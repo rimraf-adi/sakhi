@@ -141,7 +141,7 @@ export function OrbShowcase() {
             }}
           />
 
-          <div className="relative z-10 flex h-full flex-col justify-between p-6 sm:p-8">
+          <div className="relative z-10 flex h-full flex-col justify-between p-5 sm:p-7 lg:p-8">
             <div>
               <p className="text-[11px] font-semibold tracking-[0.18em] text-[#9C4B22] uppercase">
                 Voice-First · Every Home · Every Language
@@ -162,7 +162,11 @@ export function OrbShowcase() {
               <p className="text-[11px] font-semibold tracking-wider text-[#536360] uppercase">
                 Select a spoken scenario
               </p>
-              <div className="space-y-2.5" role="group" aria-label="Spoken pregnancy scenarios">
+              <div
+                className="grid grid-cols-1 gap-2.5 md:grid-cols-3 lg:grid-cols-1"
+                role="group"
+                aria-label="Spoken pregnancy scenarios"
+              >
                 {VOICE_SCENARIOS.map((item, idx) => {
                   const isActive = idx === activeIndex;
                   return (
@@ -206,7 +210,7 @@ export function OrbShowcase() {
         </div>
 
         {/* Right Panel: Deep Obsidian Ink + Film Grain + Interactive Glowing Orb */}
-        <div className="bg-grain relative flex flex-col justify-between bg-[#0F181A] p-6 text-[#F7F4ED] sm:p-9 lg:col-span-7">
+        <div className="bg-grain relative flex flex-col justify-between bg-[#0F181A] p-5 text-[#F7F4ED] sm:p-7 lg:col-span-7 lg:p-9">
           {/* Top Context Bar */}
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 border-b border-white/12 pb-4">
             <div className="flex items-center gap-2 text-xs font-medium text-[#F7F4ED]/80">
@@ -220,7 +224,7 @@ export function OrbShowcase() {
               type="button"
               aria-pressed={isPlaying}
               onClick={handlePlayCall}
-              className="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold text-[#F7F4ED] transition-[background-color,transform] duration-200 hover:bg-white/18 active:scale-[0.985]"
+              className="inline-flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold text-[#F7F4ED] transition-[background-color,transform] duration-200 hover:bg-white/18 active:scale-[0.985] sm:w-auto"
             >
               {isPlaying ? (
                 <>

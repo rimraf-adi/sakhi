@@ -60,12 +60,12 @@ export default function HomePage() {
       </a>
 
       {/* Section 0 & 1: Sayings-Inspired Framed Dark Bento Hero */}
-      <section className="bg-[#F7F4ED] p-3 sm:p-4 lg:p-5">
-        <div className="bg-grain mx-auto flex min-h-[calc(100svh-1.5rem)] max-w-[1380px] flex-col justify-between overflow-hidden rounded-[28px] bg-[#0E1517] p-3 text-[#F7F4ED] shadow-[0_30px_90px_-30px_rgba(15,24,26,0.35)] sm:min-h-[calc(100svh-2.5rem)] sm:rounded-[36px] sm:p-4">
+      <section className="bg-[#F7F4ED] p-2.5 sm:p-4 lg:p-5">
+        <div className="bg-grain mx-auto flex max-w-[1380px] flex-col justify-between overflow-hidden rounded-[24px] bg-[#0E1517] p-3 text-[#F7F4ED] shadow-[0_30px_90px_-30px_rgba(15,24,26,0.35)] sm:rounded-[32px] sm:p-4 lg:min-h-[calc(100svh-2.5rem)] lg:rounded-[36px]">
           <div className="relative z-10 grid flex-1 gap-4 lg:grid-cols-12">
             {/* Left Column: Minimal Inline Header + Serif Headline + CTAs + Scroll Cue */}
-            <div className="flex flex-col justify-between p-4 sm:p-7 lg:col-span-6 lg:p-9">
-              <header className="animate-hero-rise flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-col justify-between p-4 sm:p-6 lg:col-span-6 lg:p-9">
+              <header className="animate-hero-rise flex flex-wrap items-center justify-between gap-3">
                 <a
                   href="#"
                   className="inline-flex min-h-[44px] items-center gap-2.5 text-[#F7F4ED] transition-opacity duration-200 hover:opacity-85"
@@ -83,9 +83,17 @@ export default function HomePage() {
                   </span>
                 </a>
 
+                <a
+                  href="#join"
+                  className="inline-flex min-h-[40px] items-center gap-1 rounded-full border border-white/20 px-3.5 py-1.5 text-[11px] font-semibold text-[#F7F4ED] transition-colors hover:border-white/40 sm:hidden"
+                >
+                  Get Sakhi
+                  <ArrowRight aria-hidden="true" className="h-3 w-3" />
+                </a>
+
                 <nav
                   aria-label="Primary navigation"
-                  className="hidden items-center gap-5 text-xs font-medium text-[#F7F4ED]/70 sm:flex"
+                  className="hidden items-center gap-4 text-xs font-medium text-[#F7F4ED]/70 sm:flex md:gap-5"
                 >
                   <a
                     href="#the-gap"
@@ -120,10 +128,10 @@ export default function HomePage() {
                   <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
                     Voice-First Maternal Care · Android &amp; iOS
                   </p>
-                  <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[3.5rem]">
+                  <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[2.65rem] xl:text-[3.4rem]">
                     She speaks.
                     <br />
-                    <span className="lg:whitespace-nowrap">Sakhi listens and acts.</span>
+                    <span className="xl:whitespace-nowrap">Sakhi listens and acts.</span>
                   </h1>
                 </div>
 
@@ -261,14 +269,14 @@ export default function HomePage() {
 
               {/* Bottom Bento Row: Clinical Safety + Universal Languages */}
               <div className="grid gap-3.5 sm:grid-cols-2">
-                <div className="flex flex-col justify-between rounded-[22px] bg-[#98CFB4] p-5 text-[#102B22]">
+                <div className="flex flex-col justify-between rounded-[22px] bg-[#98CFB4] p-4 text-[#102B22] xl:p-5">
                   <p className="text-[13px] leading-snug font-medium">
                     Guided strictly by her pregnancy week, hospital visit dates, and{" "}
                     <strong className="font-semibold">
                       Ministry of Health danger-sign rules.
                     </strong>
                   </p>
-                  <div className="mt-4 flex items-center justify-between gap-2 border-t border-[#102B22]/15 pt-3 text-[11px] font-semibold whitespace-nowrap">
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-[#102B22]/15 pt-3 text-[11px] font-semibold">
                     <span className="inline-flex items-center gap-1.5">
                       <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                       Reviewed by Doctors
@@ -277,7 +285,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between rounded-[22px] bg-[#EFE8DA] p-5 text-[#0F181A]">
+                <div className="flex flex-col justify-between rounded-[22px] bg-[#EFE8DA] p-4 text-[#0F181A] xl:p-5">
                   <div>
                     <p className="font-serif text-base font-semibold text-[#0F181A]">
                       Every home. Every language.
@@ -322,9 +330,13 @@ export default function HomePage() {
                 Every pregnancy has quiet questions.
               </h2>
 
-              <div className="mt-8 grid gap-6 md:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                 {COUPLE_MOMENTS.map((item, idx) => (
-                  <Reveal key={item.moment} delayMs={idx * 90}>
+                  <Reveal
+                    key={item.moment}
+                    delayMs={idx * 90}
+                    className={idx === 2 ? "md:col-span-2 lg:col-span-1" : ""}
+                  >
                     <div className="h-full rounded-2xl border border-[#0F181A]/10 bg-[#FCFBF7] p-6 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-0.5 hover:border-[#0F181A]/20 hover:shadow-sm">
                       <p className="text-[11px] font-bold tracking-[0.16em] text-[#9C4B22] uppercase">
                         {item.moment}
@@ -376,9 +388,9 @@ export default function HomePage() {
         </section>
 
         {/* Section 3: Interactive Split Stage */}
-        <section id="hear-sakhi" className="bg-[#F7F4ED] py-18 sm:py-24">
+        <section id="hear-sakhi" className="bg-[#F7F4ED] py-14 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            <Reveal className="mb-10 max-w-2xl">
+            <Reveal className="mb-8 max-w-2xl sm:mb-10">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
                 Hear Sakhi Work
               </p>
@@ -396,11 +408,11 @@ export default function HomePage() {
         {/* Section 4: Asymmetric Hairline Editorial */}
         <section
           id="four-actions"
-          className="border-t border-[#0F181A]/10 bg-[#F7F4ED] py-20 sm:py-26"
+          className="border-t border-[#0F181A]/10 bg-[#F7F4ED] py-14 sm:py-20 lg:py-26"
         >
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            <div className="grid gap-12 lg:grid-cols-12 lg:gap-0">
-              <div className="lg:col-span-5 lg:border-r lg:border-[#0F181A]/15 lg:pr-12">
+            <div className="grid gap-10 lg:grid-cols-12 lg:gap-0">
+              <div className="border-b border-[#0F181A]/12 pb-8 lg:col-span-5 lg:border-r lg:border-b-0 lg:border-[#0F181A]/15 lg:pr-12 lg:pb-0">
                 <div className="lg:sticky lg:top-16">
                   <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
                     Safe by Design
@@ -453,7 +465,7 @@ export default function HomePage() {
         </section>
 
         {/* Section 5: Safety Guardrails & Doctor's One-Page Timeline */}
-        <section className="border-t border-[#0F181A]/10 bg-[#EFE8DA]/65 py-20 sm:py-26">
+        <section className="border-t border-[#0F181A]/10 bg-[#EFE8DA]/65 py-14 sm:py-20 lg:py-26">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="grid items-start gap-12 lg:grid-cols-12">
               <div className="lg:col-span-5">
@@ -489,8 +501,8 @@ export default function HomePage() {
               </div>
 
               <Reveal delayMs={90} className="lg:col-span-7">
-                <div className="rounded-[24px] border border-[#0F181A]/12 border-t-4 border-t-[#162B44] bg-[#FCFBF7] p-6 shadow-[0_24px_60px_-24px_rgba(15,24,26,0.2)] transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_-24px_rgba(15,24,26,0.26)] sm:p-9">
-                  <div className="flex items-start justify-between gap-4 border-b border-[#0F181A]/12 pb-5">
+                <div className="rounded-[24px] border border-[#0F181A]/12 border-t-4 border-t-[#162B44] bg-[#FCFBF7] p-5 shadow-[0_24px_60px_-24px_rgba(15,24,26,0.2)] transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_-24px_rgba(15,24,26,0.26)] sm:p-7 lg:p-9">
+                  <div className="flex flex-col gap-3 border-b border-[#0F181A]/12 pb-5 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="text-[11px] font-bold tracking-[0.16em] text-[#D97745] uppercase">
                         Pre-Visit Doctor Summary · Hospital Record
@@ -499,12 +511,12 @@ export default function HomePage() {
                         One-Page Timeline in Her Words
                       </h3>
                     </div>
-                    <span className="shrink-0 rounded-full border border-[#0F181A]/15 bg-[#F7F4ED] px-3 py-1 text-xs font-semibold text-[#0F181A] tabular-nums">
+                    <span className="w-fit shrink-0 rounded-full border border-[#0F181A]/15 bg-[#F7F4ED] px-3 py-1 text-xs font-semibold text-[#0F181A] tabular-nums">
                       ANC Visit #3
                     </span>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-3 gap-3 rounded-xl bg-[#F7F4ED] p-3.5 text-xs">
+                  <div className="mt-5 grid grid-cols-1 gap-3 rounded-xl bg-[#F7F4ED] p-3.5 text-xs sm:grid-cols-3">
                     <div>
                       <p className="text-[#536360]">Gestation</p>
                       <p className="mt-0.5 font-semibold text-[#0F181A] tabular-nums">
@@ -566,7 +578,7 @@ export default function HomePage() {
         </section>
 
         {/* Section 6: Three Baseline-First Impact Signals */}
-        <section id="impact" className="bg-[#F7F4ED] py-20 sm:py-24">
+        <section id="impact" className="bg-[#F7F4ED] py-14 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
@@ -612,7 +624,7 @@ export default function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-b from-[#F6D8B2]/82 via-[#F6D8B2]/55 via-58% to-transparent" />
 
-            <div className="relative z-10 flex flex-col items-center px-6 pt-14 pb-36 text-center sm:px-12 sm:pt-16 sm:pb-48">
+            <div className="relative z-10 flex flex-col items-center px-5 pt-12 pb-28 text-center sm:px-10 sm:pt-16 sm:pb-40 lg:px-12 lg:pb-48">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/20 bg-[#FAF6EE]/75 px-4 py-1.5 text-xs font-semibold text-[#0F181A] backdrop-blur-sm">
                 <Lock aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                 Hospital-Owned · Private by Design
@@ -634,10 +646,10 @@ export default function HomePage() {
                 no passwords and no forms.
               </div>
 
-              <div className="mt-7 flex flex-wrap justify-center gap-3.5">
+              <div className="mt-7 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-3.5">
                 <a
                   href="mailto:pilot@sakhihealth.in?subject=Bring%20Sakhi%20to%20Our%20Hospital"
-                  className="group inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#1E3A56] active:scale-[0.985]"
+                  className="group inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#1E3A56] active:scale-[0.985] sm:w-auto"
                 >
                   Bring Sakhi to Your Hospital
                   <ArrowRight
@@ -647,7 +659,7 @@ export default function HomePage() {
                 </a>
                 <a
                   href="#hear-sakhi"
-                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-[background-color,transform] duration-200 hover:bg-white active:scale-[0.985]"
+                  className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-[background-color,transform] duration-200 hover:bg-white active:scale-[0.985] sm:w-auto"
                 >
                   Listen to a Sample Call
                 </a>
@@ -657,7 +669,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 pb-10 text-xs text-[#536360] sm:flex-row sm:px-8">
+      <footer className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2.5 px-5 pb-10 text-center text-xs text-[#536360] sm:flex-row sm:px-8 sm:text-left">
         <p className="font-medium text-[#0F181A]">
           <span translate="no">Sakhi</span> · Voice-first maternal care companion for India
         </p>
