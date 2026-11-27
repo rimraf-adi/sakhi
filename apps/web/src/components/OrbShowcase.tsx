@@ -1,14 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   BellRing,
   CheckCircle2,
   Mic,
-  Pause,
-  Play,
   ShieldAlert,
-  Volume2,
 } from "lucide-react";
 import {
   type TraceStep,
@@ -46,76 +43,10 @@ const ORB_THEMES = {
 export function OrbShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [step, setStep] = useState<TraceStep>(1);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const scenario = VOICE_SCENARIOS[activeIndex] ?? VOICE_SCENARIOS[0]!;
 
-  const stopPlayback = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-    setIsPlaying(false);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
-
-  const speakLine = (text: string, lang: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = lang;
-      utterance.rate = 0.92;
-      window.speechSynthesis.speak(utterance);
-    } catch {
-      // Fallback gracefully if speech synthesis is unavailable
-    }
-  };
-
-  const handlePlayCall = () => {
-    if (isPlaying) {
-      stopPlayback();
-      return;
-    }
-
-    setIsPlaying(true);
-    setStep(1);
-    speakLine(scenario.motherDevanagari, scenario.speechLang);
-
-    const runStep = (nextStep: TraceStep) => {
-      timerRef.current = setTimeout(() => {
-        setStep(nextStep);
-        if (nextStep === 2) {
-          speakLine(scenario.followUpQuestion, scenario.speechLang);
-          runStep(3);
-        } else if (nextStep === 3) {
-          speakLine(scenario.repeatBack, scenario.speechLang);
-          runStep(4);
-        } else if (nextStep === 4) {
-          timerRef.current = setTimeout(() => {
-            setIsPlaying(false);
-          }, 2600);
-        }
-      }, 2400);
-    };
-
-    runStep(2);
-  };
-
   const handleSelectScenario = (idx: number) => {
-    stopPlayback();
     setActiveIndex(idx);
     setStep(1);
   };
@@ -130,7 +61,7 @@ export function OrbShowcase() {
   return (
     <div className="overflow-hidden rounded-[28px] border border-[#0F181A]/12 bg-[#0F181A] shadow-[0_28px_80px_-32px_rgba(15,24,26,0.34)]">
       <div className="grid lg:grid-cols-12">
-        {/* Left Panel: Editorial Copy + Clean Compact Scenario List */}
+        {/* Left Panel: Editorial Copy + Scenario Walkthrough Selector */}
         <div className="relative flex flex-col justify-between overflow-hidden bg-[#EFE8DA] p-6 text-[#0F181A] sm:p-8 lg:col-span-5 lg:p-9">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.18em] text-[#9C4B22] uppercase">
@@ -142,7 +73,8 @@ export function OrbShowcase() {
               No forms. Just speak.
             </h3>
             <p className="mt-2.5 max-w-xs text-sm leading-relaxed text-[#536360]">
-              Pick a real spoken moment and press play.
+              See how Sakhi responds in four steps. Live voice access is available only to
+              hospital-registered expectant families.
             </p>
           </div>
 
@@ -187,7 +119,7 @@ export function OrbShowcase() {
           </div>
         </div>
 
-        {/* Right Panel: Deep Obsidian Ink + Single Minimal Glowing Orb Stage */}
+        {/* Right Panel: Deep Obsidian Ink + Calm Visual Orb Walkthrough */}
         <div className="bg-grain relative flex flex-col justify-between gap-6 bg-[#0F181A] p-6 text-[#F7F4ED] sm:p-8 lg:col-span-7 lg:p-9">
           {/* Top Context Bar */}
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
@@ -198,71 +130,29 @@ export function OrbShowcase() {
               </span>
             </div>
 
-            <button
-              type="button"
-              aria-pressed={isPlaying}
-              onClick={handlePlayCall}
-              className="inline-flex min-h-[44px] w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-xs font-semibold text-[#F7F4ED] transition-[background-color,transform] duration-200 hover:bg-white/14 active:scale-[0.985] sm:w-auto"
-            >
-              {isPlaying ? (
-                <>
-                  <Pause aria-hidden="true" className="h-3.5 w-3.5 text-[#F6C478]" />
-                  Pause
-                </>
-              ) : (
-                <>
-                  <Play aria-hidden="true" className="h-3.5 w-3.5 text-[#F6C478]" />
-                  Play Demo
-                </>
-              )}
-            </button>
+            <span className="rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1 text-[11px] font-medium text-[#F5D6AE]">
+              Registered Patients Only
+            </span>
           </div>
 
-          {/* Clickable Center Orb */}
+          {/* Calm Visual Orb Centerpiece */}
           <div className="relative z-10 flex flex-col items-center py-2">
-            <button
-              type="button"
-              onClick={handlePlayCall}
-              aria-label={isPlaying ? "Pause call demo" : "Play voice call demo"}
-              className="group flex cursor-pointer flex-col items-center focus:outline-none"
-            >
-              <div className="relative flex h-28 w-28 items-center justify-center" aria-hidden="true">
-                <span
-                  className={`animate-orb-ripple absolute inset-0 rounded-full border ${orbStyle.rippleColor}`}
-                />
-                <span
-                  className={`animate-orb-ripple-delayed absolute inset-0 rounded-full border ${orbStyle.rippleColor}`}
-                />
-                <div
-                  className={`${orbStyle.animationClass} relative flex h-20 w-20 items-center justify-center rounded-full transition-[background,box-shadow,transform] duration-500 group-hover:scale-[1.03] group-active:scale-95`}
-                  style={{ background: orbStyle.background }}
-                >
-                  {isPlaying ? (
-                    <div className="flex items-center gap-1">
-                      <span className="animate-voice-bar h-4 w-1 rounded-full bg-white/90" />
-                      <span
-                        className="animate-voice-bar h-7 w-1 rounded-full bg-white/90"
-                        style={{ animationDelay: "0.18s" }}
-                      />
-                      <span
-                        className="animate-voice-bar h-5 w-1 rounded-full bg-white/90"
-                        style={{ animationDelay: "0.35s" }}
-                      />
-                      <span
-                        className="animate-voice-bar h-3.5 w-1 rounded-full bg-white/90"
-                        style={{ animationDelay: "0.52s" }}
-                      />
-                    </div>
-                  ) : (
-                    <Volume2 className="h-6 w-6 text-white/95 drop-shadow-sm" />
-                  )}
-                </div>
-              </div>
+            <div className="relative flex h-28 w-28 items-center justify-center" aria-hidden="true">
+              <span
+                className={`animate-orb-ripple absolute inset-0 rounded-full border ${orbStyle.rippleColor}`}
+              />
+              <span
+                className={`animate-orb-ripple-delayed absolute inset-0 rounded-full border ${orbStyle.rippleColor}`}
+              />
+              <div
+                className={`${orbStyle.animationClass} relative h-20 w-20 rounded-full transition-[background,box-shadow] duration-500`}
+                style={{ background: orbStyle.background }}
+              />
+            </div>
 
-              <span className="mt-2.5 text-xs tracking-wide text-[#F7F4ED]/65 transition-colors group-hover:text-[#F6C478]">
-                {isPlaying ? `Speaking in ${scenario.language}…` : "Tap to listen"}
-              </span>
-            </button>
+            <p className="mt-2.5 text-xs tracking-wide text-[#F7F4ED]/65">
+              Activated only via hospital registration
+            </p>
           </div>
 
           {/* Minimal 4-Step Hairline Tabs + Focused Single-Step Stage */}
@@ -279,10 +169,7 @@ export function OrbShowcase() {
                     key={item.step}
                     type="button"
                     aria-pressed={active}
-                    onClick={() => {
-                      stopPlayback();
-                      setStep(item.step);
-                    }}
+                    onClick={() => setStep(item.step)}
                     className={`min-h-[44px] cursor-pointer rounded-lg px-2 py-2 text-xs font-medium transition-[background-color,color] duration-200 ${
                       active
                         ? "bg-white/10 font-semibold text-[#F6C478]"

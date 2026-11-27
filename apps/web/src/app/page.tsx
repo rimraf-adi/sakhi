@@ -8,7 +8,6 @@ import {
   FileText,
   Lock,
   Mic,
-  Play,
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
@@ -112,11 +111,11 @@ export default function HomePage() {
                   style={{ animationDelay: "260ms" }}
                 >
                   <a
-                    href="#hear-sakhi"
+                    href="#how-sakhi-works"
                     className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-[#F5D6AE] px-7 py-3.5 text-sm font-semibold text-[#0F181A] shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#F6C478] active:scale-[0.985]"
                   >
-                    <Play aria-hidden="true" className="h-4 w-4 fill-current text-[#0F181A]" />
-                    Listen to a Sample Call
+                    <ArrowDown aria-hidden="true" className="h-4 w-4 text-[#0F181A]" />
+                    See How It Works
                   </a>
                   <a
                     href="#join"
@@ -354,11 +353,11 @@ export default function HomePage() {
         </section>
 
         {/* Section 3: Interactive Split Stage */}
-        <section id="hear-sakhi" className="bg-[#F7F4ED] py-14 sm:py-20 lg:py-24">
+        <section id="how-sakhi-works" className="bg-[#F7F4ED] py-14 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
             <Reveal className="mb-8 max-w-2xl sm:mb-10">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
-                Hear Sakhi Work
+                How Sakhi Works
               </p>
               <h2 className="mt-2.5 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
                 One calm orb. From spoken worry to safe action in minutes.
@@ -596,10 +595,10 @@ export default function HomePage() {
                     />
                   </a>
                   <a
-                    href="#hear-sakhi"
+                    href="#how-sakhi-works"
                     className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-[background-color,transform] duration-200 hover:bg-white active:scale-[0.985] sm:w-auto"
                   >
-                    Listen to a Sample Call
+                    See How Sakhi Works
                   </a>
                 </div>
               </div>
