@@ -1,11 +1,13 @@
 import Image from "next/image";
 import {
+  ArrowDown,
   ArrowRight,
   BellRing,
   BookmarkCheck,
   Check,
   FileText,
   Lock,
+  Mic,
   Play,
   ShieldAlert,
   ShieldCheck,
@@ -57,175 +59,248 @@ export default function HomePage() {
         Skip to main content
       </a>
 
-      {/* Section 0 & 1: Floating 3-Island Nav + Twilight Horizon Hero */}
-      <section className="relative min-h-[660px] w-full overflow-hidden bg-[#13263E] lg:min-h-[740px]">
-        <Image
-          src="/images/hero-twilight-horizon.jpg"
-          alt="Calm twilight sky over distant hills and warm golden light reflected on still water"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#101E2E]/82 via-[#162B44]/55 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F181A]/45 via-transparent to-[#13263E]/35" />
+      {/* Section 0 & 1: Sayings-Inspired Framed Dark Bento Hero */}
+      <section className="bg-[#F7F4ED] p-3 sm:p-4 lg:p-5">
+        <div className="bg-grain mx-auto flex min-h-[calc(100svh-1.5rem)] max-w-[1380px] flex-col justify-between overflow-hidden rounded-[28px] bg-[#0E1517] p-3 text-[#F7F4ED] shadow-[0_30px_90px_-30px_rgba(15,24,26,0.35)] sm:min-h-[calc(100svh-2.5rem)] sm:rounded-[36px] sm:p-4">
+          <div className="relative z-10 grid flex-1 gap-4 lg:grid-cols-12">
+            {/* Left Column: Minimal Inline Header + Serif Headline + CTAs + Scroll Cue */}
+            <div className="flex flex-col justify-between p-4 sm:p-7 lg:col-span-6 lg:p-9">
+              <header className="animate-hero-rise flex flex-wrap items-center justify-between gap-4">
+                <a
+                  href="#"
+                  className="inline-flex min-h-[44px] items-center gap-2.5 text-[#F7F4ED] transition-opacity duration-200 hover:opacity-85"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="inline-block h-3 w-3 rounded-full shadow-[0_0_10px_rgba(246,196,120,0.65)]"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 35% 30%, #fff0d4 0%, #f6c478 45%, #d97745 90%)",
+                    }}
+                  />
+                  <span translate="no" className="font-serif text-xl font-semibold tracking-tight">
+                    Sakhi
+                  </span>
+                </a>
 
-        {/* Section 0: Three Floating White Pill Islands */}
-        <header className="animate-hero-rise relative z-20 mx-auto max-w-6xl px-5 pt-6 sm:px-8">
-          <div className="flex items-center justify-between gap-3">
-            <a
-              href="#"
-              className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-white px-4 py-2 text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-transform duration-200 hover:scale-[1.02] active:scale-[0.985]"
-            >
-              <span
-                aria-hidden="true"
-                className="inline-block h-3.5 w-3.5 rounded-full shadow-[0_0_10px_rgba(217,119,69,0.55)]"
-                style={{
-                  background:
-                    "radial-gradient(circle at 35% 30%, #fff0d4 0%, #f6c478 45%, #d97745 90%)",
-                }}
-              />
-              <span translate="no" className="font-serif text-base font-semibold tracking-tight">
-                Sakhi
-              </span>
-            </a>
+                <nav
+                  aria-label="Primary navigation"
+                  className="hidden items-center gap-5 text-xs font-medium text-[#F7F4ED]/70 sm:flex"
+                >
+                  <a
+                    href="#the-gap"
+                    className="py-2 transition-colors duration-200 hover:text-[#F6C478]"
+                  >
+                    Between Visits
+                  </a>
+                  <a
+                    href="#hear-sakhi"
+                    className="py-2 transition-colors duration-200 hover:text-[#F6C478]"
+                  >
+                    Hear Sakhi
+                  </a>
+                  <a
+                    href="#four-actions"
+                    className="py-2 transition-colors duration-200 hover:text-[#F6C478]"
+                  >
+                    4 Actions
+                  </a>
+                  <a
+                    href="#privacy"
+                    className="py-2 transition-colors duration-200 hover:text-[#F6C478]"
+                  >
+                    Privacy
+                  </a>
+                </nav>
+              </header>
 
-            <nav
-              aria-label="Primary navigation"
-              className="hidden min-h-[44px] items-center gap-6 rounded-full bg-white px-7 py-2.5 text-xs font-medium text-[#0F181A]/85 shadow-[0_8px_24px_rgba(15,24,26,0.18)] md:flex"
-            >
-              <a href="#the-gap" className="py-1 transition-colors duration-200 hover:text-[#D97745]">
-                The Gap
-              </a>
-              <a
-                href="#hear-sakhi"
-                className="py-1 transition-colors duration-200 hover:text-[#D97745]"
+              {/* Hero Main Copy */}
+              <div className="my-8 max-w-xl lg:my-0">
+                <div className="animate-hero-rise" style={{ animationDelay: "90ms" }}>
+                  <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
+                    Voice-First Maternal Care · Android &amp; iOS
+                  </p>
+                  <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[3.5rem]">
+                    She speaks.
+                    <br />
+                    <span className="lg:whitespace-nowrap">Sakhi listens and acts.</span>
+                  </h1>
+                </div>
+
+                <p
+                  className="animate-hero-rise mt-5 max-w-md text-base leading-relaxed text-[#F7F4ED]/80 sm:text-lg"
+                  style={{ animationDelay: "180ms" }}
+                >
+                  Between check-ups, you should not have to guess at 11 PM. Registered by your
+                  hospital, Sakhi listens in her own language and alerts her partner and care team
+                  within minutes.
+                </p>
+
+                <div
+                  className="animate-hero-rise mt-8 flex flex-wrap items-center gap-4"
+                  style={{ animationDelay: "260ms" }}
+                >
+                  <a
+                    href="#hear-sakhi"
+                    className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-[#F5D6AE] px-7 py-3.5 text-sm font-semibold text-[#0F181A] shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#F6C478] active:scale-[0.985]"
+                  >
+                    <Play aria-hidden="true" className="h-4 w-4 fill-current text-[#0F181A]" />
+                    Listen to a Sample Call
+                  </a>
+                  <a
+                    href="#join"
+                    className="group inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-white/20 px-5 py-3 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase transition-[border-color,background-color,transform] duration-200 hover:border-white/40 hover:bg-white/8 active:scale-[0.985]"
+                  >
+                    Get Sakhi
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                    />
+                  </a>
+                </div>
+              </div>
+
+              {/* Bottom Scroll Cue + Couple Trust Points */}
+              <div
+                className="animate-hero-rise flex flex-wrap items-center justify-between gap-4 border-t border-white/12 pt-5"
+                style={{ animationDelay: "320ms" }}
               >
-                Hear Sakhi
-              </a>
-              <a
-                href="#four-actions"
-                className="py-1 transition-colors duration-200 hover:text-[#D97745]"
-              >
-                4 Actions
-              </a>
-              <a href="#impact" className="py-1 transition-colors duration-200 hover:text-[#D97745]">
-                Impact
-              </a>
-              <a href="#privacy" className="py-1 transition-colors duration-200 hover:text-[#D97745]">
-                Privacy
-              </a>
-            </nav>
+                <a
+                  href="#the-gap"
+                  aria-label="Scroll to Between Visits"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/18 text-[#F7F4ED]/80 transition-[border-color,color,transform] duration-200 hover:border-[#F6C478] hover:text-[#F6C478] active:scale-95"
+                >
+                  <ArrowDown aria-hidden="true" className="h-4 w-4" />
+                </a>
 
-            <a
-              href="#join"
-              className="group inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-[background-color,transform] duration-200 hover:bg-[#F5D6AE] active:scale-[0.985]"
-            >
-              Get Sakhi
-              <ArrowRight
-                aria-hidden="true"
-                className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
-              />
-            </a>
-          </div>
-        </header>
-
-        {/* Hero Foreground Content */}
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col justify-between gap-10 px-5 pt-14 pb-16 sm:px-8 lg:min-h-[650px] lg:flex-row lg:items-end lg:pt-18 lg:pb-18">
-          <div className="max-w-2xl pb-2 lg:pb-6">
-            <div className="animate-hero-rise" style={{ animationDelay: "90ms" }}>
-              <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
-                Voice-First Maternal Care · Android &amp; iOS
-              </p>
-              <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[3.4rem]">
-                She speaks.
-                <br />
-                <span className="lg:whitespace-nowrap">Sakhi listens and acts.</span>
-              </h1>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#F7F4ED]/65">
+                  <span>Hospital registered</span>
+                  <span aria-hidden="true" className="hidden text-white/25 sm:inline">
+                    ·
+                  </span>
+                  <span>Zero typing</span>
+                  <span aria-hidden="true" className="hidden text-white/25 sm:inline">
+                    ·
+                  </span>
+                  <span>Partner stays informed</span>
+                </div>
+              </div>
             </div>
-            <p
-              className="animate-hero-rise mt-5 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg"
+
+            {/* Right Column: 3-Tile Bento Grid (Zero Empty Space, Zero Duplicate Orb) */}
+            <div
+              className="animate-hero-rise flex flex-col gap-3.5 lg:col-span-6"
               style={{ animationDelay: "180ms" }}
             >
-              Between check-ups, you should not have to guess at 11 PM. Registered by your hospital,
-              Sakhi listens in her own language. It logs everyday symptoms and alerts her partner and
-              care team within minutes when a warning sign appears.
-            </p>
-
-            <div
-              className="animate-hero-rise mt-8 flex flex-wrap items-center gap-4"
-              style={{ animationDelay: "260ms" }}
-            >
-              <a
-                href="#hear-sakhi"
-                className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/40 bg-white/18 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-[background-color,border-color,transform] duration-200 hover:bg-white/28 active:scale-[0.985]"
-              >
-                <Play aria-hidden="true" className="h-4 w-4 fill-current text-[#F6C478]" />
-                Listen to a Sample Call
-              </a>
-              <a
-                href="#join"
-                className="group inline-flex min-h-[44px] items-center gap-1.5 px-2 py-2 text-xs font-semibold tracking-wider text-white/85 uppercase transition-colors duration-200 hover:text-[#F6C478]"
-              >
-                How to Set It Up
-                <ArrowRight
-                  aria-hidden="true"
-                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+              {/* Top Main Bento Tile: Concrete 11:14 PM Live Couple Moment */}
+              <div className="relative flex min-h-[290px] flex-1 flex-col justify-between overflow-hidden rounded-[22px] border border-white/10 p-5 sm:rounded-[26px] sm:p-7">
+                <Image
+                  src="/images/hero-twilight-horizon.jpg"
+                  alt="Calm twilight sky over distant hills and warm golden light reflected on still water"
+                  fill
+                  priority
+                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-              </a>
-            </div>
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0E1517]/75 via-[#0E1517]/40 to-[#0E1517]/90" />
 
-            {/* Subtle Couple Reassurance Row */}
-            <div
-              className="animate-hero-rise mt-8 flex flex-col gap-1.5 border-t border-white/15 pt-5 text-xs text-white/75 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2"
-              style={{ animationDelay: "320ms" }}
-            >
-              <span>Registered by your hospital</span>
-              <span aria-hidden="true" className="hidden text-white/35 sm:inline">
-                ·
-              </span>
-              <span>No English or typing needed</span>
-              <span aria-hidden="true" className="hidden text-white/35 sm:inline">
-                ·
-              </span>
-              <span>Partner &amp; family stay informed</span>
-            </div>
-          </div>
+                <div className="relative z-10 flex flex-wrap items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-2 text-xs font-medium text-[#F7F4ED]/90">
+                    <span
+                      aria-hidden="true"
+                      className="inline-block h-2 w-2 rounded-full bg-[#F6C478]"
+                    />
+                    <span className="tabular-nums">11:14 PM · Week 32 · Hindi</span>
+                  </div>
+                  <span className="rounded-full border border-white/20 bg-[#0E1517]/65 px-3 py-1 text-[11px] font-medium text-[#F5D6AE] backdrop-blur-sm">
+                    Hospital Registered
+                  </span>
+                </div>
 
-          {/* Right Column: Subtle Pan-India Language Whispers + Sage Trust Card */}
-          <div
-            className="animate-hero-rise flex w-full flex-col items-start gap-4 lg:w-auto lg:items-end lg:pb-2"
-            style={{ animationDelay: "320ms" }}
-          >
-            <div
-              aria-hidden="true"
-              className="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-xs font-medium tracking-wide text-white/55 lg:justify-end"
-            >
-              <span>नमस्ते</span>
-              <span>·</span>
-              <span>नमस्कार</span>
-              <span>·</span>
-              <span>வணக்கம்</span>
-              <span>·</span>
-              <span>ನಮಸ್ಕಾರ</span>
-              <span>·</span>
-              <span>নমস্কার</span>
-            </div>
+                <div className="relative z-10 mt-10">
+                  <div className="flex items-start gap-2.5">
+                    <Mic
+                      aria-hidden="true"
+                      className="mt-1 h-4 w-4 shrink-0 text-[#F6C478]"
+                    />
+                    <div>
+                      <p className="font-serif text-lg leading-snug font-medium text-white sm:text-xl">
+                        “Do din se sar dard hai aur pair sujhe hue hain.”
+                      </p>
+                      <p className="mt-1 text-xs text-[#F7F4ED]/75">
+                        Headache and swollen feet for two days.
+                      </p>
+                    </div>
+                  </div>
 
-            {/* Floating Soft Sage-Mint Clinical Trust Card */}
-            <div className="w-full max-w-[320px] shrink-0 rounded-2xl border border-[#102B22]/10 bg-[#98CFB4] p-5 text-[#102B22] shadow-[0_20px_50px_-15px_rgba(15,24,26,0.45)]">
-              <p className="text-[13px] leading-snug font-medium">
-                Guided strictly by her pregnancy week, her hospital’s visit schedule, and{" "}
-                <strong className="font-semibold">
-                  Ministry of Health danger-sign guidelines.
-                </strong>
-              </p>
-              <div className="mt-3.5 flex items-center justify-between gap-2 border-t border-[#102B22]/15 pt-3 text-[11px] font-semibold whitespace-nowrap">
-                <span className="inline-flex items-center gap-1.5">
-                  <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
-                  Reviewed by Doctors
-                </span>
-                <span className="opacity-75">Never Diagnoses</span>
+                  <div className="mt-4 grid gap-2 rounded-xl border border-white/15 bg-[#0E1517]/75 p-3 text-[11px] text-[#F7F4ED]/90 backdrop-blur-md sm:grid-cols-3">
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        aria-hidden="true"
+                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F6C478]"
+                      />
+                      <span>Confirms blurred vision</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        aria-hidden="true"
+                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#D97745]"
+                      />
+                      <span>Alerts partner &amp; ASHA</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        aria-hidden="true"
+                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#98CFB4]"
+                      />
+                      <span>Hospital notified in minutes</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Bento Row: Clinical Safety + Universal Languages */}
+              <div className="grid gap-3.5 sm:grid-cols-2">
+                <div className="flex flex-col justify-between rounded-[22px] bg-[#98CFB4] p-5 text-[#102B22]">
+                  <p className="text-[13px] leading-snug font-medium">
+                    Guided strictly by her pregnancy week, hospital visit dates, and{" "}
+                    <strong className="font-semibold">
+                      Ministry of Health danger-sign rules.
+                    </strong>
+                  </p>
+                  <div className="mt-4 flex items-center justify-between gap-2 border-t border-[#102B22]/15 pt-3 text-[11px] font-semibold whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1.5">
+                      <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+                      Reviewed by Doctors
+                    </span>
+                    <span className="opacity-75">Never Diagnoses</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-between rounded-[22px] bg-[#EFE8DA] p-5 text-[#0F181A]">
+                  <div>
+                    <p className="font-serif text-base font-semibold text-[#0F181A]">
+                      Every home. Every language.
+                    </p>
+                    <p
+                      aria-hidden="true"
+                      className="mt-2 flex flex-wrap gap-x-2.5 gap-y-1 text-xs font-medium text-[#536360]"
+                    >
+                      <span>नमस्ते</span>
+                      <span>·</span>
+                      <span>नमस्कार</span>
+                      <span>·</span>
+                      <span>வணக்கம்</span>
+                      <span>·</span>
+                      <span>ನಮಸ್ಕಾರ</span>
+                      <span>·</span>
+                      <span>নমস্কার</span>
+                    </p>
+                  </div>
+                  <p className="mt-4 border-t border-[#0F181A]/12 pt-3 text-[11px] font-semibold text-[#536360]">
+                    Zero typing. Zero menus. Android &amp; iOS.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -234,7 +309,10 @@ export default function HomePage() {
 
       <main id="main-content">
         {/* Section 2: Relatable Couple Moments + NFHS-6 Scale Strip */}
-        <section id="the-gap" className="border-b border-[#0F181A]/10 bg-[#F7F4ED] py-18 sm:py-22">
+        <section
+          id="the-gap"
+          className="border-b border-[#0F181A]/10 bg-[#F7F4ED] pt-12 pb-18 sm:pt-16 sm:pb-22"
+        >
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="mb-14">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
