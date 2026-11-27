@@ -75,7 +75,7 @@ const SCENARIOS: VoiceScenario[] = [
     actionTitle: "Alert · Escalate on Doubt",
     actionDetail:
       "When timing or speech remains unsure, Sakhi never guesses or reassures falsely. It treats the case as more serious and connects her to her ASHA worker & hospital.",
-    recipients: ["Patient (Voice)", "ASHA Worker", "Hospital Desk"],
+    recipients: ["Patient (Voice)", "ASHA Worker", "Hospital Care Team"],
   },
   {
     id: "iron-tablets",
@@ -103,9 +103,9 @@ const SCENARIOS: VoiceScenario[] = [
 
 const STEP_LABELS: { step: TraceStep; label: string }[] = [
   { step: 1, label: "1. She Speaks" },
-  { step: 2, label: "2. 1 Question" },
-  { step: 3, label: "3. Repeat-Back" },
-  { step: 4, label: "4. MoH Action" },
+  { step: 2, label: "2. One Question" },
+  { step: 3, label: "3. Confirms Back" },
+  { step: 4, label: "4. Care Step" },
 ];
 
 export function OrbShowcase() {
@@ -227,16 +227,17 @@ export function OrbShowcase() {
           <div className="relative z-10 flex h-full flex-col justify-between p-6 sm:p-8">
             <div>
               <p className="text-[11px] font-semibold tracking-[0.18em] text-[#9C4B22] uppercase">
-                Zero Typing · Zero Menus
+                Voice-First · Every Home · Every Language
               </p>
               <h3 className="mt-2.5 font-serif text-2xl leading-tight font-semibold text-[#0F181A] sm:text-3xl">
-                She never types.
+                No typing. No menus.
                 <br />
-                She just speaks.
+                Just a warm voice.
               </h3>
               <p className="mt-3 max-w-sm text-xs leading-relaxed text-[#536360] sm:text-sm">
-                Only 10.6% of Indians speak English. Choose a real voice moment below—no text box,
-                just how women already describe symptoms at home.
+                Whether she lives in a city apartment or a district town, speaking is how women
+                already share how they feel with family and nurses. Choose a real spoken moment
+                below.
               </p>
             </div>
 
@@ -354,7 +355,7 @@ export function OrbShowcase() {
             <p className="mt-3 text-xs tracking-wide text-[#F7F4ED]/70">
               {isPlaying
                 ? `Speaking in ${scenario.language}…`
-                : `Calm female voice · Answers only from her record & MoH rules`}
+                : `Warm female voice · Guided only by her record & health guidelines`}
             </p>
           </div>
 

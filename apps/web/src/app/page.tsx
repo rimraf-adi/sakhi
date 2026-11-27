@@ -15,7 +15,7 @@ const NFHS_STATS = [
   {
     value: "25M",
     label: "Births in India every year",
-    detail: "Every state and language, in villages and cities",
+    detail: "Across cities, towns, and villages in every state",
   },
   {
     value: "~9M",
@@ -39,13 +39,13 @@ const FOUR_ACTIONS = [
     name: "Alert",
     icon: ShieldAlert,
     summary:
-      "When Ministry of Health danger signs appear—or when doubt remains—Sakhi tells her to go to the hospital now and alerts her ASHA worker and chosen family member.",
+      "When warning signs appear—or when anything feels uncertain—Sakhi tells her to go to the hospital now and alerts her ASHA worker and chosen family member.",
   },
   {
     name: "Save",
     icon: BookmarkCheck,
     summary:
-      "Mild symptoms and missed iron tablets are recorded with dates in her hospital log so nothing is forgotten between infrequent visits.",
+      "Mild symptoms and missed iron tablets are saved with dates in her hospital record so nothing is forgotten between visits.",
   },
   {
     name: "Remind",
@@ -63,16 +63,16 @@ const FOUR_ACTIONS = [
 
 const GUARDRAILS = [
   {
-    title: "Repeat-Back Before Deciding",
+    title: "Always Confirms What She Said",
     body: "Before Sakhi acts, it repeats back what it heard in her own language and asks her to confirm.",
   },
   {
-    title: "Escalate on Doubt, Never Guess",
-    body: "If a symptom is unclear, it asks one more short question. If still unsure, it treats the case as more serious, not less, and sends her to her ASHA worker or hospital.",
+    title: "When Unsure, Connects Her to Care",
+    body: "If a symptom is unclear, it asks one short follow-up question. If still unsure, it treats the case as more serious—never less—and connects her to her ASHA worker or hospital.",
   },
   {
-    title: "Built for Regional Speech Risk",
-    body: "Hindi, Marathi, and mixed speech vary by region. Doctors test Sakhi on realistic cases before launch, and every answer is logged so the hospital can audit it.",
+    title: "Tested With Doctors Across Languages",
+    body: "Regional speech and mixed phrasing vary across India. Doctors test Sakhi on realistic cases before launch, and every conversation is logged for hospital review.",
   },
 ];
 
@@ -189,19 +189,20 @@ export default function HomePage() {
         </header>
 
         {/* Hero Foreground Content */}
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col justify-between gap-8 px-5 pt-16 pb-14 sm:px-8 lg:min-h-[650px] lg:flex-row lg:items-end lg:pt-20 lg:pb-16">
-          <div className="max-w-2xl pb-2 lg:pb-8">
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col justify-between gap-10 px-5 pt-14 pb-16 sm:px-8 lg:min-h-[650px] lg:flex-row lg:items-end lg:pt-18 lg:pb-18">
+          <div className="max-w-2xl pb-2 lg:pb-6">
             <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
-              Voice-First Maternal Agent · Android & iOS
+              Voice-First Maternal Care · Android & iOS
             </p>
-            <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[3.35rem]">
-              The woman talks.
+            <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[3.4rem]">
+              She speaks.
               <br />
-              <span className="lg:whitespace-nowrap">The agent does the work.</span>
+              <span className="lg:whitespace-nowrap">Sakhi listens and acts.</span>
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
-              Registered by her hospital, Sakhi gives every pregnant woman in India a calm, glowing
-              orb in her own language—acting on warning signs in minutes, never days.
+              Registered by her hospital, Sakhi is a calm, voice-first companion for every pregnant
+              woman in India—across cities, towns, and villages—turning between-visit worries into
+              timely care.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -216,24 +217,58 @@ export default function HomePage() {
                 href="#four-actions"
                 className="inline-flex items-center gap-1.5 px-2 py-2 text-xs font-semibold tracking-wider text-white/85 uppercase transition-colors hover:text-[#F6C478]"
               >
-                Explore 4 Actions
+                Four Ways Sakhi Helps
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>
 
-          {/* Floating Soft Sage-Mint Clinical Trust Card */}
-          <div className="w-full max-w-[300px] shrink-0 self-start rounded-2xl border border-[#102B22]/10 bg-[#98CFB4] p-5 text-[#102B22] shadow-[0_20px_50px_-15px_rgba(15,24,26,0.45)] lg:mb-4 lg:self-end">
-            <p className="text-[13px] leading-snug font-medium">
-              Answers strictly from her pregnancy week, hospital dates, and{" "}
-              <strong className="font-semibold">Ministry of Health danger-sign rules.</strong>
-            </p>
-            <div className="mt-3.5 flex items-center justify-between gap-2 border-t border-[#102B22]/15 pt-3 text-[11px] font-semibold whitespace-nowrap">
-              <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
-                Doctor-Tested & Logged
-              </span>
-              <span className="opacity-75">Zero Diagnosis</span>
+          {/* Right Column: Luminous Sakhi Orb + Pan-India Language Whispers + Sage Trust Card */}
+          <div className="flex w-full flex-col items-start gap-7 lg:w-auto lg:items-end lg:pb-2">
+            {/* Serene Luminous Orb & Multilingual Greeting Whispers */}
+            <div className="relative flex flex-col items-center self-center px-6 py-2 lg:self-center">
+              <div
+                aria-hidden="true"
+                className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs font-medium tracking-wide text-white/40"
+              >
+                <span>नमस्ते</span>
+                <span>·</span>
+                <span>नमस्कार</span>
+                <span>·</span>
+                <span>வணக்கம்</span>
+                <span>·</span>
+                <span>ನಮಸ್ಕಾರ</span>
+                <span>·</span>
+                <span>নমস্কার</span>
+              </div>
+              <div className="relative flex h-32 w-32 items-center justify-center">
+                <span className="animate-orb-ripple absolute inset-0 rounded-full border border-[#F6C478]/35" />
+                <span className="animate-orb-ripple-delayed absolute inset-0 rounded-full border border-[#D97745]/35" />
+                <div
+                  className="animate-orb-breathe h-20 w-20 rounded-full"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 35% 30%, #fff4dc 0%, #f6c478 40%, #d97745 80%, #9c431b 100%)",
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Floating Soft Sage-Mint Clinical Trust Card */}
+            <div className="w-full max-w-[320px] shrink-0 rounded-2xl border border-[#102B22]/10 bg-[#98CFB4] p-5 text-[#102B22] shadow-[0_20px_50px_-15px_rgba(15,24,26,0.45)]">
+              <p className="text-[13px] leading-snug font-medium">
+                Guided strictly by her pregnancy week, her hospital’s visit schedule, and{" "}
+                <strong className="font-semibold">
+                  Ministry of Health danger-sign guidelines.
+                </strong>
+              </p>
+              <div className="mt-3.5 flex items-center justify-between gap-2 border-t border-[#102B22]/15 pt-3 text-[11px] font-semibold whitespace-nowrap">
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                  Reviewed by Doctors
+                </span>
+                <span className="opacity-75">Never Diagnoses</span>
+              </div>
             </div>
           </div>
         </div>
@@ -299,22 +334,22 @@ export default function HomePage() {
               <div className="lg:col-span-5 lg:border-r lg:border-[#0F181A]/15 lg:pr-12">
                 <div className="lg:sticky lg:top-16">
                   <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
-                    Bounded Clinical Agent
+                    Safe by Design
                   </p>
                   <h2 className="mt-3 font-serif text-4xl leading-[1.1] font-semibold tracking-tight text-[#0F181A] sm:text-5xl">
-                    Four actions.
+                    Four clear ways
                     <br />
-                    Zero guesswork.
+                    Sakhi helps.
                   </h2>
                   <div className="mt-5 h-px w-12 bg-[#0F181A]/35" />
                   <p className="mt-5 text-base leading-relaxed text-[#536360]">
-                    Sakhi never diagnoses, never advises on medicine, and never answers from general
-                    knowledge.
+                    Sakhi never diagnoses and never advises on medicine. It supports women and
+                    clinicians with four clear, dependable steps—nothing more, nothing unverified.
                   </p>
                   <p className="mt-4 text-sm leading-relaxed text-[#536360]">
-                    Every answer fits this woman, this week, and this symptom—drawing only from her
-                    gestational weeks, earlier symptoms, hospital visit dates, and Ministry of
-                    Health danger-sign rules.
+                    Every reply fits this woman, this week, and this symptom—drawing only from her
+                    weeks of pregnancy, earlier symptoms, hospital visit dates, and Ministry of
+                    Health danger-sign guidelines.
                   </p>
                 </div>
               </div>
@@ -354,11 +389,11 @@ export default function HomePage() {
                   Safety Before Everything
                 </p>
                 <h2 className="mt-3 font-serif text-3xl leading-[1.12] font-semibold tracking-tight sm:text-4xl">
-                  Built for the hardest risk: a misheard danger sign.
+                  Built so mothers feel heard—and clinicians feel safe.
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-[#536360] sm:text-base">
-                  If Sakhi hears the wrong word or stays calm when it should alert, a woman may feel
-                  safe when she is not. Our protocol handles regional speech uncertainty directly:
+                  If Sakhi mishears a word or stays calm when it should alert, a woman may feel safe
+                  when she is not. Our care protocol handles regional speech uncertainty directly:
                 </p>
 
                 <div className="mt-7 space-y-5">
@@ -419,7 +454,7 @@ export default function HomePage() {
                           19 Nov · Danger Alert Sent
                         </span>
                         <span className="rounded-full bg-[#98CFB4]/35 px-2.5 py-0.5 text-[11px] font-semibold text-[#102B22]">
-                          ASHA responded in 38m · Reached PHC
+                          Care team responded in 38m · Reached hospital
                         </span>
                       </div>
                       <p className="mt-1.5 text-sm font-medium text-[#0F181A]">
@@ -565,9 +600,9 @@ export default function HomePage() {
 
       <footer className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 pb-10 text-xs text-[#536360] sm:flex-row sm:px-8">
         <p className="font-medium text-[#0F181A]">
-          Sakhi · Voice-first agent for pregnant women in India
+          Sakhi · Voice-first maternal care companion for India
         </p>
-        <p>Android & iOS · Ministry of Health danger-sign rules · Hospital-owned records</p>
+        <p>Cities, towns & villages · Android & iOS · Hospital-owned records</p>
       </footer>
     </div>
   );
