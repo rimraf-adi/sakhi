@@ -316,19 +316,6 @@ export function OrbShowcase() {
             </button>
           </div>
 
-          {/* Care-Circle Handoff Strip for Expectant Couples */}
-          <div className="relative z-10 mt-4 grid grid-cols-3 gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5 text-[11px] text-[#F7F4ED]/75">
-            <div>
-              <span className="font-semibold text-[#F6C478]">1.</span> She speaks at home
-            </div>
-            <div>
-              <span className="font-semibold text-[#F6C478]">2.</span> Sakhi confirms back
-            </div>
-            <div>
-              <span className="font-semibold text-[#98CFB4]">3.</span> Partner &amp; care team alerted
-            </div>
-          </div>
-
           {/* Center Orb Stage */}
           <div className="relative z-10 my-4 flex flex-col items-center">
             <div className="relative flex h-28 w-28 items-center justify-center">

@@ -225,42 +225,21 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right Column: Luminous Sakhi Orb + Pan-India Language Whispers + Sage Trust Card */}
-          <div className="flex w-full flex-col items-start gap-6 lg:w-auto lg:items-end lg:pb-2">
-            {/* Serene Luminous Orb & Multilingual Greeting Whispers */}
-            <div className="relative flex flex-col items-center self-center px-6 py-1 lg:self-center">
-              <div
-                aria-hidden="true"
-                className="mb-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs font-medium tracking-wide text-white/45"
-              >
-                <span>नमस्ते</span>
-                <span>·</span>
-                <span>नमस्कार</span>
-                <span>·</span>
-                <span>வணக்கம்</span>
-                <span>·</span>
-                <span>ನಮಸ್ಕಾರ</span>
-                <span>·</span>
-                <span>নমস্কার</span>
-              </div>
-              <div className="relative flex h-28 w-28 items-center justify-center">
-                <span className="animate-orb-ripple absolute inset-0 rounded-full border border-[#F6C478]/35" />
-                <span className="animate-orb-ripple-delayed absolute inset-0 rounded-full border border-[#D97745]/35" />
-                <div
-                  className="animate-orb-breathe h-20 w-20 rounded-full"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 35% 30%, #fff4dc 0%, #f6c478 40%, #d97745 80%, #9c431b 100%)",
-                  }}
-                />
-              </div>
-              <a
-                href="#hear-sakhi"
-                className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs text-white/90 backdrop-blur-sm transition-colors hover:bg-white/20"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-[#F6C478]" />
-                “Do din se sar dard hai…”
-              </a>
+          {/* Right Column: Subtle Pan-India Language Whispers + Sage Trust Card */}
+          <div className="flex w-full flex-col items-start gap-4 lg:w-auto lg:items-end lg:pb-2">
+            <div
+              aria-hidden="true"
+              className="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-xs font-medium tracking-wide text-white/55 lg:justify-end"
+            >
+              <span>नमस्ते</span>
+              <span>·</span>
+              <span>नमस्कार</span>
+              <span>·</span>
+              <span>வணக்கம்</span>
+              <span>·</span>
+              <span>ನಮಸ್ಕಾರ</span>
+              <span>·</span>
+              <span>নমস্কার</span>
             </div>
 
             {/* Floating Soft Sage-Mint Clinical Trust Card */}
