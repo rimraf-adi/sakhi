@@ -67,7 +67,16 @@ export default function HomePage() {
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#101E2E]/82 via-[#162B44]/55 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F181A]/45 via-transparent to-[#13263E]/35" />
+        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[#13263E]/35" />
+        {/* Smooth multi-stop fade blending the Hero horizon into Paper Ivory */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 sm:h-40"
+          style={{
+            background:
+              "linear-gradient(to top, #F7F4ED 0%, rgba(247, 244, 237, 0.82) 28%, rgba(247, 244, 237, 0.35) 62%, rgba(247, 244, 237, 0) 100%)",
+          }}
+        />
 
         {/* Section 0: Three Floating White Pill Islands */}
         <header className="relative z-20 mx-auto max-w-6xl px-5 pt-6 sm:px-8">
@@ -121,7 +130,7 @@ export default function HomePage() {
         </header>
 
         {/* Hero Foreground Content */}
-        <div className="relative z-10 mx-auto flex max-w-6xl flex-col justify-between gap-10 px-5 pt-14 pb-16 sm:px-8 lg:min-h-[650px] lg:flex-row lg:items-end lg:pt-18 lg:pb-18">
+        <div className="relative z-20 mx-auto flex max-w-6xl flex-col justify-between gap-10 px-5 pt-14 pb-28 sm:px-8 sm:pb-32 lg:min-h-[680px] lg:flex-row lg:items-end lg:pt-18 lg:pb-32">
           <div className="max-w-2xl pb-2 lg:pb-6">
             <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
               Voice-First Maternal Care · Android &amp; iOS
@@ -207,7 +216,7 @@ export default function HomePage() {
 
       <main id="main-content">
         {/* Section 2: Relatable Couple Moments + NFHS-6 Scale Strip */}
-        <section id="the-gap" className="border-b border-[#0F181A]/10 bg-[#F7F4ED] py-18 sm:py-22">
+        <section id="the-gap" className="border-b border-[#0F181A]/10 bg-[#F7F4ED] pt-10 pb-18 sm:pt-14 sm:pb-22">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="mb-14">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
