@@ -57,115 +57,134 @@ export default function HomePage() {
         Skip to main content
       </a>
 
-      {/* Section 0 & 1: Sayings-Inspired Framed Dark Bento Hero */}
-      <section className="bg-[#F7F4ED] pt-4 pb-4 sm:pt-6 sm:pb-6">
+      {/* Section 0 & 1: Warm Light Editorial Header + Bento Hero */}
+      <header className="bg-[#F7F4ED]">
+        <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-4 px-5 py-5 sm:px-8 sm:py-6">
+          <a
+            href="#"
+            className="inline-flex min-h-[44px] items-center gap-2.5 text-[#0F181A] transition-opacity duration-200 hover:opacity-80"
+          >
+            <span
+              aria-hidden="true"
+              className="inline-block h-3.5 w-3.5 rounded-full bg-gradient-to-br from-[#F3C9AC] to-[#D58E6D]"
+            />
+            <span translate="no" className="font-serif text-2xl font-semibold tracking-tight">
+              Sakhi
+            </span>
+          </a>
+
+          <div className="flex items-center gap-7">
+            <nav
+              aria-label="Primary navigation"
+              className="hidden items-center gap-7 text-sm font-medium text-[#2A3332] md:flex"
+            >
+              <a
+                href="#the-gap"
+                className="py-2 transition-colors duration-200 hover:text-[#9C5A3C]"
+              >
+                Between Visits
+              </a>
+              <a
+                href="#how-sakhi-works"
+                className="py-2 transition-colors duration-200 hover:text-[#9C5A3C]"
+              >
+                How it Works
+              </a>
+              <a
+                href="#privacy"
+                className="py-2 transition-colors duration-200 hover:text-[#9C5A3C]"
+              >
+                Privacy
+              </a>
+            </nav>
+
+            <a
+              href="#join"
+              className="group inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-[#D58E6D] px-5 py-2.5 text-sm font-semibold text-white transition-[background-color,transform] duration-200 hover:bg-[#C37B59] active:scale-[0.985]"
+            >
+              Get Sakhi
+              <ArrowRight
+                aria-hidden="true"
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+              />
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <section className="bg-[#F7F4ED] pt-4 pb-12 sm:pt-6 sm:pb-16 lg:pt-8 lg:pb-20">
         <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-          <div className="bg-grain flex flex-col justify-between overflow-hidden rounded-[24px] bg-[#0E1517] p-3 text-[#F7F4ED] shadow-[0_30px_90px_-30px_rgba(15,24,26,0.35)] sm:rounded-[32px] sm:p-4 lg:min-h-[620px] lg:rounded-[36px] xl:min-h-[660px]">
-          <div className="relative z-10 grid flex-1 gap-4 lg:grid-cols-12">
-            {/* Left Column: Minimal Inline Header + Serif Headline + CTAs + Scroll Cue */}
-            <div className="flex flex-col justify-between p-4 sm:p-6 lg:col-span-6 lg:p-9">
-              <header className="animate-hero-rise flex items-center justify-between gap-3">
-                <a
-                  href="#"
-                  className="inline-flex min-h-[44px] items-center gap-2.5 text-[#F7F4ED] transition-opacity duration-200 hover:opacity-85"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="inline-block h-3 w-3 rounded-full shadow-[0_0_10px_rgba(246,196,120,0.65)]"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 35% 30%, #fff0d4 0%, #f6c478 45%, #d97745 90%)",
-                    }}
-                  />
-                  <span translate="no" className="font-serif text-xl font-semibold tracking-tight">
-                    Sakhi
-                  </span>
-                </a>
-              </header>
-
-              {/* Hero Main Copy */}
-              <div className="my-8 max-w-xl lg:my-8">
-                <div className="animate-hero-rise" style={{ animationDelay: "90ms" }}>
-                  <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
-                    Voice-First Maternal Care · Android &amp; iOS
-                  </p>
-                  <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[2.55rem] xl:text-[3rem]">
-                    She speaks.
-                    <br />
-                    <span className="xl:whitespace-nowrap">Sakhi listens and acts.</span>
-                  </h1>
-                </div>
-
-                <p
-                  className="animate-hero-rise mt-5 max-w-md text-base leading-relaxed text-[#F7F4ED]/80 sm:text-lg"
-                  style={{ animationDelay: "180ms" }}
-                >
-                  Between check-ups, you should not have to guess at 11 PM. Registered by your
-                  hospital, Sakhi listens in her own language and alerts her partner and care team
-                  within minutes.
+          <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+            {/* Left Column: Serif Headline + Copy + CTAs + Trust Points */}
+            <div className="lg:col-span-6">
+              <div className="animate-hero-rise" style={{ animationDelay: "60ms" }}>
+                <p className="text-xs font-semibold tracking-[0.18em] text-[#9C5A3C] uppercase">
+                  Voice-First Maternal Care · Android &amp; iOS
                 </p>
-
-                <div
-                  className="animate-hero-rise mt-8 flex flex-wrap items-center gap-4"
-                  style={{ animationDelay: "260ms" }}
-                >
-                  <a
-                    href="#how-sakhi-works"
-                    className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-[#F5D6AE] px-7 py-3.5 text-sm font-semibold text-[#0F181A] shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#F6C478] active:scale-[0.985]"
-                  >
-                    <ArrowDown aria-hidden="true" className="h-4 w-4 text-[#0F181A]" />
-                    See How It Works
-                  </a>
-                  <a
-                    href="#join"
-                    className="group inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-white/20 px-5 py-3 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase transition-[border-color,background-color,transform] duration-200 hover:border-white/40 hover:bg-white/8 active:scale-[0.985]"
-                  >
-                    Get Sakhi
-                    <ArrowRight
-                      aria-hidden="true"
-                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
-                    />
-                  </a>
-                </div>
+                <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-[#0F181A] sm:text-5xl lg:text-[3.25rem] xl:text-[3.5rem]">
+                  She speaks.
+                  <br />
+                  Sakhi listens and acts.
+                </h1>
               </div>
 
-              {/* Bottom Scroll Cue + Couple Trust Points */}
+              <p
+                className="animate-hero-rise mt-5 max-w-md text-base leading-relaxed text-[#3A4745] sm:text-lg"
+                style={{ animationDelay: "140ms" }}
+              >
+                Between check-ups, you should not have to guess at 11 PM. Registered by your
+                hospital, Sakhi listens in her own language and alerts her partner and care team
+                within minutes.
+              </p>
+
               <div
-                className="animate-hero-rise flex flex-wrap items-center justify-between gap-4 border-t border-white/12 pt-5"
-                style={{ animationDelay: "320ms" }}
+                className="animate-hero-rise mt-8 flex flex-wrap items-center gap-3.5"
+                style={{ animationDelay: "220ms" }}
               >
                 <a
-                  href="#the-gap"
-                  aria-label="Scroll to Between Visits"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/18 text-[#F7F4ED]/80 transition-[border-color,color,transform] duration-200 hover:border-[#F6C478] hover:text-[#F6C478] active:scale-95"
+                  href="#join"
+                  className="group inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#D58E6D] px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#C37B59] active:scale-[0.985]"
                 >
+                  Get Sakhi
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                  />
+                </a>
+                <a
+                  href="#how-sakhi-works"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#0F181A]/35 bg-transparent px-7 py-3.5 text-sm font-medium text-[#0F181A] transition-[border-color,background-color,transform] duration-200 hover:border-[#0F181A]/65 hover:bg-[#0F181A]/[0.04] active:scale-[0.985]"
+                >
+                  See How It Works
                   <ArrowDown aria-hidden="true" className="h-4 w-4" />
                 </a>
+              </div>
 
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#F7F4ED]/65">
-                  <span>Hospital registered</span>
-                  <span aria-hidden="true" className="hidden text-white/25 sm:inline">
-                    ·
-                  </span>
-                  <span>Zero typing</span>
-                  <span aria-hidden="true" className="hidden text-white/25 sm:inline">
-                    ·
-                  </span>
-                  <span>Partner stays informed</span>
-                </div>
+              <div
+                className="animate-hero-rise mt-10 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-[#536360]"
+                style={{ animationDelay: "280ms" }}
+              >
+                <span>Hospital registered</span>
+                <span aria-hidden="true" className="hidden text-[#0F181A]/25 sm:inline">
+                  ·
+                </span>
+                <span>Zero typing</span>
+                <span aria-hidden="true" className="hidden text-[#0F181A]/25 sm:inline">
+                  ·
+                </span>
+                <span>Partner stays informed</span>
               </div>
             </div>
 
-            {/* Right Column: 3-Tile Bento Grid (Zero Empty Space, Zero Duplicate Orb) */}
+            {/* Right Column: Veranda Illustration + Clinical Safety & Language Bento Tiles */}
             <div
-              className="animate-hero-rise flex flex-col gap-3.5 lg:col-span-6"
-              style={{ animationDelay: "180ms" }}
+              className="animate-hero-rise flex flex-col gap-4 lg:col-span-6"
+              style={{ animationDelay: "160ms" }}
             >
-              {/* Top Main Bento Tile: Luminous Editorial Artwork */}
-              <div className="relative aspect-[4/3] w-full flex-1 overflow-hidden rounded-[22px] border border-white/10 bg-[#EFE8DA] sm:rounded-[26px] lg:aspect-auto lg:min-h-[360px]">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[24px] border border-[#0F181A]/8 bg-[#EFE8DA] shadow-[0_20px_50px_-28px_rgba(15,24,26,0.18)]">
                 <Image
                   src="/images/hero-bento-editorial.jpg"
-                  alt="Editorial risograph illustration of a warm sunlit Indian veranda archway with sage botanical leaves and soft golden light"
+                  alt="Warm editorial illustration of an expectant Indian mother seated peacefully by a sunlit arched veranda doorway holding her phone"
                   fill
                   priority
                   className="object-cover object-center"
@@ -173,16 +192,15 @@ export default function HomePage() {
                 />
               </div>
 
-              {/* Bottom Bento Row: Clinical Safety + Universal Languages */}
-              <div className="grid gap-3.5 sm:grid-cols-2">
-                <div className="flex flex-col justify-between rounded-[22px] bg-[#98CFB4] p-4 text-[#102B22] xl:p-5">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="flex flex-col justify-between rounded-[22px] bg-[#A7CBB5] p-5 text-[#132C22]">
                   <p className="text-[13px] leading-snug font-medium">
                     Guided strictly by her pregnancy week, hospital visit dates, and{" "}
                     <strong className="font-semibold">
                       Ministry of Health danger-sign rules.
                     </strong>
                   </p>
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-[#102B22]/15 pt-3 text-[11px] font-semibold">
+                  <div className="mt-5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-[#132C22]/15 pt-3.5 text-[11px] font-semibold">
                     <span className="inline-flex items-center gap-1.5">
                       <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                       Reviewed by Doctors
@@ -191,7 +209,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between rounded-[22px] bg-[#EFE8DA] p-4 text-[#0F181A] xl:p-5">
+                <div className="flex flex-col justify-between rounded-[22px] bg-[#EDE6D6] p-5 text-[#0F181A]">
                   <div>
                     <p className="font-serif text-base font-semibold text-[#0F181A]">
                       Every home. Every language.
@@ -211,14 +229,13 @@ export default function HomePage() {
                       <span>নমস্কার</span>
                     </p>
                   </div>
-                  <p className="mt-4 border-t border-[#0F181A]/12 pt-3 text-[11px] font-semibold text-[#536360]">
+                  <p className="mt-5 border-t border-[#0F181A]/12 pt-3.5 text-[11px] font-semibold text-[#536360]">
                     Zero typing. Zero menus. Android &amp; iOS.
                   </p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
       </section>
 
