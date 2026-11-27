@@ -1,530 +1,416 @@
-import { Easing, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import { ArrowDown, ArrowRight, ShieldCheck } from "lucide-react";
-import { AnimatedCursor, BrowserFrame, SERIF } from "../components/ScreenChrome";
+import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { SANS, SERIF } from '../components/ScreenChrome';
 
-const STATS = [
-  {
-    prefix: "~",
-    target: 23,
-    decimals: 0,
-    suffix: "M",
-    label: "Births in India every year",
-    detail: "Across cities, towns, and villages",
-  },
-  {
-    prefix: "~",
-    target: 8,
-    decimals: 0,
-    suffix: "M",
-    label: "Miss 4 antenatal check-ups",
-    detail: "1 in 3 mothers (NFHS-6) face silent gaps",
-  },
-  {
-    prefix: "",
-    target: 54.9,
-    decimals: 1,
-    suffix: "%",
-    label: "Take iron tablets for 100 days",
-    detail: "Only 37.8% reach 180 days",
-  },
-  {
-    prefix: "",
-    target: 10.6,
-    decimals: 1,
-    suffix: "%",
-    label: "Speak English in India",
-    detail: "Forms and text chats exclude most mothers",
-  },
-];
+function SilkWaveField({ frame }: { frame: number }) {
+  const width = 1480;
+  const height = 220;
+  const midY = height * 0.52;
+  const bands = 72;
+  const step = width / bands;
+  const center = (bands - 1) / 2;
+  const phase = frame * 0.11;
 
-function useRevealStyle(frame: number, fps: number, delay: number) {
-  const progress = spring({
-    frame: frame - delay,
-    fps,
-    config: { damping: 18, stiffness: 140, mass: 0.9 },
-  });
-  return {
-    opacity: interpolate(progress, [0, 1], [0, 1], {
-      extrapolateLeft: "clamp",
-      extrapolateRight: "clamp",
-    }),
-    transform: `translateY(${interpolate(progress, [0, 1], [22, 0])}px)`,
+  const buildPath = (amp: number, freq: number, spd: number) => {
+    const pts: string[] = [];
+    for (let x = 0; x <= width; x += 8) {
+      const taper = Math.sin((x / width) * Math.PI);
+      const y =
+        midY +
+        Math.sin(x * freq + phase * spd) *
+          Math.cos(x * 0.0045 - phase * 0.5) *
+          amp *
+          taper;
+      pts.push(`${x === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`);
+    }
+    return pts.join(' ');
   };
+
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
+      {Array.from({ length: bands }).map((_, i) => {
+        const dist = Math.abs(i - center) / center;
+        const win = Math.pow(Math.max(0.06, 1 - dist * 0.9), 1.45);
+        const mod = 0.48 + 0.34 * Math.sin(phase * 1.7 + i * 0.32) + 0.18 * Math.cos(phase * 2.6 - i * 0.5);
+        const bh = Math.max(6, Math.min(0.95, win * mod) * (height * 0.72));
+        const x = i * step + step * 0.5;
+        return (
+          <line
+            key={i}
+            x1={x}
+            y1={midY - bh / 2}
+            x2={x}
+            y2={midY + bh / 2}
+            stroke="rgba(213, 142, 109, 0.35)"
+            strokeWidth={2}
+          />
+        );
+      })}
+      <path d={buildPath(46, 0.0085, 1.0)} stroke="#D58E6D" strokeWidth={3.2} fill="none" />
+      <path d={buildPath(32, 0.012, -1.3)} stroke="#247A57" strokeWidth={2.2} strokeOpacity={0.75} fill="none" />
+      <path d={buildPath(20, 0.006, 0.7)} stroke="#EAB685" strokeWidth={1.6} strokeOpacity={0.8} fill="none" />
+    </svg>
+  );
 }
 
 export function Scene1Landing() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Browser entrance zoom + fade
-  const browserSpring = spring({
-    frame,
+  // Beat 1 (0-165): 11 PM gap between monthly hospital visits
+  // Beat 2 (165-405): Scary misleading search results & forwards at night
+  // Beat 3 (405-630): Sakhi calm voice-first sunrise transition
+  const beat = frame < 165 ? 1 : frame < 405 ? 2 : 3;
+
+  const beat1In = spring({ frame, fps, config: { damping: 18, stiffness: 120 } });
+  const lineProgress = interpolate(frame, [20, 110], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const pulse = 1 + Math.sin(frame * 0.16) * 0.08;
+
+  const beat2In = spring({
+    frame: Math.max(0, frame - 165),
     fps,
-    config: { damping: 20, stiffness: 120 },
+    config: { damping: 18, stiffness: 125 },
   });
-  const browserScale = interpolate(browserSpring, [0, 1], [0.975, 1]);
-  const browserOpacity = interpolate(frame, [0, 14], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  // Staggered hero element reveals
-  const headerStyle = useRevealStyle(frame, fps, 0);
-  const eyebrowStyle = useRevealStyle(frame, fps, 8);
-  const h1Style = useRevealStyle(frame, fps, 15);
-  const copyStyle = useRevealStyle(frame, fps, 24);
-  const ctaStyle = useRevealStyle(frame, fps, 32);
-  const artCardStyle = useRevealStyle(frame, fps, 14);
-  const sageTileStyle = useRevealStyle(frame, fps, 28);
-  const creamTileStyle = useRevealStyle(frame, fps, 38);
-
-  // Subtle Ken-Burns zoom on the veranda illustration
-  const artScale = interpolate(frame, [0, 240], [1, 1.06], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+  const searchTyped = 'headache and swollen feet 8th month...'.slice(
+    0,
+    Math.max(1, Math.floor(interpolate(frame, [175, 250], [0, 38], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }))),
+  );
+  const beat2Out = interpolate(frame, [380, 405], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
 
-  // Smooth eased browser scroll down to NFHS-6 stats & 11 PM gap
-  const scrollY = interpolate(frame, [75, 185], [0, 560], {
-    easing: Easing.inOut(Easing.cubic),
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  // Thesis reveal + warm amber highlight sweep
-  const thesisStyle = useRevealStyle(frame, fps, 265);
-  const highlightSweep = interpolate(frame, [305, 360], [0, 100], {
-    easing: Easing.out(Easing.cubic),
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  const cursorX = interpolate(frame, [0, 75, 190, 320], [1140, 1280, 960, 1080], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const cursorY = interpolate(frame, [0, 75, 190, 320], [320, 440, 590, 650], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+  const beat3In = spring({
+    frame: Math.max(0, frame - 405),
+    fps,
+    config: { damping: 16, stiffness: 110 },
   });
 
   return (
-    <div
+    <AbsoluteFill
       style={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "#EFE8DA",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
+        backgroundColor: beat === 3 ? '#FAF6EE' : '#0B1715',
+        color: beat === 3 ? '#101828' : '#FAF6EE',
+        fontFamily: SANS,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0 140px',
+        paddingBottom: 70,
+        overflow: 'hidden',
       }}
     >
-      <div
-        style={{
-          transform: `scale(${browserScale})`,
-          opacity: browserOpacity,
-        }}
-      >
-        <BrowserFrame url="localhost:3000">
+      {/* Beat 1: 11 PM Gap Between Monthly Visits */}
+      {beat === 1 && (
+        <div
+          style={{
+            width: '100%',
+            maxWidth: 1260,
+            textAlign: 'center',
+            opacity: beat1In,
+            transform: `translateY(${interpolate(beat1In, [0, 1], [24, 0])}px)`,
+          }}
+        >
           <div
             style={{
-              transform: `translateY(${-scrollY}px)`,
-              padding: "28px 96px 80px",
-              backgroundColor: "#F7F4ED",
-              color: "#0F181A",
+              fontFamily: SERIF,
+              fontSize: 108,
+              fontWeight: 700,
+              letterSpacing: '-0.03em',
+              color: '#EAB685',
+              lineHeight: 1,
             }}
           >
-            {/* Header */}
+            11:00 PM
+          </div>
+          <h1
+            style={{
+              fontFamily: SERIF,
+              fontSize: 58,
+              fontWeight: 600,
+              margin: '20px 0 54px',
+              letterSpacing: '-0.02em',
+              color: '#FAF6EE',
+            }}
+          >
+            Never guess alone between hospital visits.
+          </h1>
+
+          {/* Animated Monthly Visit Timeline */}
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              maxWidth: 980,
+              margin: '0 auto',
+              paddingTop: 20,
+            }}
+          >
             <div
               style={{
-                ...headerStyle,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingBottom: 32,
+                height: 3,
+                width: '100%',
+                backgroundColor: 'rgba(255,255,255,0.12)',
+                borderRadius: 99,
+                position: 'relative',
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span
+              <div
+                style={{
+                  height: 3,
+                  width: `${lineProgress * 100}%`,
+                  background: 'linear-gradient(90deg, #58B98E 0%, #EAB685 52%, #58B98E 100%)',
+                  borderRadius: 99,
+                }}
+              />
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                marginTop: -12,
+              }}
+            >
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ width: 20, height: 20, borderRadius: 99, backgroundColor: '#58B98E', border: '4px solid #0B1715' }} />
+                <div style={{ marginTop: 12, fontSize: 18, fontWeight: 600, color: '#C8D3CF' }}>Hospital Check-Up</div>
+                <div style={{ fontSize: 14, color: '#8EA39C' }}>Day 1</div>
+              </div>
+
+              <div style={{ textAlign: 'center', transform: `scale(${pulse})` }}>
+                <div
                   style={{
-                    width: 14,
-                    height: 14,
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #F3C9AC, #D58E6D)",
+                    width: 24,
+                    height: 24,
+                    margin: '0 auto',
+                    borderRadius: 99,
+                    backgroundColor: '#EAB685',
+                    border: '4px solid #0B1715',
+                    boxShadow: '0 0 28px rgba(234,182,133,0.75)',
                   }}
                 />
-                <span
-                  style={{
-                    fontFamily: SERIF,
-                    fontSize: 26,
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  Sakhi
-                </span>
-              </div>
-
-              <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "#2A3332" }}>
-                  Between Visits
-                </span>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "#2A3332" }}>
-                  4 Actions
-                </span>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "#2A3332" }}>
-                  Privacy
-                </span>
-                <div
-                  style={{
-                    backgroundColor: "#D58E6D",
-                    color: "#FFFFFF",
-                    borderRadius: 999,
-                    padding: "10px 20px",
-                    fontSize: 14,
-                    fontWeight: 600,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
-                >
-                  <span>Get Sakhi</span>
-                  <ArrowRight size={15} />
+                <div style={{ marginTop: 12, fontSize: 20, fontWeight: 700, color: '#EAB685' }}>
+                  28 days of quiet questions
                 </div>
-              </div>
-            </div>
-
-            {/* Hero Split */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 54,
-                alignItems: "center",
-                paddingBottom: 72,
-              }}
-            >
-              <div>
-                <p
-                  style={{
-                    ...eyebrowStyle,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "0.18em",
-                    color: "#9C5A3C",
-                    textTransform: "uppercase",
-                    margin: 0,
-                  }}
-                >
-                  VOICE-FIRST MATERNAL CARE · ANDROID &amp; IOS
-                </p>
-                <h1
-                  style={{
-                    ...h1Style,
-                    fontFamily: SERIF,
-                    fontSize: 64,
-                    lineHeight: 1.05,
-                    fontWeight: 700,
-                    margin: "16px 0 0",
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  She speaks.
-                  <br />
-                  Sakhi listens and acts.
-                </h1>
-                <p
-                  style={{
-                    ...copyStyle,
-                    marginTop: 22,
-                    fontSize: 19,
-                    lineHeight: 1.55,
-                    color: "#3A4745",
-                    maxWidth: 500,
-                  }}
-                >
-                  Between check-ups, you should not have to guess at 11 PM. Registered by
-                  your hospital, Sakhi listens in her own language and alerts her partner
-                  and care team within minutes.
-                </p>
-
-                <div style={{ ...ctaStyle, display: "flex", gap: 14, marginTop: 30 }}>
-                  <div
-                    style={{
-                      backgroundColor: "#D58E6D",
-                      color: "#FFFFFF",
-                      borderRadius: 999,
-                      padding: "14px 26px",
-                      fontSize: 15,
-                      fontWeight: 600,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    <span>Get Sakhi</span>
-                    <ArrowRight size={16} />
-                  </div>
-                  <div
-                    style={{
-                      border: "1px solid rgba(15,24,26,0.35)",
-                      borderRadius: 999,
-                      padding: "14px 26px",
-                      fontSize: 15,
-                      fontWeight: 500,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    <span>See How It Works</span>
-                    <ArrowDown size={16} />
-                  </div>
-                </div>
+                <div style={{ fontSize: 15, color: '#9EB0AA' }}>At home, late at night</div>
               </div>
 
-              {/* Right Bento Column */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                <div
-                  style={{
-                    ...artCardStyle,
-                    borderRadius: 24,
-                    overflow: "hidden",
-                    border: "1px solid rgba(15,24,26,0.08)",
-                    height: 410,
-                  }}
-                >
-                  <Img
-                    src={staticFile("hero-bento-editorial.jpg")}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      transform: `scale(${artScale})`,
-                    }}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 16,
-                  }}
-                >
-                  <div
-                    style={{
-                      ...sageTileStyle,
-                      borderRadius: 20,
-                      backgroundColor: "#A7CBB5",
-                      padding: 20,
-                      color: "#132C22",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, fontWeight: 500 }}>
-                      Guided strictly by her pregnancy week, hospital visit dates, and{" "}
-                      <strong>Ministry of Health danger-sign rules.</strong>
-                    </p>
-                    <div
-                      style={{
-                        marginTop: 18,
-                        paddingTop: 12,
-                        borderTop: "1px solid rgba(19,44,34,0.16)",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        fontSize: 12,
-                        fontWeight: 600,
-                      }}
-                    >
-                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <ShieldCheck size={14} /> Reviewed by Doctors
-                      </span>
-                      <span style={{ opacity: 0.75 }}>Never Diagnoses</span>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      ...creamTileStyle,
-                      borderRadius: 20,
-                      backgroundColor: "#EDE6D6",
-                      padding: 20,
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div>
-                      <p
-                        style={{
-                          margin: 0,
-                          fontFamily: SERIF,
-                          fontSize: 18,
-                          fontWeight: 700,
-                        }}
-                      >
-                        Every home. Every language.
-                      </p>
-                      <p
-                        style={{
-                          margin: "10px 0 0",
-                          fontSize: 13,
-                          color: "#536360",
-                          fontWeight: 500,
-                        }}
-                      >
-                        नमस्ते · नमस्कार · வணக்கம் · ನಮಸ್ಕಾರ · নমস্কার
-                      </p>
-                    </div>
-                    <p
-                      style={{
-                        margin: "18px 0 0",
-                        paddingTop: 12,
-                        borderTop: "1px solid rgba(15,24,26,0.12)",
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: "#536360",
-                      }}
-                    >
-                      Zero typing. Zero menus. Android &amp; iOS.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Section 2: National Scale Numbers (Incremental Count-Up) */}
-            <div
-              style={{
-                borderTop: "1px solid rgba(15,24,26,0.12)",
-                paddingTop: 52,
-              }}
-            >
-              <p
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: "0.18em",
-                  color: "#536360",
-                  textTransform: "uppercase",
-                  margin: "0 0 32px",
-                }}
-              >
-                ACROSS INDIA, MILLIONS OF FAMILIES NAVIGATE THESE EXACT GAPS
-              </p>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
-                  gap: 32,
-                }}
-              >
-                {STATS.map((s, idx) => {
-                  const startFrame = 115 + idx * 30;
-                  const statStyle = useRevealStyle(frame, fps, startFrame);
-                  const countProgress = interpolate(
-                    frame,
-                    [startFrame, startFrame + 32],
-                    [0, 1],
-                    {
-                      easing: Easing.out(Easing.cubic),
-                      extrapolateLeft: "clamp",
-                      extrapolateRight: "clamp",
-                    },
-                  );
-                  const currentVal = (s.target * countProgress).toFixed(s.decimals);
-                  return (
-                    <div
-                      key={s.label}
-                      style={{
-                        ...statStyle,
-                        borderLeft: idx > 0 ? "1px solid rgba(15,24,26,0.12)" : "none",
-                        paddingLeft: idx > 0 ? 32 : 0,
-                      }}
-                    >
-                      <p
-                        style={{
-                          margin: 0,
-                          fontFamily: SERIF,
-                          fontSize: 58,
-                          fontWeight: 700,
-                          letterSpacing: "-0.02em",
-                        }}
-                      >
-                        {s.prefix}
-                        {currentVal}
-                        {s.suffix}
-                      </p>
-                      <p
-                        style={{
-                          margin: "12px 0 0",
-                          fontSize: 16,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {s.label}
-                      </p>
-                      <p
-                        style={{
-                          margin: "6px 0 0",
-                          fontSize: 14,
-                          lineHeight: 1.5,
-                          color: "#536360",
-                        }}
-                      >
-                        {s.detail}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div
-                style={{
-                  ...thesisStyle,
-                  marginTop: 54,
-                  paddingTop: 40,
-                  borderTop: "1px solid rgba(15,24,26,0.1)",
-                  textAlign: "center",
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: SERIF,
-                    fontSize: 28,
-                    lineHeight: 1.45,
-                    maxWidth: 920,
-                    margin: "0 auto",
-                  }}
-                >
-                  When a warning sign begins at 11 PM between visits, Sakhi shrinks{" "}
-                  <span
-                    style={{
-                      color: "#D97745",
-                      backgroundImage:
-                        "linear-gradient(120deg, rgba(246,196,120,0.34), rgba(217,119,69,0.2))",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: `${highlightSweep}% 38%`,
-                      backgroundPosition: "0 88%",
-                      padding: "0 4px",
-                    }}
-                  >
-                    the delay between a warning sign and care
-                  </span>{" "}
-                  from weeks to minutes.
-                </p>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ width: 20, height: 20, marginLeft: 'auto', borderRadius: 99, backgroundColor: '#58B98E', border: '4px solid #0B1715' }} />
+                <div style={{ marginTop: 12, fontSize: 18, fontWeight: 600, color: '#C8D3CF' }}>Next Check-Up</div>
+                <div style={{ fontSize: 14, color: '#8EA39C' }}>Day 28</div>
               </div>
             </div>
           </div>
+        </div>
+      )}
 
-          <AnimatedCursor x={cursorX} y={cursorY} />
-        </BrowserFrame>
-      </div>
-    </div>
+      {/* Beat 2: Scary, Misleading Online Search & Forwards */}
+      {beat === 2 && (
+        <div
+          style={{
+            width: '100%',
+            maxWidth: 1180,
+            opacity: beat2In * beat2Out,
+            transform: `translateY(${interpolate(beat2In, [0, 1], [24, 0])}px)`,
+          }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: 36 }}>
+            <span
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: '#E06246',
+              }}
+            >
+              Why Late-Night Searching Fails Mothers
+            </span>
+            <h2
+              style={{
+                fontFamily: SERIF,
+                fontSize: 52,
+                fontWeight: 600,
+                margin: '12px 0 0',
+                color: '#FAF6EE',
+              }}
+            >
+              Scary results. Misleading advice.
+            </h2>
+          </div>
+
+          {/* Search Bar */}
+          <div
+            style={{
+              maxWidth: 780,
+              margin: '0 auto 30px',
+              backgroundColor: 'rgba(255,255,255,0.06)',
+              border: '1.5px solid rgba(224,98,70,0.45)',
+              borderRadius: 99,
+              padding: '16px 28px',
+              fontSize: 22,
+              color: '#FAF6EE',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <span>{searchTyped}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: '#E06246' }}>1,420,000 results</span>
+          </div>
+
+          {/* 3 Staggered Misleading Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 22 }}>
+            {[
+              {
+                tag: 'Misleading Forward',
+                title: '"Just drink warm water and sleep it off."',
+                sub: 'Forwarded many times in family groups',
+                delay: 205,
+              },
+              {
+                tag: 'Panic-Inducing Forum',
+                title: 'Worst-case medical articles with zero context',
+                sub: 'Spikes midnight anxiety without helping',
+                delay: 235,
+              },
+              {
+                tag: 'Unsafe Guesswork',
+                title: 'Random home remedies or unverified pills',
+                sub: 'Ignores her pregnancy week & history',
+                delay: 265,
+              },
+            ].map((card) => {
+              const cardIn = spring({
+                frame: Math.max(0, frame - card.delay),
+                fps,
+                config: { damping: 16, stiffness: 130 },
+              });
+              return (
+                <div
+                  key={card.tag}
+                  style={{
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(224,98,70,0.32)',
+                    borderRadius: 18,
+                    padding: '24px 24px',
+                    opacity: cardIn,
+                    transform: `translateY(${interpolate(cardIn, [0, 1], [22, 0])}px)`,
+                  }}
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      padding: '4px 10px',
+                      borderRadius: 99,
+                      backgroundColor: 'rgba(224,98,70,0.18)',
+                      color: '#F6AD94',
+                      marginBottom: 14,
+                    }}
+                  >
+                    {card.tag}
+                  </span>
+                  <div style={{ fontFamily: SERIF, fontSize: 22, lineHeight: 1.3, color: '#FAF6EE', marginBottom: 10 }}>
+                    {card.title}
+                  </div>
+                  <div style={{ fontSize: 14.5, color: '#9EB0AA' }}>{card.sub}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Beat 3: Sakhi Calm Voice-First Sunrise */}
+      {beat === 3 && (
+        <div
+          style={{
+            width: '100%',
+            maxWidth: 1480,
+            textAlign: 'center',
+            opacity: beat3In,
+            transform: `scale(${interpolate(beat3In, [0, 1], [0.96, 1])})`,
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 14,
+              marginBottom: 16,
+            }}
+          >
+            <span
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: 99,
+                background: 'linear-gradient(135deg, #F3C9AC, #D58E6D)',
+              }}
+            />
+            <span style={{ fontFamily: SERIF, fontSize: 64, fontWeight: 700, letterSpacing: '-0.02em', color: '#101828' }}>
+              Sakhi
+            </span>
+          </div>
+
+          <h2
+            style={{
+              fontFamily: SERIF,
+              fontSize: 46,
+              fontWeight: 600,
+              margin: '0 0 18px',
+              color: '#101828',
+              letterSpacing: '-0.015em',
+            }}
+          >
+            Warm. Voice-first. Safe.
+          </h2>
+
+          <div style={{ margin: '10px auto 26px', display: 'flex', justifyContent: 'center' }}>
+            <SilkWaveField frame={frame} />
+          </div>
+
+          <div style={{ display: 'inline-flex', gap: 18 }}>
+            {[
+              'No misleading advice',
+              'Voice-first to calm anxiety',
+              'Complete health journal',
+            ].map((pill, idx) => {
+              const pillIn = spring({
+                frame: Math.max(0, frame - (440 + idx * 18)),
+                fps,
+                config: { damping: 16, stiffness: 130 },
+              });
+              return (
+                <div
+                  key={pill}
+                  style={{
+                    padding: '12px 24px',
+                    borderRadius: 99,
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid rgba(16,24,40,0.12)',
+                    fontSize: 18,
+                    fontWeight: 600,
+                    color: '#0F4C3A',
+                    opacity: pillIn,
+                    transform: `translateY(${interpolate(pillIn, [0, 1], [14, 0])}px)`,
+                  }}
+                >
+                  {pill}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </AbsoluteFill>
   );
 }
