@@ -24,12 +24,29 @@
 
   html {
     scroll-behavior: smooth;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(217, 119, 69, 0.16);
   }
 
   body {
     background-color: var(--paper-ivory);
     color: var(--obsidian-ink);
     font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  [id] {
+    scroll-margin-top: 2rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid #d97745;
+    outline-offset: 2px;
   }
 }
 
@@ -147,4 +164,19 @@
 .animate-voice-bar {
   animation: voice-bar 0.9s ease-in-out infinite;
   transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-orb-breathe,
+  .animate-orb-alert,
+  .animate-orb-sage,
+  .animate-orb-ripple,
+  .animate-orb-ripple-delayed,
+  .animate-voice-bar {
+    animation: none;
+  }
 }

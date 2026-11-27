@@ -11,50 +11,12 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { OrbShowcase } from "@/components/OrbShowcase";
-
-const NFHS_STATS = [
-  {
-    value: "25M",
-    label: "Births in India every year",
-    detail: "Across cities, towns, and villages in every state",
-  },
-  {
-    value: "~9M",
-    label: "Miss 4 antenatal check-ups",
-    detail: "Roughly 1 in 3 women (NFHS-6) face long silent gaps",
-  },
-  {
-    value: "55%",
-    label: "Take iron tablets for 100 days",
-    detail: "Daily habits fade without gentle spoken reminders",
-  },
-  {
-    value: "10.6%",
-    label: "Speak English in India",
-    detail: "Forms, menus, and text chats exclude most mothers",
-  },
-];
-
-const COUPLE_MOMENTS = [
-  {
-    moment: "Late-night worry",
-    question: "“Is this headache or swelling normal, or should we go in now?”",
-    answer:
-      "Speak for ten seconds. Sakhi checks Ministry of Health danger signs and tells you both what to do next, without guessing.",
-  },
-  {
-    moment: "Daily care rhythm",
-    question: "“Did I take my iron tablet today, and when is our next check-up?”",
-    answer:
-      "Gentle voice reminders in her language keep iron tablets and visit dates on track, with zero nagging.",
-  },
-  {
-    moment: "Short clinic visits",
-    question: "“How do we share four weeks of symptoms in one quick visit?”",
-    answer:
-      "Before you walk in, Sakhi reads her a short recap and shares a dated one-page timeline with her doctor in her own words.",
-  },
-];
+import {
+  COUPLE_MOMENTS,
+  GUARDRAILS,
+  IMPACT_SIGNALS,
+  NFHS_STATS,
+} from "@/data/sakhi-content";
 
 const FOUR_ACTIONS = [
   {
@@ -83,42 +45,17 @@ const FOUR_ACTIONS = [
   },
 ];
 
-const GUARDRAILS = [
-  {
-    title: "Always Confirms What She Said",
-    body: "Before Sakhi acts, it repeats back what it heard in her own language and asks her to confirm.",
-  },
-  {
-    title: "When Unsure, Connects Her to Care",
-    body: "If a symptom is unclear, it asks one short follow-up question. If anything is still unsure, it treats the case as serious and connects her to her ASHA worker or hospital.",
-  },
-  {
-    title: "Tested With Doctors Across Languages",
-    body: "Regional speech and mixed phrasing vary across India. Doctors test Sakhi on realistic cases before launch, and every conversation is logged for hospital review.",
-  },
-];
-
-const IMPACT_SIGNALS = [
-  {
-    pillar: "Speed",
-    metric: "9 in 10",
-    body: "danger alerts get a human response within 2 hours, and 8 in 10 of those women reach a facility the same day.",
-  },
-  {
-    pillar: "Habits",
-    metric: "+10 pp",
-    body: "higher iron tablet adherence and check-up attendance compared to similar women not using Sakhi.",
-  },
-  {
-    pillar: "Safety",
-    metric: "0 missed",
-    body: "danger signs in monthly doctor reviews of sampled conversations, with fewer than 1 false alarm in 5.",
-  },
-];
-
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#F7F4ED] text-[#0F181A]">
+      {/* Keyboard Skip Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-[#0F181A] focus:px-5 focus:py-2.5 focus:text-xs focus:font-semibold focus:text-[#F7F4ED] focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
+
       {/* Section 0 & 1: Floating 3-Island Nav + Twilight Horizon Hero */}
       <section className="relative min-h-[660px] w-full overflow-hidden bg-[#13263E] lg:min-h-[740px]">
         <Image
@@ -129,54 +66,56 @@ export default function HomePage() {
           className="object-cover object-center"
           sizes="100vw"
         />
-        {/* Subtle directional twilight scrim so white serif typography stays crisp */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#101E2E]/82 via-[#162B44]/55 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F181A]/45 via-transparent to-[#13263E]/35" />
 
-        {/* Section 0: Three Floating White Pill Islands (Calmy Pattern) */}
+        {/* Section 0: Three Floating White Pill Islands */}
         <header className="relative z-20 mx-auto max-w-6xl px-5 pt-6 sm:px-8">
           <div className="flex items-center justify-between gap-3">
-            {/* Left Brand Pill */}
             <a
               href="#"
-              className="inline-flex items-center gap-2.5 rounded-full bg-white px-4 py-2 text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-transform hover:scale-[1.02]"
+              className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-white px-4 py-2 text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-transform hover:scale-[1.02]"
             >
               <span
+                aria-hidden="true"
                 className="inline-block h-3.5 w-3.5 rounded-full shadow-[0_0_10px_rgba(217,119,69,0.55)]"
                 style={{
                   background:
                     "radial-gradient(circle at 35% 30%, #fff0d4 0%, #f6c478 45%, #d97745 90%)",
                 }}
               />
-              <span className="font-serif text-base font-semibold tracking-tight">Sakhi</span>
+              <span translate="no" className="font-serif text-base font-semibold tracking-tight">
+                Sakhi
+              </span>
             </a>
 
-            {/* Center Navigation Pill */}
-            <nav className="hidden items-center gap-6 rounded-full bg-white px-7 py-2.5 text-xs font-medium text-[#0F181A]/85 shadow-[0_8px_24px_rgba(15,24,26,0.18)] md:flex">
-              <a href="#the-gap" className="transition-colors hover:text-[#D97745]">
+            <nav
+              aria-label="Primary navigation"
+              className="hidden min-h-[44px] items-center gap-6 rounded-full bg-white px-7 py-2.5 text-xs font-medium text-[#0F181A]/85 shadow-[0_8px_24px_rgba(15,24,26,0.18)] md:flex"
+            >
+              <a href="#the-gap" className="py-1 transition-colors hover:text-[#D97745]">
                 The Gap
               </a>
-              <a href="#hear-sakhi" className="transition-colors hover:text-[#D97745]">
+              <a href="#hear-sakhi" className="py-1 transition-colors hover:text-[#D97745]">
                 Hear Sakhi
               </a>
-              <a href="#four-actions" className="transition-colors hover:text-[#D97745]">
+              <a href="#four-actions" className="py-1 transition-colors hover:text-[#D97745]">
                 4 Actions
               </a>
-              <a href="#impact" className="transition-colors hover:text-[#D97745]">
+              <a href="#impact" className="py-1 transition-colors hover:text-[#D97745]">
                 Impact
               </a>
-              <a href="#privacy" className="transition-colors hover:text-[#D97745]">
+              <a href="#privacy" className="py-1 transition-colors hover:text-[#D97745]">
                 Privacy
               </a>
             </nav>
 
-            {/* Right Action Pill */}
             <a
               href="#join"
-              className="inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-colors hover:bg-[#F5D6AE]"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-colors hover:bg-[#F5D6AE]"
             >
               Get Sakhi
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
             </a>
           </div>
         </header>
@@ -185,7 +124,7 @@ export default function HomePage() {
         <div className="relative z-10 mx-auto flex max-w-6xl flex-col justify-between gap-10 px-5 pt-14 pb-16 sm:px-8 lg:min-h-[650px] lg:flex-row lg:items-end lg:pt-18 lg:pb-18">
           <div className="max-w-2xl pb-2 lg:pb-6">
             <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
-              Voice-First Maternal Care · Android & iOS
+              Voice-First Maternal Care · Android &amp; iOS
             </p>
             <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[3.4rem]">
               She speaks.
@@ -201,26 +140,30 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
                 href="#hear-sakhi"
-                className="inline-flex items-center gap-2.5 rounded-full border border-white/40 bg-white/18 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white/28"
+                className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/40 bg-white/18 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/28"
               >
-                <Play className="h-4 w-4 fill-current text-[#F6C478]" />
+                <Play aria-hidden="true" className="h-4 w-4 fill-current text-[#F6C478]" />
                 Listen to a Sample Call
               </a>
               <a
                 href="#join"
-                className="inline-flex items-center gap-1.5 px-2 py-2 text-xs font-semibold tracking-wider text-white/85 uppercase transition-colors hover:text-[#F6C478]"
+                className="inline-flex min-h-[44px] items-center gap-1.5 px-2 py-2 text-xs font-semibold tracking-wider text-white/85 uppercase transition-colors hover:text-[#F6C478]"
               >
                 How to Set It Up
-                <ArrowRight className="h-3.5 w-3.5" />
+                <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
               </a>
             </div>
 
             {/* Subtle Couple Reassurance Row */}
             <div className="mt-8 flex flex-col gap-1.5 border-t border-white/15 pt-5 text-xs text-white/75 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
               <span>Registered by your hospital</span>
-              <span className="hidden text-white/35 sm:inline">·</span>
+              <span aria-hidden="true" className="hidden text-white/35 sm:inline">
+                ·
+              </span>
               <span>No English or typing needed</span>
-              <span className="hidden text-white/35 sm:inline">·</span>
+              <span aria-hidden="true" className="hidden text-white/35 sm:inline">
+                ·
+              </span>
               <span>Partner &amp; family stay informed</span>
             </div>
           </div>
@@ -252,7 +195,7 @@ export default function HomePage() {
               </p>
               <div className="mt-3.5 flex items-center justify-between gap-2 border-t border-[#102B22]/15 pt-3 text-[11px] font-semibold whitespace-nowrap">
                 <span className="inline-flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                  <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                   Reviewed by Doctors
                 </span>
                 <span className="opacity-75">Never Diagnoses</span>
@@ -262,11 +205,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <main>
+      <main id="main-content">
         {/* Section 2: Relatable Couple Moments + NFHS-6 Scale Strip */}
         <section id="the-gap" className="border-b border-[#0F181A]/10 bg-[#F7F4ED] py-18 sm:py-22">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            {/* Three Quiet Questions Every Expectant Couple Recognizes */}
             <div className="mb-14">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
                 Between Visits
@@ -307,7 +249,7 @@ export default function HomePage() {
                       idx > 0 ? "lg:border-l lg:border-[#0F181A]/12 lg:pl-8" : ""
                     } ${idx < NFHS_STATS.length - 1 ? "lg:pr-8" : ""}`}
                   >
-                    <p className="font-serif text-4xl font-semibold tracking-tight text-[#0F181A] sm:text-5xl">
+                    <p className="font-serif text-4xl font-semibold tracking-tight text-[#0F181A] tabular-nums sm:text-5xl">
                       {stat.value}
                     </p>
                     <p className="mt-2.5 text-sm font-semibold text-[#0F181A]">{stat.label}</p>
@@ -329,7 +271,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Section 3: Interactive Split Stage (Sukoya + Sayings Pattern) */}
+        {/* Section 3: Interactive Split Stage */}
         <section id="hear-sakhi" className="bg-[#F7F4ED] py-18 sm:py-24">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="mb-10 max-w-2xl">
@@ -345,14 +287,13 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Section 4: Asymmetric Hairline Editorial, "Four Actions. Zero Guesswork." */}
+        {/* Section 4: Asymmetric Hairline Editorial */}
         <section
           id="four-actions"
           className="border-t border-[#0F181A]/10 bg-[#F7F4ED] py-20 sm:py-26"
         >
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-0">
-              {/* Left Sticky Serif Thesis */}
               <div className="lg:col-span-5 lg:border-r lg:border-[#0F181A]/15 lg:pr-12">
                 <div className="lg:sticky lg:top-16">
                   <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
@@ -376,13 +317,15 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right 4 Circular Dark-Icon Rows */}
               <div className="space-y-9 lg:col-span-7 lg:pl-14">
                 {FOUR_ACTIONS.map((item) => {
                   const Icon = item.icon;
                   return (
                     <div key={item.name} className="flex items-start gap-5">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0F181A] text-[#F7F4ED] shadow-sm">
+                      <div
+                        aria-hidden="true"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0F181A] text-[#F7F4ED] shadow-sm"
+                      >
                         <Icon className="h-5 w-5" />
                       </div>
                       <div>
@@ -405,7 +348,6 @@ export default function HomePage() {
         <section className="border-t border-[#0F181A]/10 bg-[#EFE8DA]/65 py-20 sm:py-26">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="grid items-start gap-12 lg:grid-cols-12">
-              {/* Left: Safety & ASR Risk Honesty */}
               <div className="lg:col-span-5">
                 <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
                   For Both Families &amp; Clinicians
@@ -421,7 +363,10 @@ export default function HomePage() {
                 <div className="mt-7 space-y-5">
                   {GUARDRAILS.map((rule) => (
                     <div key={rule.title} className="flex items-start gap-3.5">
-                      <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2B7A5B]/15 text-[#2B7A5B]">
+                      <span
+                        aria-hidden="true"
+                        className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2B7A5B]/15 text-[#2B7A5B]"
+                      >
                         <Check className="h-3.5 w-3.5" />
                       </span>
                       <div>
@@ -435,7 +380,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right: Tactile Paper Artifact, Doctor's One-Page Summary */}
               <div className="lg:col-span-7">
                 <div className="rounded-[24px] border border-[#0F181A]/12 border-t-4 border-t-[#162B44] bg-[#FCFBF7] p-6 shadow-[0_24px_60px_-24px_rgba(15,24,26,0.2)] sm:p-9">
                   <div className="flex items-start justify-between gap-4 border-b border-[#0F181A]/12 pb-5">
@@ -447,20 +391,23 @@ export default function HomePage() {
                         One-Page Timeline in Her Words
                       </h3>
                     </div>
-                    <span className="shrink-0 rounded-full border border-[#0F181A]/15 bg-[#F7F4ED] px-3 py-1 text-xs font-semibold text-[#0F181A]">
+                    <span className="shrink-0 rounded-full border border-[#0F181A]/15 bg-[#F7F4ED] px-3 py-1 text-xs font-semibold text-[#0F181A] tabular-nums">
                       ANC Visit #3
                     </span>
                   </div>
 
-                  {/* Metadata Strip */}
                   <div className="mt-5 grid grid-cols-3 gap-3 rounded-xl bg-[#F7F4ED] p-3.5 text-xs">
                     <div>
                       <p className="text-[#536360]">Gestation</p>
-                      <p className="mt-0.5 font-semibold text-[#0F181A]">Week 32 · Day 2</p>
+                      <p className="mt-0.5 font-semibold text-[#0F181A] tabular-nums">
+                        Week 32 · Day 2
+                      </p>
                     </div>
                     <div>
                       <p className="text-[#536360]">Iron Tablets</p>
-                      <p className="mt-0.5 font-semibold text-[#0F181A]">24 / 28 days</p>
+                      <p className="mt-0.5 font-semibold text-[#0F181A] tabular-nums">
+                        24 / 28 days
+                      </p>
                     </div>
                     <div>
                       <p className="text-[#536360]">Language</p>
@@ -468,7 +415,6 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  {/* Chronological Verbatim Logs */}
                   <div className="mt-6 space-y-5 border-l-2 border-[#0F181A]/15 pl-5">
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
@@ -490,7 +436,7 @@ export default function HomePage() {
 
                     <div>
                       <span className="text-xs font-bold text-[#536360] uppercase">
-                        14 Nov · Mild Symptom & Habit Saved
+                        14 Nov · Mild Symptom &amp; Habit Saved
                       </span>
                       <p className="mt-1 text-sm font-medium text-[#0F181A]">
                         “Kal raat iron ki goli lena bhool gayi, aur thakan lag rahi hai.”
@@ -511,7 +457,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Section 6: Three Baseline-First Impact Signals (Duna 3-Column Pattern) */}
+        {/* Section 6: Three Baseline-First Impact Signals */}
         <section id="impact" className="bg-[#F7F4ED] py-20 sm:py-24">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
             <div className="max-w-2xl">
@@ -522,8 +468,8 @@ export default function HomePage() {
                 Three signals we track from day one
               </h2>
               <p className="mt-3 text-base text-[#536360]">
-                We measure each hospital&apos;s baseline first, so we can show real change and not
-                just a final number.
+                We measure each hospital’s baseline first, so we can show real change and not just
+                a final number.
               </p>
             </div>
 
@@ -533,7 +479,7 @@ export default function HomePage() {
                   <p className="text-xs font-bold tracking-[0.16em] text-[#D97745] uppercase">
                     {signal.pillar}
                   </p>
-                  <p className="mt-3 font-serif text-4xl font-semibold tracking-tight text-[#0F181A] sm:text-5xl">
+                  <p className="mt-3 font-serif text-4xl font-semibold tracking-tight text-[#0F181A] tabular-nums sm:text-5xl">
                     {signal.metric}
                   </p>
                   <p className="mt-3 text-sm leading-relaxed text-[#536360]">{signal.body}</p>
@@ -556,12 +502,11 @@ export default function HomePage() {
               className="object-cover object-bottom"
               sizes="(max-width: 1200px) 100vw, 1152px"
             />
-            {/* Soft upper apricot wash so dark serif typography and CTAs stay crisp */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#F6D8B2]/82 via-[#F6D8B2]/55 via-58% to-transparent" />
 
             <div className="relative z-10 flex flex-col items-center px-6 pt-14 pb-36 text-center sm:px-12 sm:pt-16 sm:pb-48">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/20 bg-[#FAF6EE]/75 px-4 py-1.5 text-xs font-semibold text-[#0F181A] backdrop-blur-sm">
-                <Lock className="h-3.5 w-3.5 shrink-0" />
+                <Lock aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                 Hospital-Owned · Private by Design
               </div>
 
@@ -575,7 +520,6 @@ export default function HomePage() {
                 only see grouped data with no names, and only with your consent.
               </p>
 
-              {/* Simple 2-Step Onboarding Note for Expectant Couples */}
               <div className="mt-6 max-w-xl rounded-2xl border border-[#0F181A]/15 bg-[#FAF6EE]/80 px-5 py-3.5 text-xs leading-relaxed text-[#0F181A] backdrop-blur-sm sm:text-sm">
                 <span className="font-semibold">How your family starts:</span> Ask your hospital or
                 OB-GYN to add you at your next visit. Setup takes 60 seconds on Android or iOS, with
@@ -585,14 +529,14 @@ export default function HomePage() {
               <div className="mt-7 flex flex-wrap justify-center gap-3.5">
                 <a
                   href="mailto:pilot@sakhihealth.in?subject=Bring%20Sakhi%20to%20Our%20Hospital"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-colors hover:bg-[#1E3A56]"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-colors hover:bg-[#1E3A56]"
                 >
                   Bring Sakhi to Your Hospital
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
                 </a>
                 <a
                   href="#hear-sakhi"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-colors hover:bg-white"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-colors hover:bg-white"
                 >
                   Listen to a Sample Call
                 </a>
@@ -604,9 +548,9 @@ export default function HomePage() {
 
       <footer className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 pb-10 text-xs text-[#536360] sm:flex-row sm:px-8">
         <p className="font-medium text-[#0F181A]">
-          Sakhi · Voice-first maternal care companion for India
+          <span translate="no">Sakhi</span> · Voice-first maternal care companion for India
         </p>
-        <p>Cities, towns & villages · Android & iOS · Hospital-owned records</p>
+        <p>Cities, towns &amp; villages · Android &amp; iOS · Hospital-owned records</p>
       </footer>
     </div>
   );
