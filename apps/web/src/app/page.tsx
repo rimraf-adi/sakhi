@@ -7,7 +7,6 @@ import {
   Check,
   FileText,
   Lock,
-  Mic,
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
@@ -162,72 +161,16 @@ export default function HomePage() {
               className="animate-hero-rise flex flex-col gap-3.5 lg:col-span-6"
               style={{ animationDelay: "180ms" }}
             >
-              {/* Top Main Bento Tile: Clean Editorial 11:14 PM Voice Moment */}
-              <div className="relative flex flex-1 flex-col justify-between gap-6 overflow-hidden rounded-[22px] border border-white/10 bg-[#141E21] p-6 sm:rounded-[26px] sm:p-7">
-                {/* Subtle ambient wash (pure CSS glow, no orb) */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -top-20 -right-20 h-52 w-52 rounded-full bg-[#F6C478]/10 blur-3xl"
+              {/* Top Main Bento Tile: Luminous Editorial Artwork */}
+              <div className="relative aspect-[4/3] w-full flex-1 overflow-hidden rounded-[22px] border border-white/10 bg-[#EFE8DA] sm:rounded-[26px] lg:aspect-auto lg:min-h-[360px]">
+                <Image
+                  src="/images/hero-bento-editorial.jpg"
+                  alt="Editorial risograph illustration of a warm sunlit Indian veranda archway with sage botanical leaves and soft golden light"
+                  fill
+                  priority
+                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-
-                {/* Top row: timestamp + minimalist audio waveform */}
-                <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
-                  <div className="inline-flex items-center gap-2 text-xs font-medium text-[#F7F4ED]/80">
-                    <span
-                      aria-hidden="true"
-                      className="inline-block h-2 w-2 rounded-full bg-[#F6C478]"
-                    />
-                    <span className="tabular-nums">11:14 PM · Week 32 · Hindi</span>
-                  </div>
-                  <div aria-hidden="true" className="flex h-5 items-center gap-[3px]">
-                    {[6, 13, 19, 9, 17, 12, 20, 8, 14, 7].map((barHeight, idx) => (
-                      <span
-                        key={idx}
-                        className="w-[2.5px] rounded-full bg-[#F6C478]/80"
-                        style={{ height: `${barHeight}px` }}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Center focal editorial quote */}
-                <div className="relative z-10 my-auto">
-                  <div className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.18em] text-[#F5D6AE]/80 uppercase">
-                    <Mic aria-hidden="true" className="h-4 w-4 text-[#F6C478]" />
-                    <span>She Speaks</span>
-                  </div>
-                  <p className="mt-3 font-serif text-2xl leading-[1.26] font-medium tracking-[-0.01em] text-white sm:text-[1.7rem]">
-                    “Do din se sar dard hai aur pair sujhe hue hain.”
-                  </p>
-                  <p className="mt-2 text-sm text-[#F7F4ED]/60">
-                    Headache and swollen feet for two days.
-                  </p>
-                </div>
-
-                {/* Bottom hairline outcome strip */}
-                <div className="relative z-10 grid gap-2.5 border-t border-white/10 pt-4 text-xs text-[#F7F4ED]/85 sm:grid-cols-3">
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      aria-hidden="true"
-                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F6C478]"
-                    />
-                    <span>Checks blurred vision</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      aria-hidden="true"
-                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#D97745]"
-                    />
-                    <span>Alerts partner &amp; ASHA</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      aria-hidden="true"
-                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#A4E1BD]"
-                    />
-                    <span>Hospital notified</span>
-                  </div>
-                </div>
               </div>
 
               {/* Bottom Bento Row: Clinical Safety + Universal Languages */}
