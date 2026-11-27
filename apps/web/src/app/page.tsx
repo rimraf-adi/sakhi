@@ -60,8 +60,9 @@ export default function HomePage() {
       </a>
 
       {/* Section 0 & 1: Sayings-Inspired Framed Dark Bento Hero */}
-      <section className="bg-[#F7F4ED] p-2.5 sm:p-4 lg:p-5">
-        <div className="bg-grain mx-auto flex max-w-[1380px] flex-col justify-between overflow-hidden rounded-[24px] bg-[#0E1517] p-3 text-[#F7F4ED] shadow-[0_30px_90px_-30px_rgba(15,24,26,0.35)] sm:rounded-[32px] sm:p-4 lg:min-h-[620px] lg:rounded-[36px] xl:min-h-[660px]">
+      <section className="bg-[#F7F4ED] pt-4 pb-4 sm:pt-6 sm:pb-6">
+        <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+          <div className="bg-grain flex flex-col justify-between overflow-hidden rounded-[24px] bg-[#0E1517] p-3 text-[#F7F4ED] shadow-[0_30px_90px_-30px_rgba(15,24,26,0.35)] sm:rounded-[32px] sm:p-4 lg:min-h-[620px] lg:rounded-[36px] xl:min-h-[660px]">
           <div className="relative z-10 grid flex-1 gap-4 lg:grid-cols-12">
             {/* Left Column: Minimal Inline Header + Serif Headline + CTAs + Scroll Cue */}
             <div className="flex flex-col justify-between p-4 sm:p-6 lg:col-span-6 lg:p-9">
@@ -90,7 +91,7 @@ export default function HomePage() {
                   <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
                     Voice-First Maternal Care · Android &amp; iOS
                   </p>
-                  <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[2.65rem] xl:text-[3.4rem]">
+                  <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[2.55rem] xl:text-[3rem]">
                     She speaks.
                     <br />
                     <span className="xl:whitespace-nowrap">Sakhi listens and acts.</span>
@@ -276,6 +277,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        </div>
       </section>
 
       <main id="main-content">
@@ -284,7 +286,7 @@ export default function HomePage() {
           id="the-gap"
           className="border-b border-[#0F181A]/10 bg-[#F7F4ED] pt-12 pb-18 sm:pt-16 sm:pb-22"
         >
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
             <div className="mb-14">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
                 Between Visits
@@ -353,7 +355,7 @@ export default function HomePage() {
 
         {/* Section 3: Interactive Split Stage */}
         <section id="hear-sakhi" className="bg-[#F7F4ED] py-14 sm:py-20 lg:py-24">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
             <Reveal className="mb-8 max-w-2xl sm:mb-10">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
                 Hear Sakhi Work
@@ -374,7 +376,7 @@ export default function HomePage() {
           id="four-actions"
           className="border-t border-[#0F181A]/10 bg-[#F7F4ED] py-14 sm:py-20 lg:py-26"
         >
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-0">
               <div className="border-b border-[#0F181A]/12 pb-8 lg:col-span-5 lg:border-r lg:border-b-0 lg:border-[#0F181A]/15 lg:pr-12 lg:pb-0">
                 <div className="lg:sticky lg:top-16">
@@ -430,7 +432,7 @@ export default function HomePage() {
 
         {/* Section 5: Safety Guardrails & Doctor's One-Page Timeline */}
         <section className="border-t border-[#0F181A]/10 bg-[#EFE8DA]/65 py-14 sm:py-20 lg:py-24">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
             <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
                 <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
@@ -514,7 +516,7 @@ export default function HomePage() {
 
         {/* Section 6: Three Baseline-First Impact Signals */}
         <section id="impact" className="bg-[#F7F4ED] py-14 sm:py-20 lg:py-24">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
             <div className="max-w-2xl">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
                 Measured Against Baseline
@@ -545,66 +547,71 @@ export default function HomePage() {
         </section>
 
         {/* Section 7: Privacy Manifesto & Closing How-to-Join Vista */}
-        <section id="privacy" className="px-4 pb-10 sm:px-8 sm:pb-14">
-          <div
-            id="join"
-            className="relative mx-auto max-w-6xl overflow-hidden rounded-[32px] border border-[#0F181A]/12 bg-[#F6D8B2] shadow-[0_30px_80px_-32px_rgba(15,24,26,0.22)]"
-          >
-            <Image
-              src="/images/closing-dawn-water.jpg"
-              alt="Warm morning apricot sky over distant sage-teal hills and a calm sunlit river"
-              fill
-              className="object-cover object-bottom"
-              sizes="(max-width: 1200px) 100vw, 1152px"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#F6D8B2]/82 via-[#F6D8B2]/55 via-58% to-transparent" />
+        <section id="privacy" className="pb-10 sm:pb-14">
+          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+            <div
+              id="join"
+              className="relative overflow-hidden rounded-[32px] border border-[#0F181A]/12 bg-[#F6D8B2] shadow-[0_30px_80px_-32px_rgba(15,24,26,0.22)]"
+            >
+              <Image
+                src="/images/closing-dawn-water.jpg"
+                alt="Warm morning apricot sky over distant sage-teal hills and a calm sunlit river"
+                fill
+                className="object-cover object-bottom"
+                sizes="(max-width: 1240px) 100vw, 1240px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#F6D8B2]/82 via-[#F6D8B2]/55 via-58% to-transparent" />
 
-            <div className="relative z-10 flex flex-col items-center px-5 pt-12 pb-28 text-center sm:px-10 sm:pt-16 sm:pb-40 lg:px-12 lg:pb-48">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/20 bg-[#FAF6EE]/75 px-4 py-1.5 text-xs font-semibold text-[#0F181A] backdrop-blur-sm">
-                <Lock aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
-                Hospital-Owned · Private by Design
-              </div>
+              <div className="relative z-10 flex flex-col items-center px-5 pt-12 pb-28 text-center sm:px-10 sm:pt-16 sm:pb-40 lg:px-12 lg:pb-48">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/20 bg-[#FAF6EE]/75 px-4 py-1.5 text-xs font-semibold text-[#0F181A] backdrop-blur-sm">
+                  <Lock aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+                  Hospital-Owned · Private by Design
+                </div>
 
-              <h2 className="mt-5 max-w-2xl font-serif text-3xl leading-[1.08] font-semibold tracking-tight text-[#0F181A] sm:text-5xl">
-                Private at home. Connected to your hospital.
-              </h2>
+                <h2 className="mt-5 max-w-2xl font-serif text-3xl leading-[1.08] font-semibold tracking-tight text-[#0F181A] sm:text-5xl">
+                  Private at home. Connected to your hospital.
+                </h2>
 
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#0F181A]/90 sm:text-base">
-                Your record stays strictly with your hospital. We never sell data or share it with
-                private companies. Government health professionals and public-health researchers
-                only see grouped data with no names, and only with your consent.
-              </p>
+                <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#0F181A]/90 sm:text-base">
+                  Your record stays strictly with your hospital. We never sell data or share it with
+                  private companies. Government health professionals and public-health researchers
+                  only see grouped data with no names, and only with your consent.
+                </p>
 
-              <div className="mt-6 max-w-xl rounded-2xl border border-[#0F181A]/15 bg-[#FAF6EE]/80 px-5 py-3.5 text-xs leading-relaxed text-[#0F181A] backdrop-blur-sm sm:text-sm">
-                <span className="font-semibold">How your family starts:</span> Ask your hospital or
-                OB-GYN to add you at your next visit. Setup takes 60 seconds on Android or iOS, with
-                no passwords and no forms.
-              </div>
+                <div className="mt-6 max-w-xl rounded-2xl border border-[#0F181A]/15 bg-[#FAF6EE]/80 px-5 py-3.5 text-xs leading-relaxed text-[#0F181A] backdrop-blur-sm sm:text-sm">
+                  <span className="font-semibold">How your family starts:</span> Ask your hospital
+                  or OB-GYN to add you at your next visit. Setup takes 60 seconds on Android or iOS,
+                  with no passwords and no forms.
+                </div>
 
-              <div className="mt-7 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-3.5">
-                <a
-                  href="mailto:pilot@sakhihealth.in?subject=Bring%20Sakhi%20to%20Our%20Hospital"
-                  className="group inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#1E3A56] active:scale-[0.985] sm:w-auto"
-                >
-                  Bring Sakhi to Your Hospital
-                  <ArrowRight
-                    aria-hidden="true"
-                    className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
-                  />
-                </a>
-                <a
-                  href="#hear-sakhi"
-                  className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-[background-color,transform] duration-200 hover:bg-white active:scale-[0.985] sm:w-auto"
-                >
-                  Listen to a Sample Call
-                </a>
+                <div className="mt-7 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-3.5">
+                  <a
+                    href="mailto:pilot@sakhihealth.in?subject=Bring%20Sakhi%20to%20Our%20Hospital"
+                    className="group inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#1E3A56] active:scale-[0.985] sm:w-auto"
+                  >
+                    Bring Sakhi to Your Hospital
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                    />
+                  </a>
+                  <a
+                    href="#hear-sakhi"
+                    className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-[background-color,transform] duration-200 hover:bg-white active:scale-[0.985] sm:w-auto"
+                  >
+                    Listen to a Sample Call
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Sources & Notes */}
-        <section aria-labelledby="sources-heading" className="mx-auto max-w-6xl px-5 pb-10 sm:px-8">
+        <section
+          aria-labelledby="sources-heading"
+          className="mx-auto max-w-[1240px] px-5 pb-10 sm:px-8"
+        >
           <div className="border-t border-[#0F181A]/10 pt-8">
             <h2
               id="sources-heading"
@@ -624,7 +631,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2.5 px-5 pb-10 text-center text-xs text-[#536360] sm:flex-row sm:px-8 sm:text-left">
+      <footer className="mx-auto flex max-w-[1240px] flex-col items-center justify-between gap-2.5 px-5 pb-10 text-center text-xs text-[#536360] sm:flex-row sm:px-8 sm:text-left">
         <p className="font-medium text-[#0F181A]">
           <span translate="no">Sakhi</span> · Voice-first maternal care companion for India
         </p>
