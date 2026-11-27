@@ -16,6 +16,7 @@ import { OrbShowcase } from "@/components/OrbShowcase";
 import { Reveal } from "@/components/Reveal";
 import {
   COUPLE_MOMENTS,
+  DATA_SOURCES,
   IMPACT_SIGNALS,
   NFHS_STATS,
 } from "@/data/sakhi-content";
@@ -339,8 +340,9 @@ export default function HomePage() {
 
             <Reveal delayMs={100} className="mx-auto mt-12 max-w-3xl border-t border-[#0F181A]/10 pt-10 text-center">
               <p className="font-serif text-xl leading-relaxed text-[#0F181A] sm:text-2xl">
-                India still loses about 22,500 women a year in pregnancy and childbirth (88 per
-                100,000 live births). Sakhi cannot stop all of these deaths. It aims at one thing:{" "}
+                India still loses over 20,000 women a year in pregnancy and childbirth (88 per
+                100,000 live births, SRS 2020-22). Sakhi cannot stop all of these deaths. It aims at
+                one thing:{" "}
                 <span className="text-[#D97745] underline decoration-[#D97745]/35 underline-offset-4">
                   the delay between a warning sign and care.
                 </span>
@@ -598,6 +600,26 @@ export default function HomePage() {
                 </a>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Sources & Notes */}
+        <section aria-labelledby="sources-heading" className="mx-auto max-w-6xl px-5 pb-10 sm:px-8">
+          <div className="border-t border-[#0F181A]/10 pt-8">
+            <h2
+              id="sources-heading"
+              className="text-[11px] font-semibold tracking-[0.16em] text-[#536360] uppercase"
+            >
+              Sources &amp; Notes
+            </h2>
+            <ol className="mt-4 grid gap-x-8 gap-y-3 text-xs leading-relaxed text-[#536360] md:grid-cols-2">
+              {DATA_SOURCES.map((source) => (
+                <li key={source.claim}>
+                  <span className="font-medium text-[#0F181A]">{source.claim}:</span>{" "}
+                  {source.citation}
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
       </main>

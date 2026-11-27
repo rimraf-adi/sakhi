@@ -90,24 +90,24 @@ export const VOICE_SCENARIOS: VoiceScenario[] = [
 
 export const NFHS_STATS = [
   {
-    value: "25M",
+    value: "~23M",
     label: "Births in India every year",
-    detail: "Across cities, towns, and villages in every state",
+    detail: "Across cities, towns, and villages (UN WPP 2024)",
   },
   {
-    value: "~9M",
+    value: "~8M",
     label: "Miss 4 antenatal check-ups",
-    detail: "Roughly 1 in 3 women (NFHS-6) face long silent gaps",
+    detail: "34.8% of mothers (NFHS-6, 2023-24) face silent gaps",
   },
   {
-    value: "55%",
+    value: "54.9%",
     label: "Take iron tablets for 100 days",
-    detail: "Daily habits fade without gentle spoken reminders",
+    detail: "Only 37.8% reach 180 days (NFHS-6, 2023-24)",
   },
   {
     value: "10.6%",
     label: "Speak English in India",
-    detail: "Forms, menus, and text chats exclude most mothers",
+    detail: "Census of India 2011 (1st, 2nd & 3rd language)",
   },
 ];
 
@@ -162,5 +162,38 @@ export const IMPACT_SIGNALS = [
     pillar: "Safety",
     metric: "0 missed",
     body: "danger signs in monthly doctor reviews of sampled conversations, with fewer than 1 false alarm in 5.",
+  },
+];
+
+export interface DataSource {
+  claim: string;
+  citation: string;
+}
+
+export const DATA_SOURCES: DataSource[] = [
+  {
+    claim: "Annual births (~23M)",
+    citation:
+      "United Nations World Population Prospects (2024) and UNICEF India estimates of annual live births.",
+  },
+  {
+    claim: "Antenatal care & iron tablets (34.8% miss 4+ ANC; 54.9% IFA 100+ days)",
+    citation:
+      "National Family Health Survey-6 (NFHS-6, 2023-24), Ministry of Health & Family Welfare (MoHFW) and IIPS (65.2% complete 4+ ANC visits; 54.9% take IFA for 100+ days; 37.8% for 180+ days).",
+  },
+  {
+    claim: "Maternal mortality (88 per 100,000 live births; 20,000+ deaths/year)",
+    citation:
+      "Sample Registration System (SRS) Special Bulletin on Maternal Mortality 2020-22, Office of the Registrar General, India (RGI).",
+  },
+  {
+    claim: "English speakers (10.6%)",
+    citation:
+      "Census of India 2011, Language Table C-17 (combined first, second, and third language speakers).",
+  },
+  {
+    claim: "Clinical rules & pilot targets",
+    citation:
+      "Escalation protocols follow MoHFW Maternal Health danger-sign guidelines. The three baseline metrics above (9 in 10, +10 pp, 0 missed) are Sakhi's hospital pilot evaluation targets, not yet published clinical outcomes.",
   },
 ];
