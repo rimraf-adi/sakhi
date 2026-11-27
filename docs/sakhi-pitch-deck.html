@@ -365,7 +365,7 @@
 
           <div class="bottom-row">
             <span><strong>Ministry of Health</strong> Safe Rules</span>
-            <span>01 / 09</span>
+            <span>01 / 08</span>
           </div>
         </div>
 
@@ -463,7 +463,7 @@
 
           <div class="bottom-row">
             <span><strong>The Gap:</strong> Turning "wait until my next visit" into safe action in minutes</span>
-            <span>02 / 09</span>
+            <span>02 / 08</span>
           </div>
         </div>
       </div>
@@ -520,7 +520,7 @@
 
           <div class="bottom-row">
             <span><strong>60-Second Hospital Setup:</strong> Clinic logs her week, visit dates, health professional, and family contact</span>
-            <span>03 / 09</span>
+            <span>03 / 08</span>
           </div>
         </div>
 
@@ -580,7 +580,7 @@
 
           <div class="bottom-row">
             <span><strong>Full History Intact:</strong> Nothing is forgotten in a busy 5-minute clinic visit</span>
-            <span>04 / 09</span>
+            <span>04 / 08</span>
           </div>
         </div>
 
@@ -642,7 +642,7 @@
 
           <div class="bottom-row">
             <span><strong>Privacy First:</strong> Records stay with her hospital; never sold or shared privately</span>
-            <span>05 / 09</span>
+            <span>05 / 08</span>
           </div>
         </div>
 
@@ -735,95 +735,7 @@
 
           <div class="bottom-row">
             <span><strong>Flow:</strong> Mother talks &rarr; Speech understood &rarr; Safe rule check &rarr; Voice repeat &rarr; Clinic sync</span>
-            <span>06 / 09</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SLIDE 7: COST & FAILURE RESILIENCE (FORMAL 2x2 MATRIX) -->
-  <section class="slide">
-    <div class="slide-content">
-      <div style="display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 44px; height: 100%; align-items: stretch;">
-        <!-- Left Formal 2x2 Resilience Matrix -->
-        <div class="editorial-sand" style="justify-content: center; height: 100%;">
-          <div style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--obsidian-ink);">Failure &amp; Cost Safeguards</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-            <div class="editorial-card" style="background: var(--orb-gold);">
-              <div style="font-size: 12px; font-weight: 800; color: var(--obsidian-ink);">COST SPIKE</div>
-              <div style="font-size: 16px; font-weight: 700; color: var(--obsidian-ink);">Open-Weight Swap</div>
-              <div style="font-size: 13px; line-height: 1.38; color: var(--obsidian-ink);">Move to self-hosted Faster-Whisper + vLLM / Ollama anytime.</div>
-            </div>
-
-            <div class="editorial-card" style="background: #FFFFFF;">
-              <div style="font-size: 12px; font-weight: 800; color: var(--muted-slate);">PEAK TRAFFIC</div>
-              <div style="font-size: 16px; font-weight: 700; color: var(--obsidian-ink);">Multi-Key Rotation</div>
-              <div style="font-size: 13px; line-height: 1.38; color: var(--muted-slate);">Balances load across keys during busy morning clinics.</div>
-            </div>
-
-            <div class="editorial-card" style="background: var(--sage-mint);">
-              <div style="font-size: 12px; font-weight: 800; color: var(--sage-ink);">API OUTAGE</div>
-              <div style="font-size: 16px; font-weight: 700; color: var(--sage-ink);">Zero-Key Fallback</div>
-              <div style="font-size: 13px; line-height: 1.38; color: var(--sage-ink);">Apps start and run end-to-end with zero .env or API keys.</div>
-            </div>
-
-            <div class="editorial-card" style="background: var(--orb-terracotta);">
-              <div style="font-size: 12px; font-weight: 800; color: #FFFFFF;">WEAK SIGNAL</div>
-              <div style="font-size: 16px; font-weight: 700; color: #FFFFFF;">Offline Voice Queue</div>
-              <div style="font-size: 13px; line-height: 1.38; color: #FFFFFF;">Saves voice locally on device and syncs when online.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Text Column -->
-        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0;">
-          <div class="top-row">
-            <span class="pill" style="font-size: 12px; padding: 4px 12px;">03. Cost &amp; Backup Plan</span>
-            <span class="brand-mark">Sakhi</span>
-          </div>
-
-          <div>
-            <h2 style="margin-bottom: 12px;">Keeps Working If Services<br/>Get Costly or Go Down</h2>
-            <p class="lead" style="margin-bottom: 24px;">
-              A mother's safety never stops when a cloud service raises prices or village signal drops.
-            </p>
-
-            <ul class="bullet-list">
-              <li class="bullet-item">
-                <span class="badge-circle">1</span>
-                <div>
-                  <div class="item-title">Swap to Self-Hosted Open Models</div>
-                  <div class="item-desc">If cloud costs rise, Sakhi switches to our own <strong>Faster-Whisper + vLLM or Ollama</strong> servers with zero vendor lock-in.</div>
-                </div>
-              </li>
-              <li class="bullet-item">
-                <span class="badge-circle">2</span>
-                <div>
-                  <div class="item-title">Automatic Key Rotation</div>
-                  <div class="item-desc">Rotates across multiple backup keys so busy morning clinic hours never hit a service limit.</div>
-                </div>
-              </li>
-              <li class="bullet-item">
-                <span class="badge-circle">3</span>
-                <div>
-                  <div class="item-title">Built-In Offline Rule Backup</div>
-                  <div class="item-desc">Local Ministry of Health rules are built right in. Both apps start and run end-to-end with <strong>zero <span class="code-tag">.env</span> and zero API keys</strong>.</div>
-                </div>
-              </li>
-              <li class="bullet-item">
-                <span class="badge-circle">4</span>
-                <div>
-                  <div class="item-title">Saves Voice on Weak Signal</div>
-                  <div class="item-desc">When village internet is slow, voice notes wait safely on the phone and send automatically once signal returns.</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div class="bottom-row">
-            <span><strong>Always On:</strong> Cloud-fast today, self-hosted or offline-ready anytime</span>
-            <span>07 / 09</span>
+            <span>06 / 08</span>
           </div>
         </div>
       </div>
@@ -876,7 +788,7 @@
 
           <div class="bottom-row">
             <span><strong>Step by Step:</strong> Prove safety in a pilot clinic before scaling</span>
-            <span>08 / 09</span>
+            <span>07 / 08</span>
           </div>
         </div>
 
@@ -940,7 +852,7 @@
 
           <div class="bottom-row">
             <span><strong>Sakhi</strong> | Voice-First Pregnancy Companion</span>
-            <span>09 / 09</span>
+            <span>08 / 08</span>
           </div>
         </div>
 
