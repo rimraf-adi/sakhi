@@ -34,6 +34,27 @@ const NFHS_STATS = [
   },
 ];
 
+const COUPLE_MOMENTS = [
+  {
+    moment: "Late-night worry",
+    question: "“Is this headache or swelling normal, or should we go in now?”",
+    answer:
+      "Speak for ten seconds. Sakhi checks Ministry of Health warning signs and tells you both clearly—never guessing.",
+  },
+  {
+    moment: "Daily care rhythm",
+    question: "“Did I take my iron tablet today, and when is our next check-up?”",
+    answer:
+      "Gentle spoken reminders in her own language keep daily habits steady without family stress or nagging.",
+  },
+  {
+    moment: "Short clinic visits",
+    question: "“How do we share four weeks of symptoms in one quick visit?”",
+    answer:
+      "Before you walk in, Sakhi reads her a brief recap and hands the doctor a dated one-page history in her words.",
+  },
+];
+
 const FOUR_ACTIONS = [
   {
     name: "Alert",
@@ -179,10 +200,10 @@ export default function HomePage() {
 
             {/* Right Action Pill */}
             <a
-              href="#pilot"
+              href="#join"
               className="inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-colors hover:bg-[#F5D6AE]"
             >
-              Hospital Pilot
+              How to Join
               <ArrowRight className="h-3.5 w-3.5" />
             </a>
           </div>
@@ -200,9 +221,9 @@ export default function HomePage() {
               <span className="lg:whitespace-nowrap">Sakhi listens and acts.</span>
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
-              Registered by her hospital, Sakhi is a calm, voice-first companion for every pregnant
-              woman in India—across cities, towns, and villages—turning between-visit worries into
-              timely care.
+              Between check-ups, you shouldn’t have to guess at 11 PM. Registered by your hospital,
+              Sakhi listens in your own language—calming small worries, and alerting your partner and
+              care team in minutes when a sign matters.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -221,15 +242,24 @@ export default function HomePage() {
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
             </div>
+
+            {/* Subtle Couple Reassurance Row */}
+            <div className="mt-8 flex flex-col gap-1.5 border-t border-white/15 pt-5 text-xs text-white/75 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
+              <span>Registered by your hospital</span>
+              <span className="hidden text-white/35 sm:inline">·</span>
+              <span>No English or typing needed</span>
+              <span className="hidden text-white/35 sm:inline">·</span>
+              <span>Partner &amp; family stay informed</span>
+            </div>
           </div>
 
           {/* Right Column: Luminous Sakhi Orb + Pan-India Language Whispers + Sage Trust Card */}
-          <div className="flex w-full flex-col items-start gap-7 lg:w-auto lg:items-end lg:pb-2">
+          <div className="flex w-full flex-col items-start gap-6 lg:w-auto lg:items-end lg:pb-2">
             {/* Serene Luminous Orb & Multilingual Greeting Whispers */}
-            <div className="relative flex flex-col items-center self-center px-6 py-2 lg:self-center">
+            <div className="relative flex flex-col items-center self-center px-6 py-1 lg:self-center">
               <div
                 aria-hidden="true"
-                className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs font-medium tracking-wide text-white/40"
+                className="mb-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs font-medium tracking-wide text-white/45"
               >
                 <span>नमस्ते</span>
                 <span>·</span>
@@ -241,7 +271,7 @@ export default function HomePage() {
                 <span>·</span>
                 <span>নমস্কার</span>
               </div>
-              <div className="relative flex h-32 w-32 items-center justify-center">
+              <div className="relative flex h-28 w-28 items-center justify-center">
                 <span className="animate-orb-ripple absolute inset-0 rounded-full border border-[#F6C478]/35" />
                 <span className="animate-orb-ripple-delayed absolute inset-0 rounded-full border border-[#D97745]/35" />
                 <div
@@ -252,6 +282,13 @@ export default function HomePage() {
                   }}
                 />
               </div>
+              <a
+                href="#hear-sakhi"
+                className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs text-white/90 backdrop-blur-sm transition-colors hover:bg-white/20"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-[#F6C478]" />
+                “Do din se sar dard hai…”
+              </a>
             </div>
 
             {/* Floating Soft Sage-Mint Clinical Trust Card */}
@@ -275,27 +312,61 @@ export default function HomePage() {
       </section>
 
       <main>
-        {/* Section 2: Borderless NFHS-6 Scale & Care-Gap Strip (Duna Pattern) */}
+        {/* Section 2: Relatable Couple Moments + NFHS-6 Scale Strip */}
         <section id="the-gap" className="border-b border-[#0F181A]/10 bg-[#F7F4ED] py-18 sm:py-22">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
-              {NFHS_STATS.map((stat, idx) => (
-                <div
-                  key={stat.value}
-                  className={`${
-                    idx > 0 ? "lg:border-l lg:border-[#0F181A]/12 lg:pl-8" : ""
-                  } ${idx < NFHS_STATS.length - 1 ? "lg:pr-8" : ""}`}
-                >
-                  <p className="font-serif text-4xl font-semibold tracking-tight text-[#0F181A] sm:text-5xl">
-                    {stat.value}
-                  </p>
-                  <p className="mt-2.5 text-sm font-semibold text-[#0F181A]">{stat.label}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-[#536360]">{stat.detail}</p>
-                </div>
-              ))}
+            {/* Three Quiet Questions Every Expectant Couple Recognizes */}
+            <div className="mb-14">
+              <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
+                Between Visits
+              </p>
+              <h2 className="mt-2.5 font-serif text-3xl font-semibold tracking-tight text-[#0F181A] sm:text-4xl">
+                Every pregnancy has quiet questions.
+              </h2>
+
+              <div className="mt-8 grid gap-6 md:grid-cols-3">
+                {COUPLE_MOMENTS.map((item) => (
+                  <div
+                    key={item.moment}
+                    className="rounded-2xl border border-[#0F181A]/10 bg-[#FCFBF7] p-6"
+                  >
+                    <p className="text-[11px] font-bold tracking-[0.16em] text-[#9C4B22] uppercase">
+                      {item.moment}
+                    </p>
+                    <p className="mt-3 font-serif text-lg leading-snug font-medium text-[#0F181A]">
+                      {item.question}
+                    </p>
+                    <p className="mt-3 text-xs leading-relaxed text-[#536360] sm:text-sm">
+                      {item.answer}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="mx-auto mt-14 max-w-3xl border-t border-[#0F181A]/10 pt-10 text-center">
+            <div className="border-t border-[#0F181A]/10 pt-12">
+              <p className="mb-8 text-xs font-semibold tracking-[0.18em] text-[#536360] uppercase">
+                Across India, millions of families navigate these exact gaps
+              </p>
+              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+                {NFHS_STATS.map((stat, idx) => (
+                  <div
+                    key={stat.value}
+                    className={`${
+                      idx > 0 ? "lg:border-l lg:border-[#0F181A]/12 lg:pl-8" : ""
+                    } ${idx < NFHS_STATS.length - 1 ? "lg:pr-8" : ""}`}
+                  >
+                    <p className="font-serif text-4xl font-semibold tracking-tight text-[#0F181A] sm:text-5xl">
+                      {stat.value}
+                    </p>
+                    <p className="mt-2.5 text-sm font-semibold text-[#0F181A]">{stat.label}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-[#536360]">{stat.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mx-auto mt-12 max-w-3xl border-t border-[#0F181A]/10 pt-10 text-center">
               <p className="font-serif text-xl leading-relaxed text-[#0F181A] sm:text-2xl">
                 India still loses about 22,500 women a year in pregnancy and childbirth (88 per
                 100,000 live births). Sakhi cannot stop all of these deaths. It aims at one thing:{" "}
@@ -386,14 +457,15 @@ export default function HomePage() {
               {/* Left: Safety & ASR Risk Honesty */}
               <div className="lg:col-span-5">
                 <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
-                  Safety Before Everything
+                  For Both Families &amp; Clinicians
                 </p>
                 <h2 className="mt-3 font-serif text-3xl leading-[1.12] font-semibold tracking-tight sm:text-4xl">
-                  Built so mothers feel heard—and clinicians feel safe.
+                  Walk into your check-up heard, not rushed.
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-[#536360] sm:text-base">
-                  If Sakhi mishears a word or stays calm when it should alert, a woman may feel safe
-                  when she is not. Our care protocol handles regional speech uncertainty directly:
+                  Before each check-up, Sakhi reads her a short recap in her own language, while her
+                  doctor receives a dated one-page history in her exact words—built to prevent
+                  misheard danger signs:
                 </p>
 
                 <div className="mt-7 space-y-5">
@@ -521,10 +593,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Section 7: Privacy Manifesto & Closing Hospital Pilot Vista (Heritage Pattern) */}
+        {/* Section 7: Privacy Manifesto & Closing How-to-Join Vista (Heritage Pattern) */}
         <section id="privacy" className="px-4 pb-10 sm:px-8 sm:pb-14">
           <div
-            id="pilot"
+            id="join"
             className="relative mx-auto max-w-6xl overflow-hidden rounded-[32px] border border-[#0F181A]/12 shadow-[0_30px_80px_-32px_rgba(15,24,26,0.22)]"
             style={{
               background:
@@ -545,7 +617,7 @@ export default function HomePage() {
               aria-hidden="true"
               viewBox="0 0 1200 220"
               preserveAspectRatio="none"
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-36 w-full sm:h-48"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-32 w-full sm:h-44"
             >
               <path
                 d="M0,110 C220,52 430,132 710,88 C940,52 1080,84 1200,66 L1200,220 L0,220 Z"
@@ -562,35 +634,42 @@ export default function HomePage() {
               />
             </svg>
 
-            <div className="relative z-10 flex flex-col items-center px-6 pt-14 pb-40 text-center sm:px-12 sm:pt-16 sm:pb-52">
+            <div className="relative z-10 flex flex-col items-center px-6 pt-14 pb-36 text-center sm:px-12 sm:pt-16 sm:pb-44">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/20 bg-[#FAF6EE]/75 px-4 py-1.5 text-xs font-semibold text-[#0F181A] backdrop-blur-sm">
-                <Lock className="h-3.5 w-3.5" />
-                Privacy Comes First · Hospital-Owned Records
+                <Lock className="h-3.5 w-3.5 shrink-0" />
+                Hospital-Owned · Private by Design
               </div>
 
               <h2 className="mt-5 max-w-2xl font-serif text-3xl leading-[1.08] font-semibold tracking-tight text-[#0F181A] sm:text-5xl">
-                Bring Sakhi to your antenatal clinic.
+                Private at home. Connected to your hospital.
               </h2>
 
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#0F181A]/90 sm:text-base">
-                Her record stays with her hospital. We never sell data or share it with private
-                companies. Only government health professionals and public-health researchers see
-                grouped data with no names, and only with her consent.
+                Your record stays strictly with your hospital. We never sell data or share it with
+                private companies. Only government health professionals and public-health researchers
+                see grouped data with no names—and only with your consent.
               </p>
+
+              {/* Simple 2-Step Onboarding Note for Expectant Couples */}
+              <div className="mt-6 max-w-xl rounded-2xl border border-[#0F181A]/15 bg-[#FAF6EE]/80 px-5 py-3.5 text-xs leading-relaxed text-[#0F181A] backdrop-blur-sm sm:text-sm">
+                <span className="font-semibold">How your family starts:</span> Ask your hospital or
+                OB-GYN to register you at your next visit—60 seconds on Android or iOS, with zero
+                passwords or forms.
+              </div>
 
               <div className="mt-7 flex flex-wrap justify-center gap-3.5">
                 <a
-                  href="mailto:pilot@sakhihealth.in?subject=Sakhi%20Hospital%20Pilot"
+                  href="mailto:pilot@sakhihealth.in?subject=Ask%20About%20Sakhi%20Access"
                   className="inline-flex items-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-colors hover:bg-[#1E3A56]"
                 >
-                  Request a Hospital Pilot
+                  Ask About Hospital Access
                   <ArrowRight className="h-3.5 w-3.5" />
                 </a>
                 <a
-                  href="#hear-sakhi"
+                  href="mailto:pilot@sakhihealth.in?subject=Sakhi%20Hospital%20Partner"
                   className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-colors hover:bg-white"
                 >
-                  Review Clinical Safety Cases
+                  For Hospitals &amp; Doctors
                 </a>
               </div>
             </div>

@@ -229,15 +229,14 @@ export function OrbShowcase() {
               <p className="text-[11px] font-semibold tracking-[0.18em] text-[#9C4B22] uppercase">
                 Voice-First · Every Home · Every Language
               </p>
-              <h3 className="mt-2.5 font-serif text-2xl leading-tight font-semibold text-[#0F181A] sm:text-3xl">
-                No typing. No menus.
+              <h3 className="mt-2.5 font-serif text-2xl leading-tight font-semibold text-[#0F181A] sm:text-[1.75rem]">
+                No apps to learn.
                 <br />
-                Just a warm voice.
+                No forms. Just speak.
               </h3>
               <p className="mt-3 max-w-sm text-xs leading-relaxed text-[#536360] sm:text-sm">
-                Whether she lives in a city apartment or a district town, speaking is how women
-                already share how they feel with family and nurses. Choose a real spoken moment
-                below.
+                Whether you live in a city apartment or a district town, speaking is how families
+                already describe how she feels. Try a real spoken moment below.
               </p>
             </div>
 
@@ -317,9 +316,22 @@ export function OrbShowcase() {
             </button>
           </div>
 
+          {/* Care-Circle Handoff Strip for Expectant Couples */}
+          <div className="relative z-10 mt-4 grid grid-cols-3 gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5 text-[11px] text-[#F7F4ED]/75">
+            <div>
+              <span className="font-semibold text-[#F6C478]">1.</span> She speaks at home
+            </div>
+            <div>
+              <span className="font-semibold text-[#F6C478]">2.</span> Sakhi confirms back
+            </div>
+            <div>
+              <span className="font-semibold text-[#98CFB4]">3.</span> Partner &amp; care team alerted
+            </div>
+          </div>
+
           {/* Center Orb Stage */}
-          <div className="relative z-10 my-7 flex flex-col items-center">
-            <div className="relative flex h-36 w-36 items-center justify-center">
+          <div className="relative z-10 my-4 flex flex-col items-center">
+            <div className="relative flex h-28 w-28 items-center justify-center">
               <span
                 className={`animate-orb-ripple absolute inset-0 rounded-full border ${orbStyle.rippleColor}`}
               />
@@ -327,32 +339,32 @@ export function OrbShowcase() {
                 className={`animate-orb-ripple-delayed absolute inset-0 rounded-full border ${orbStyle.rippleColor}`}
               />
               <div
-                className={`${orbStyle.animationClass} relative flex h-24 w-24 items-center justify-center rounded-full transition-all duration-500`}
+                className={`${orbStyle.animationClass} relative flex h-20 w-20 items-center justify-center rounded-full transition-all duration-500`}
                 style={{ background: orbStyle.background }}
               >
                 {isPlaying ? (
                   <div className="flex items-center gap-1">
-                    <span className="animate-voice-bar h-5 w-1 rounded-full bg-white/90" />
+                    <span className="animate-voice-bar h-4 w-1 rounded-full bg-white/90" />
                     <span
-                      className="animate-voice-bar h-8 w-1 rounded-full bg-white/90"
+                      className="animate-voice-bar h-7 w-1 rounded-full bg-white/90"
                       style={{ animationDelay: "0.18s" }}
                     />
                     <span
-                      className="animate-voice-bar h-6 w-1 rounded-full bg-white/90"
+                      className="animate-voice-bar h-5 w-1 rounded-full bg-white/90"
                       style={{ animationDelay: "0.35s" }}
                     />
                     <span
-                      className="animate-voice-bar h-4 w-1 rounded-full bg-white/90"
+                      className="animate-voice-bar h-3.5 w-1 rounded-full bg-white/90"
                       style={{ animationDelay: "0.52s" }}
                     />
                   </div>
                 ) : (
-                  <Volume2 className="h-7 w-7 text-white/95 drop-shadow-sm" />
+                  <Volume2 className="h-6 w-6 text-white/95 drop-shadow-sm" />
                 )}
               </div>
             </div>
 
-            <p className="mt-3 text-xs tracking-wide text-[#F7F4ED]/70">
+            <p className="mt-2 text-xs tracking-wide text-[#F7F4ED]/70">
               {isPlaying
                 ? `Speaking in ${scenario.language}…`
                 : `Warm female voice · Guided only by her record & health guidelines`}
