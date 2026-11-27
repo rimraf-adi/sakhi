@@ -1,5 +1,5 @@
-import { interpolate, useCurrentFrame } from "remotion";
-import { AnimatedCursor, PhoneFrame, SANS, SERIF } from "../components/ScreenChrome";
+import { useCurrentFrame } from "remotion";
+import { PhoneFrame, SANS, SERIF } from "../components/ScreenChrome";
 
 type AcousticMode = "priya" | "sakhi" | "urgent";
 
@@ -107,16 +107,6 @@ export function Scene3MobileAlert() {
       : step === 2 || step === 3
         ? "rgba(127,209,174,0.28)"
         : "rgba(234,182,133,0.32)";
-
-  const showCursor = frame >= 1110 && frame <= 1245;
-  const cursorX = interpolate(frame, [1110, 1200], [1360, 1295], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const cursorY = interpolate(frame, [1110, 1200], [640, 818], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
 
   const chapters = [
     {
@@ -470,8 +460,6 @@ export function Scene3MobileAlert() {
           </div>
         </div>
       </PhoneFrame>
-
-      {showCursor && <AnimatedCursor x={cursorX} y={cursorY} clickFrame={580} />}
     </div>
   );
 }
