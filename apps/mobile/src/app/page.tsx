@@ -3,13 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   BookOpen,
-  Calendar,
-  CheckCircle2,
-  HeartHandshake,
+  Heart,
   Lock,
+  MessageCircle,
   Mic,
-  PhoneCall,
   RotateCcw,
+  Send,
   ShieldCheck,
   Square,
   Users,
@@ -17,7 +16,78 @@ import {
 } from "lucide-react";
 
 type Language = "Hindi" | "Marathi";
-type MobileTab = "voice" | "today" | "journal" | "family";
+type MobileTab = "feed" | "voice" | "journal";
+
+interface CirclePost {
+  id: string;
+  author: string;
+  badge: string;
+  avatar: string;
+  avatarBg: string;
+  avatarText: string;
+  time: string;
+  text: string;
+  voiceDuration?: string;
+  voiceLang?: string;
+  likes: number;
+  replies: number;
+  reply?: {
+    author: string;
+    badge: string;
+    avatar: string;
+    time: string;
+    text: string;
+  };
+}
+
+const INITIAL_CIRCLE_POSTS: CirclePost[] = [
+  {
+    id: "p1",
+    author: "Anjali Verma",
+    badge: "Wk 33",
+    avatar: "A",
+    avatarBg: "#E4DAC7",
+    avatarText: "#101828",
+    time: "14m",
+    text: "Anyone else waking up with calf cramps at 3 AM? Warm water helped a bit.",
+    voiceDuration: "0:19",
+    likes: 12,
+    replies: 3,
+    reply: {
+      author: "Sunita Patil",
+      badge: "Wk 34",
+      avatar: "S",
+      time: "6m",
+      text: "Yes! Flexing toes upward and a pillow between knees really helped me.",
+    },
+  },
+  {
+    id: "p2",
+    author: "Kavita Devi",
+    badge: "Wk 31",
+    avatar: "K",
+    avatarBg: "#F3D3A7",
+    avatarText: "#101828",
+    time: "1h",
+    text: '"Aaj iron ki goli ke saath nimbu paani liya, chakkar bilkul nahi aaya."',
+    voiceDuration: "0:24",
+    voiceLang: "Hindi",
+    likes: 18,
+    replies: 5,
+  },
+  {
+    id: "p3",
+    author: "Dr. Anita Deshmukh",
+    badge: "Clinic",
+    avatar: "Dr",
+    avatarBg: "#0F4C3A",
+    avatarText: "#FFFFFF",
+    time: "3h",
+    text: "If headache and swollen feet show up together, do not wait till morning. Speak to Sakhi right away.",
+    likes: 26,
+    replies: 4,
+  },
+];
 type FlowPhase =
   | "idle"
   | "recording_initial"
@@ -107,8 +177,10 @@ export default function MobileVoiceApp() {
   const [activeScenarioFollowup, setActiveScenarioFollowup] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<MobileTab>("voice");
   const [ironTakenToday, setIronTakenToday] = useState(false);
-  const [shareUpdatesWithFamily, setShareUpdatesWithFamily] = useState(true);
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+  const [circlePosts, setCirclePosts] = useState<CirclePost[]>(INITIAL_CIRCLE_POSTS);
+  const [composerText, setComposerText] = useState("");
+  const [likedIds, setLikedIds] = useState<Record<string, boolean>>({});
 
   const captionsRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -525,15 +597,51 @@ export default function MobileVoiceApp() {
     }, 3500);
   };
 
+  const handlePublishPost = (withVoice = false) => {
+    const trimmed = composerText.trim();
+    if (!trimmed && !withVoice) return;
+    const newPost: CirclePost = {
+      id: `user-${Date.now()}`,
+      author: patient.name,
+      badge: `Wk ${patient.gestationWeek}`,
+      avatar: patientFirst.charAt(0).toUpperCase(),
+      avatarBg: "#C8643B",
+      avatarText: "#FFFFFF",
+      time: "Just now",
+      text: trimmed || '"Aaj aaram kiya aur paani zyada piya, thoda behtar lag raha hai."',
+      ...(withVoice ? { voiceDuration: "0:12", voiceLang: patient.language } : {}),
+      likes: 0,
+      replies: 0,
+    };
+    setCirclePosts((prev) => [newPost, ...prev]);
+    setComposerText("");
+  };
+
+  const dotStates = [
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    "missed",
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    ironTakenToday ? "done" : "today",
+  ] as const;
+
   return (
     <div className="min-h-screen bg-[#FAF6EE] text-[#101828] flex flex-col lg:flex-row items-center justify-center gap-8 p-4 sm:p-8">
-      {/* Bedside Voice-Native + Post-Voice Patient Phone Frame */}
+      {/* Bedside Voice-Native + Threads Closed Circle + Graphical Journal Phone */}
       <div
         className={`w-[330px] h-[640px] shrink-0 rounded-[44px] border-[6px] border-[#1A201E] overflow-hidden relative flex flex-col shadow-xl transition-colors duration-300 ${
           isDaylightTab ? "bg-[#FAF6EE] text-[#101828]" : "bg-[#0B1715] text-[#FAF6EE]"
         }`}
       >
-        {/* Ambient Lantern Glow (Voice mode only) */}
         {!isDaylightTab && (
           <div
             className="absolute bottom-24 left-1/2 -translate-x-1/2 w-72 h-64 rounded-full pointer-events-none transition-all duration-700"
@@ -554,31 +662,15 @@ export default function MobileVoiceApp() {
           <span>4G</span>
         </div>
 
-        {/* Whisper-Quiet Context Header */}
-        <div
-          className={`px-6 pt-3 pb-2 flex items-center justify-between relative z-10 shrink-0 ${
-            isDaylightTab ? "border-b border-[#E7DFD0]" : ""
-          }`}
-        >
-          <span
-            className={`text-xs font-medium ${
-              isDaylightTab ? "text-[#101828]" : "text-[#C8D3CF]"
-            }`}
-          >
-            {patientFirst} · Week {patient.gestationWeek}
-          </span>
-          <span
-            className={`text-[11px] font-medium ${
-              isDaylightTab ? "text-[#667085]" : "text-[#8EA39C]"
-            }`}
-          >
-            {isDaylightTab ? `Next: ${patient.nextVisitLabel}` : patient.language}
-          </span>
-        </div>
-
         {activeTab === "voice" ? (
           <>
-            {/* Receding Kinetic Voice Captions (Sakhi-only labels, zero chat bubbles) */}
+            <div className="px-6 pt-3 pb-2 flex items-center justify-between relative z-10 shrink-0">
+              <span className="text-xs font-medium text-[#C8D3CF]">
+                {patientFirst} · Week {patient.gestationWeek}
+              </span>
+              <span className="text-[11px] font-medium text-[#8EA39C]">{patient.language}</span>
+            </div>
+
             <div
               ref={captionsRef}
               className="flex-1 overflow-y-auto px-6 pt-4 pb-3 space-y-5 relative z-10"
@@ -623,12 +715,10 @@ export default function MobileVoiceApp() {
               })}
             </div>
 
-            {/* Full-Width Living Acoustic Field */}
             <div className="relative z-10 shrink-0 pt-1">
               <canvas ref={canvasRef} className="w-full h-[104px] block" />
             </div>
 
-            {/* Bottom Autonomy Consent / Voice Control */}
             <div className="px-5 pb-3 pt-1 relative z-10 shrink-0">
               {phase === "consent" ? (
                 <div className="grid grid-cols-2 gap-2.5">
@@ -657,10 +747,10 @@ export default function MobileVoiceApp() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => setActiveTab("today")}
+                    onClick={() => setActiveTab("feed")}
                     className="w-full py-1.5 rounded-lg bg-[#D96B4F] text-[11px] font-semibold text-[#FAF6EE] cursor-pointer"
                   >
-                    Open Care Plan &rarr;
+                    Open Circle &rarr;
                   </button>
                 </div>
               ) : phase === "saved" ? (
@@ -676,7 +766,7 @@ export default function MobileVoiceApp() {
                     onClick={() => setActiveTab("journal")}
                     className="w-full py-1.5 rounded-lg bg-[#0F4C3A] text-[11px] font-semibold text-[#FAF6EE] cursor-pointer"
                   >
-                    View Journal &rarr;
+                    Open Journal &rarr;
                   </button>
                 </div>
               ) : phase === "declined" ? (
@@ -729,345 +819,386 @@ export default function MobileVoiceApp() {
               )}
             </div>
           </>
-        ) : activeTab === "today" ? (
-          <div className="flex-1 overflow-y-auto px-4 py-3.5 space-y-3" style={{ scrollbarWidth: "none" }}>
-            {/* Voice Recap Card */}
-            <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3.5 shadow-sm">
-              <div className="text-[10.5px] font-semibold uppercase tracking-wider text-[#9C5A3C]">
-                Aaj · Care Plan
-              </div>
-              <div className="font-serif text-[17px] leading-snug text-[#101828] mt-1">
-                Listen to Sakhi&apos;s advice
-              </div>
-              <p className="text-[11.5px] text-[#475467] mt-1 leading-relaxed">
-                {evaluation?.spokenGuidance ||
-                  "Aaram karein, paani piyein, aur agar sar dard ya sujan badhe toh turant bolein."}
-              </p>
-              <button
-                type="button"
-                onClick={() =>
-                  playSampleAudio(
-                    "recap",
-                    evaluation?.spokenGuidance ||
-                      "Priya, aaram karein, paani piyein, aur agar sar dard badhe toh turant bolein.",
-                  )
-                }
-                className="mt-2.5 w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-[#C8643B] hover:bg-[#B45630] text-white text-xs font-semibold transition cursor-pointer"
-              >
-                <Volume2 size={14} />
-                {playingAudioId === "recap" ? "Playing in Hindi..." : "Play voice recap"}
-              </button>
+        ) : activeTab === "feed" ? (
+          /* Threads/Twitter-style Closed Circle for Enrolled Pregnant Women ONLY */
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Crisp Hairline Header */}
+            <div className="px-4 pt-2.5 pb-2 flex items-center justify-between border-b border-[#EAE3D5] shrink-0">
+              <span className="font-serif text-[19px] font-bold text-[#101828]">Sakhi</span>
+              <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F4C3A]">
+                <Lock size={10} />
+                Week 30-34 Circle · 24 mothers
+              </span>
             </div>
 
-            {/* Active Care Card */}
-            {phase === "alert" ? (
-              <div className="rounded-2xl bg-[#FFF4F1] border border-[#F3C5B8] p-3.5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-[#9C331A]">Care team notified</span>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#FDE4DC] text-[#9C331A]">
-                    Urgent
-                  </span>
-                </div>
-                <div className="space-y-1.5 text-[11.5px] text-[#344054]">
-                  <div className="flex justify-between">
-                    <span>{patient.ashaName} (Health Pro)</span>
-                    <span className="text-[#0F4C3A] font-medium">Called 2m ago</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{patient.familyName} (Partner)</span>
-                    <span className="text-[#0F4C3A] font-medium">Notified</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>District Women&apos;s Hospital</span>
-                    <span className="text-[#0F4C3A] font-medium">Desk alerted</span>
-                  </div>
-                </div>
+            {/* Subtle Post-Voice Care Strip */}
+            <div
+              className={`px-4 py-1.5 border-b border-[#EAE3D5] flex items-center justify-between text-[11px] shrink-0 ${
+                phase === "alert" ? "bg-[#FFF4F1]" : "bg-[#F5EFE4]"
+              }`}
+            >
+              <span className={`font-semibold ${phase === "alert" ? "text-[#9C331A]" : "text-[#344054]"}`}>
+                {phase === "alert"
+                  ? "Care team notified · Meena alerted"
+                  : "Tonight 8:00 PM · Iron tablet"}
+              </span>
+              {phase === "alert" ? (
                 <button
                   type="button"
                   onClick={() =>
                     playSampleAudio(
-                      "call",
-                      `${patient.ashaName.split(" ")[0]} didi ko call lagaya ja raha hai.`,
+                      "care-recap",
+                      evaluation?.spokenGuidance ||
+                        "Priya, Meena didi aur Rohit ko khabar bhej di hai. Aaram karein.",
                     )
                   }
-                  className="w-full mt-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-[#101828] text-white text-xs font-semibold cursor-pointer"
+                  className="font-bold text-[#C8643B] cursor-pointer"
                 >
-                  <PhoneCall size={13} />
-                  Call {patient.ashaName.split(" ")[0]}
+                  {playingAudioId === "care-recap" ? "Playing..." : "Replay advice"}
                 </button>
-              </div>
-            ) : (
-              <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3.5 flex items-center justify-between gap-3">
-                <div>
-                  <div className="text-[10.5px] font-semibold text-[#0F4C3A]">Tonight · 8:00 PM</div>
-                  <div className="text-xs font-semibold text-[#101828] mt-0.5">Iron Tablet (IFA)</div>
-                  <div className="text-[11px] text-[#475467]">Take after dinner with lemon water</div>
-                </div>
+              ) : (
                 <button
                   type="button"
                   onClick={() => setIronTakenToday((v) => !v)}
-                  className={`px-2.5 py-1.5 rounded-xl text-[11px] font-semibold shrink-0 transition cursor-pointer ${
-                    ironTakenToday
-                      ? "bg-[#0F4C3A] text-white"
-                      : "bg-[#EFE6D5] text-[#101828] hover:bg-[#E5D9C3]"
-                  }`}
+                  className="font-bold text-[#0F4C3A] cursor-pointer"
                 >
-                  {ironTakenToday ? "Taken today" : "Mark taken"}
+                  {ironTakenToday ? "Taken ✓" : "Mark taken"}
                 </button>
-              </div>
-            )}
+              )}
+            </div>
 
-            {/* Week 32 Quiet Guide */}
-            <div className="rounded-2xl bg-[#F3ECE0] border border-[#E4DAC7] p-3.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-[#101828] flex items-center gap-1.5">
-                  <ShieldCheck size={13} className="text-[#0F4C3A]" />
-                  Week {patient.gestationWeek} Verified Guide
-                </span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    playSampleAudio(
-                      "guide",
-                      "Aathvein mahine mein din mein do ghante baayein karwat aaram karein.",
-                    )
-                  }
-                  className="text-[11px] font-semibold text-[#C8643B] cursor-pointer"
-                >
-                  {playingAudioId === "guide" ? "Playing..." : "Listen"}
-                </button>
+            {/* Quick Text + Voice Composer Row */}
+            <div className="px-4 py-2 border-b border-[#EAE3D5] flex items-center gap-2 shrink-0">
+              <div className="w-6 h-6 rounded-full bg-[#C8643B] text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                {patientFirst.charAt(0)}
               </div>
-              <p className="text-[11.5px] text-[#475467] mt-1.5 leading-relaxed">
-                Rest on your left side in the afternoon and stay hydrated. Always speak up if headache or blurred vision starts.
-              </p>
+              <input
+                type="text"
+                value={composerText}
+                onChange={(e) => setComposerText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handlePublishPost(false);
+                }}
+                placeholder="Share text or voice with your circle..."
+                className="flex-1 bg-transparent text-[11.5px] text-[#101828] placeholder:text-[#667085] focus:outline-none min-w-0"
+              />
+              <button
+                type="button"
+                title="Post voice note"
+                onClick={() => handlePublishPost(true)}
+                className="text-[#C8643B] hover:opacity-80 cursor-pointer"
+              >
+                <Mic size={14} />
+              </button>
+              <button
+                type="button"
+                title="Post text"
+                onClick={() => handlePublishPost(false)}
+                className="text-[#101828] hover:opacity-80 cursor-pointer"
+              >
+                <Send size={13} />
+              </button>
+            </div>
+
+            {/* Edge-to-Edge Threads Feed */}
+            <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: "none" }}>
+              {circlePosts.map((post) => {
+                const liked = Boolean(likedIds[post.id]);
+                return (
+                  <div key={post.id} className="px-4 py-2.5 border-b border-[#EAE3D5]">
+                    <div className="flex gap-2.5">
+                      <div className="flex flex-col items-center shrink-0">
+                        <div
+                          className="w-7 h-7 rounded-full text-[10.5px] font-bold flex items-center justify-center"
+                          style={{ backgroundColor: post.avatarBg, color: post.avatarText }}
+                        >
+                          {post.avatar}
+                        </div>
+                        {post.reply && <div className="w-[1.5px] flex-1 bg-[#DDD3C0] my-1" />}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="font-bold text-[#101828] truncate">
+                            {post.author}{" "}
+                            <span className="font-medium text-[#667085]">· {post.badge}</span>
+                          </span>
+                          <span className="text-[10px] text-[#98A2B3] shrink-0">{post.time}</span>
+                        </div>
+                        <p className="text-[11.5px] text-[#101828] mt-0.5 leading-[1.38]">
+                          {post.text}
+                        </p>
+
+                        {post.voiceDuration && (
+                          <button
+                            type="button"
+                            onClick={() => playSampleAudio(post.id, post.text)}
+                            className={`mt-1.5 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10.5px] font-semibold cursor-pointer ${
+                              post.voiceLang
+                                ? "bg-[#0F4C3A] text-[#FAF6EE]"
+                                : "bg-[#EFE6D5] text-[#101828]"
+                            }`}
+                          >
+                            <Volume2 size={11} />
+                            <span>
+                              {playingAudioId === post.id
+                                ? "Playing..."
+                                : `${post.voiceDuration}${post.voiceLang ? ` · ${post.voiceLang}` : ""}`}
+                            </span>
+                          </button>
+                        )}
+
+                        <div className="mt-1.5 flex items-center gap-4 text-[10.5px] text-[#667085]">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setLikedIds((prev) => ({ ...prev, [post.id]: !prev[post.id] }))
+                            }
+                            className={`inline-flex items-center gap-1 cursor-pointer ${
+                              liked ? "text-[#C8643B] font-semibold" : ""
+                            }`}
+                          >
+                            <Heart size={11} fill={liked ? "#C8643B" : "none"} />
+                            {post.likes + (liked ? 1 : 0)}
+                          </button>
+                          <span className="inline-flex items-center gap-1">
+                            <MessageCircle size={11} />
+                            {post.replies}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {post.reply && (
+                      <div className="flex gap-2.5 mt-1.5">
+                        <div className="w-7 flex justify-center shrink-0">
+                          <div className="w-6 h-6 rounded-full bg-[#D6E8DF] text-[#0F4C3A] text-[10px] font-bold flex items-center justify-center">
+                            {post.reply.avatar}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between text-[10.5px]">
+                            <span className="font-bold text-[#101828]">
+                              {post.reply.author}{" "}
+                              <span className="font-medium text-[#667085]">· {post.reply.badge}</span>
+                            </span>
+                            <span className="text-[10px] text-[#98A2B3]">{post.reply.time}</span>
+                          </div>
+                          <p className="text-[11px] text-[#344054] mt-0.5 leading-[1.35]">
+                            {post.reply.text}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
-        ) : activeTab === "journal" ? (
-          <div className="flex-1 overflow-y-auto px-4 py-3.5 space-y-3" style={{ scrollbarWidth: "none" }}>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-[#9C5A3C]">
-                  Diary
-                </div>
-                <div className="font-serif text-lg font-bold text-[#101828]">My Health Journal</div>
-              </div>
+        ) : (
+          /* Graphical Pregnancy & Health Journal */
+          <div className="flex-1 flex flex-col overflow-y-auto" style={{ scrollbarWidth: "none" }}>
+            <div className="px-4 pt-2.5 pb-2 flex items-center justify-between border-b border-[#EAE3D5] shrink-0">
+              <span className="font-serif text-[18px] font-bold text-[#101828]">
+                Pregnancy Journal
+              </span>
               <button
                 type="button"
                 onClick={() =>
                   playSampleAudio(
-                    "journal",
-                    "Doctor se milne se pehle: aapki iron ki goli 118 din poori hui hai aur pichle hafte BP normal tha.",
+                    "journal-recap",
+                    "Doctor se milne se pehle: aapki iron ki goli 118 din poori hui hai aur BP normal hai.",
                   )
                 }
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#0F4C3A] text-white text-[11px] font-semibold cursor-pointer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0F4C3A] text-white text-[10.5px] font-semibold cursor-pointer"
               >
-                <Volume2 size={12} />
-                {playingAudioId === "journal" ? "Playing..." : "Listen before visit"}
+                <Volume2 size={11} />
+                {playingAudioId === "journal-recap" ? "Playing..." : "Listen"}
               </button>
             </div>
 
-            {/* IFA Iron Streak */}
-            <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3.5">
-              <div className="flex items-center justify-between text-xs font-semibold text-[#101828]">
-                <span>Iron Tablet Streak</span>
-                <span className="text-[#0F4C3A]">{ironTakenToday ? 119 : 118} / 180 days</span>
-              </div>
-              <div className="w-full h-2 rounded-full bg-[#EFE6D5] mt-2 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-[#0F4C3A] transition-all"
-                  style={{ width: `${Math.round(((ironTakenToday ? 119 : 118) / 180) * 100)}%` }}
+            {/* Graphical SVG Gestation Arc */}
+            <div className="px-4 py-2.5 border-b border-[#EAE3D5] flex items-center gap-3.5 shrink-0">
+              <svg width={98} height={58} viewBox="0 0 104 62" className="shrink-0">
+                <path
+                  d="M 10 54 A 42 42 0 0 1 94 54"
+                  fill="none"
+                  stroke="#E7DFD0"
+                  strokeWidth={9}
+                  strokeLinecap="round"
                 />
+                <path
+                  d="M 10 54 A 42 42 0 0 1 83 25"
+                  fill="none"
+                  stroke="#0F4C3A"
+                  strokeWidth={9}
+                  strokeLinecap="round"
+                />
+                <circle cx="83" cy="25" r="5" fill="#C8643B" stroke="#FAF6EE" strokeWidth="2" />
+                <text x="52" y="46" textAnchor="middle" fontSize="14" fontWeight="700" fill="#101828">
+                  Wk {patient.gestationWeek}
+                </text>
+                <text x="52" y="59" textAnchor="middle" fontSize="9" fill="#667085">
+                  of 40
+                </text>
+              </svg>
+              <div>
+                <div className="text-xs font-bold text-[#101828]">Trimester 3 · 56 days left</div>
+                <div className="text-[11px] text-[#475467] mt-0.5">
+                  Next: {patient.nextVisitLabel}
+                </div>
+                <div className="mt-1 inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#0F4C3A]">
+                  <ShieldCheck size={12} />
+                  Hospital-owned record
+                </div>
               </div>
             </div>
 
-            {/* Plain-Language Timeline */}
-            <div className="space-y-2">
+            {/* Graphical 14-Day Iron Dot Calendar */}
+            <div className="px-4 py-2.5 border-b border-[#EAE3D5] shrink-0">
+              <div className="flex items-center justify-between text-[11px] font-bold mb-2">
+                <span>Iron Tablets (14-Day Grid)</span>
+                <span className="text-[#0F4C3A]">{ironTakenToday ? 119 : 118} / 180 days</span>
+              </div>
+              <div className="grid grid-cols-7 gap-1.5 justify-items-center">
+                {dotStates.map((st, idx) => {
+                  const isToday = idx === 13;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      disabled={!isToday}
+                      onClick={() => isToday && setIronTakenToday((v) => !v)}
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                        st === "done"
+                          ? "bg-[#0F4C3A] text-white"
+                          : st === "missed"
+                            ? "border-2 border-[#C8643B] text-[#C8643B]"
+                            : "border-2 border-dashed border-[#0F4C3A] bg-[#EFE6D5] text-[#101828]"
+                      } ${isToday ? "cursor-pointer" : "cursor-default"}`}
+                    >
+                      {st === "done" ? "✓" : st === "today" ? "•" : ""}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Graphical BP Sparkline & Weight */}
+            <div className="px-4 py-2.5 border-b border-[#EAE3D5] grid grid-cols-2 gap-3 shrink-0">
+              <div>
+                <div className="text-[10px] font-semibold text-[#667085]">BP Trend</div>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-sm font-bold text-[#101828]">116/74</span>
+                  <svg width={64} height={20} viewBox="0 0 74 22">
+                    <polyline
+                      points="4,15 26,11 48,13 70,8"
+                      fill="none"
+                      stroke="#0F4C3A"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                    />
+                    <circle cx="70" cy="8" r="3" fill="#0F4C3A" />
+                  </svg>
+                </div>
+              </div>
+              <div className="border-l border-[#EAE3D5] pl-3">
+                <div className="text-[10px] font-semibold text-[#667085]">Weight Gain</div>
+                <div className="text-sm font-bold text-[#101828] mt-0.5">+8.2 kg</div>
+              </div>
+            </div>
+
+            {/* Vertical Hairline Timeline Spine */}
+            <div className="px-4 py-2.5 space-y-2.5">
               {(phase === "alert" || phase === "saved") && (
-                <div className="rounded-2xl bg-white border border-[#C8643B]/40 p-3">
-                  <div className="flex items-center justify-between text-[10.5px] font-semibold text-[#C8643B]">
-                    <span>Just now · Voice check-in</span>
-                    <span>{phase === "alert" ? "Care alerted" : "Saved"}</span>
+                <div className="flex gap-2.5">
+                  <div className="flex flex-col items-center">
+                    <span className="w-2 h-2 rounded-full bg-[#C8643B] mt-1" />
+                    <div className="w-[1.5px] flex-1 bg-[#DDD3C0] mt-1" />
                   </div>
-                  <div className="text-xs text-[#101828] mt-1 font-medium">
-                    &ldquo;{initialUtterance}&rdquo;
+                  <div>
+                    <div className="text-[10px] font-semibold text-[#C8643B]">
+                      Just now · {phase === "alert" ? "Care alerted" : "Saved"}
+                    </div>
+                    <div className="text-[11.5px] font-medium text-[#101828]">
+                      &ldquo;{initialUtterance}&rdquo;
+                    </div>
                   </div>
                 </div>
               )}
 
-              <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3">
-                <div className="flex items-center justify-between text-[10.5px] text-[#667085]">
-                  <span>Yesterday · 8:10 PM</span>
-                  <span className="text-[#0F4C3A] font-medium flex items-center gap-1">
-                    <CheckCircle2 size={11} />
-                    Saved
-                  </span>
+              <div className="flex gap-2.5">
+                <div className="flex flex-col items-center">
+                  <span className="w-2 h-2 rounded-full bg-[#C8643B] mt-1" />
+                  <div className="w-[1.5px] flex-1 bg-[#DDD3C0] mt-1" />
                 </div>
-                <div className="text-xs font-medium text-[#101828] mt-1">
-                  Missed iron tablet noted; 8 PM reminder set
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3">
-                <div className="flex items-center justify-between text-[10.5px] text-[#667085]">
-                  <span>10 Nov · ANC Visit 2</span>
-                  <span className="text-[#0F4C3A] font-medium">Doctor verified</span>
-                </div>
-                <div className="text-xs font-medium text-[#101828] mt-1">
-                  BP normal (116/74), baby heartbeat steady
+                <div>
+                  <div className="text-[10px] font-semibold text-[#667085]">Tonight · 11:14 PM</div>
+                  <div className="text-[11.5px] font-medium text-[#101828]">
+                    Headache &amp; swollen feet alerted to care team
+                  </div>
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3">
-                <div className="flex items-center justify-between text-[10.5px] text-[#667085]">
-                  <span>28 Oct · Mild swelling checked</span>
-                  <span className="text-[#475467] font-medium">No danger signs</span>
+              <div className="flex gap-2.5">
+                <div className="flex flex-col items-center">
+                  <span className="w-2 h-2 rounded-full bg-[#0F4C3A] mt-1" />
                 </div>
-                <div className="text-xs font-medium text-[#101828] mt-1">
-                  Noted for clinic review
+                <div>
+                  <div className="text-[10px] font-semibold text-[#667085]">10 Nov · ANC Visit 2</div>
+                  <div className="text-[11.5px] font-medium text-[#101828]">
+                    Baby heartbeat steady · Verified by Dr. Deshmukh
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex-1 overflow-y-auto px-4 py-3.5 space-y-3" style={{ scrollbarWidth: "none" }}>
-            {/* Closed Family Circle Header */}
-            <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3.5 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#101828]">
-                  <Lock size={13} className="text-[#0F4C3A]" />
-                  Closed Family Circle · 3 members
-                </span>
-              </div>
-              <div className="text-[11px] text-[#475467]">
-                Maa (Savitri) · Saas (Kamla) · {patient.familyName.split(" ")[0]}
-              </div>
-              <div className="pt-1 border-t border-[#F0EAE0] flex items-center justify-between">
-                <span className="text-[11px] font-medium text-[#344054]">
-                  Share weekly care notes
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setShareUpdatesWithFamily((v) => !v)}
-                  className={`px-2.5 py-1 rounded-full text-[10.5px] font-semibold transition cursor-pointer ${
-                    shareUpdatesWithFamily
-                      ? "bg-[#0F4C3A] text-white"
-                      : "bg-[#EFE6D5] text-[#475467]"
-                  }`}
-                >
-                  {shareUpdatesWithFamily ? "On" : "Private"}
-                </button>
-              </div>
-            </div>
-
-            {shareUpdatesWithFamily && (
-              <div className="rounded-2xl bg-[#F3ECE0] border border-[#E4DAC7] p-3.5">
-                <div className="text-[10.5px] font-semibold uppercase tracking-wider text-[#0F4C3A]">
-                  Hospital-Verified Note for Family
-                </div>
-                <p className="text-xs text-[#101828] mt-1 leading-relaxed">
-                  Week {patient.gestationWeek} care: warm iron-rich meals, afternoon rest, and check-up on {patient.nextVisitLabel}.
-                </p>
-                <button
-                  type="button"
-                  onClick={() =>
-                    playSampleAudio(
-                      "family-note",
-                      "Parivar ke liye hospital salaah: Priya ko roz dopahar aaram aur garam poshtik khana dein.",
-                    )
-                  }
-                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#101828] text-white text-[11px] font-semibold cursor-pointer"
-                >
-                  <Volume2 size={12} />
-                  {playingAudioId === "family-note" ? "Playing..." : "Play in Hindi · 0:18"}
-                </button>
-              </div>
-            )}
-
-            {/* Voice Blessing from Maa */}
-            <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-[#9C5A3C] flex items-center gap-1.5">
-                  <HeartHandshake size={13} />
-                  Voice note from Maa (Savitri Devi)
-                </span>
-              </div>
-              <p className="font-serif text-[13.5px] text-[#101828] mt-1.5 leading-snug">
-                &ldquo;Beta, dal-palak bana rakha hai, shaam ko iron ki goli yaad se kha lena.&rdquo;
-              </p>
-              <button
-                type="button"
-                onClick={() =>
-                  playSampleAudio(
-                    "maa",
-                    "Beta, dal palak bana rakha hai, shaam ko iron ki goli yaad se kha lena.",
-                  )
-                }
-                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EFE6D5] hover:bg-[#E6DAC4] text-[#101828] text-[11px] font-semibold cursor-pointer"
-              >
-                <Volume2 size={12} />
-                {playingAudioId === "maa" ? "Playing..." : "Listen to Maa · 0:14"}
-              </button>
-            </div>
-
-            {/* Myth-Free Doctor Note */}
-            <div className="rounded-2xl bg-white border border-[#E7DFD0] p-3.5">
-              <div className="text-[10.5px] font-semibold text-[#0F4C3A]">
-                Myth-Free Doctor Note
-              </div>
-              <p className="text-[11.5px] text-[#344054] mt-1 leading-relaxed">
-                Swollen feet with headache in Month 8 is never &apos;just heat&apos;. Always check BP at the hospital.
-              </p>
-              <button
-                type="button"
-                onClick={() =>
-                  playSampleAudio(
-                    "myth",
-                    "Aathvein mahine mein pair ki sujan aur sar dard ko garmi samajhkar nazarandaz na karein.",
-                  )
-                }
-                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0F4C3A] text-white text-[11px] font-semibold cursor-pointer"
-              >
-                <Volume2 size={12} />
-                {playingAudioId === "myth" ? "Playing..." : "Play in Hindi · 0:22"}
-              </button>
             </div>
           </div>
         )}
 
-        {/* 4-Item Bottom Tab Bar */}
+        {/* 3-Tab Bottom Navigation (Circle · Voice · Journal) */}
         <div
-          className={`px-3 py-2 grid grid-cols-4 gap-1 shrink-0 relative z-10 border-t ${
+          className={`px-4 py-1.5 grid grid-cols-3 items-center shrink-0 relative z-10 border-t ${
             isDaylightTab
-              ? "bg-[#FAF6EE] border-[#E7DFD0] text-[#475467]"
+              ? "bg-[#FAF6EE] border-[#EAE3D5] text-[#475467]"
               : "bg-[#081210] border-white/10 text-[#8EA39C]"
           }`}
         >
-          {[
-            { id: "voice" as const, label: "Voice", icon: Mic },
-            { id: "today" as const, label: "Today", icon: Calendar },
-            { id: "journal" as const, label: "Journal", icon: BookOpen },
-            { id: "family" as const, label: "Family", icon: Users },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const active = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex flex-col items-center justify-center py-1 rounded-xl text-[10px] font-semibold transition cursor-pointer ${
-                  active
-                    ? isDaylightTab
-                      ? "bg-[#EFE6D5] text-[#101828]"
-                      : "bg-white/10 text-[#FAF6EE]"
-                    : "hover:opacity-80"
-                }`}
-              >
-                <Icon size={14} className={active && !isDaylightTab ? "text-[#EAB685]" : ""} />
-                <span className="mt-0.5">{tab.label}</span>
-              </button>
-            );
-          })}
+          <button
+            type="button"
+            onClick={() => setActiveTab("feed")}
+            className={`flex flex-col items-center justify-center py-1 text-[10px] font-semibold cursor-pointer ${
+              activeTab === "feed" ? "text-[#101828]" : ""
+            }`}
+          >
+            <Users size={15} />
+            <span className="mt-0.5">Circle</span>
+          </button>
+
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={() => setActiveTab("voice")}
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition cursor-pointer ${
+                activeTab === "voice"
+                  ? "bg-[#D96B4F] text-[#FAF6EE]"
+                  : "bg-[#0B1715] text-[#EAB685]"
+              }`}
+              title="Bedside Voice"
+            >
+              <Mic size={15} />
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("journal")}
+            className={`flex flex-col items-center justify-center py-1 text-[10px] font-semibold cursor-pointer ${
+              activeTab === "journal" ? "text-[#101828]" : ""
+            }`}
+          >
+            <BookOpen size={15} />
+            <span className="mt-0.5">Journal</span>
+          </button>
         </div>
       </div>
 
@@ -1081,18 +1212,17 @@ export default function MobileVoiceApp() {
             Voice-native + post-voice UX
           </h1>
           <p className="text-xs text-[#475467] mt-1 leading-relaxed">
-            Powered by Groq Whisper STT + bounded MoHFW triage, followed by her Care Plan, Journal, and Closed Family Circle.
+            Bedside voice triage, a private community platform for enrolled mothers, and a graphical pregnancy journal.
           </p>
         </div>
 
         <div>
           <div className="text-xs font-semibold text-[#344054] mb-1.5">Jump to screen</div>
-          <div className="grid grid-cols-4 gap-1.5">
+          <div className="grid grid-cols-3 gap-1.5">
             {[
               { id: "voice" as const, label: "Voice" },
-              { id: "today" as const, label: "Today" },
+              { id: "feed" as const, label: "Circle Feed" },
               { id: "journal" as const, label: "Journal" },
-              { id: "family" as const, label: "Family" },
             ].map((tab) => (
               <button
                 key={tab.id}

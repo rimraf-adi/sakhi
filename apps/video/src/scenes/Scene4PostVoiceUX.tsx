@@ -1,12 +1,12 @@
 import React from "react";
 import {
   BookOpen,
-  Calendar,
   CheckCircle2,
-  HeartHandshake,
+  Heart,
   Lock,
+  MessageCircle,
   Mic,
-  PhoneCall,
+  Send,
   ShieldCheck,
   Users,
   Volume2,
@@ -14,39 +14,88 @@ import {
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { PhoneFrame, SANS, SERIF } from "../components/ScreenChrome";
 
-type TabMode = "today" | "journal" | "family";
+type ViewMode = "circle" | "journal";
 
 const COPY: Record<
-  TabMode,
+  ViewMode,
   {
     headline: string;
     body: string;
     time: string;
+    tab: "feed" | "journal";
   }
 > = {
-  today: {
-    headline: "After she speaks, care stays calm.",
-    body: "Instead of leaving her with a wall of text, Sakhi opens a quiet care plan in warm daylight: one-tap audio replay, who was notified, and tonight's gentle reminder.",
+  circle: {
+    headline: "A closed circle of mothers, never strangers.",
+    body: "Only hospital-enrolled pregnant women in the same trimester are in her circle. They share text and voice notes safely, without public-internet myths.",
     time: "8:15 AM",
+    tab: "feed",
   },
   journal: {
-    headline: "Her own journal, in her own words.",
-    body: "Every voice check-in, iron tablet streak, and doctor-verified visit stays organized in plain language she can listen to before stepping into a busy 5-minute clinic.",
+    headline: "A visual journal built for her, not just forms.",
+    body: "A clear Week 32 gestation arc, 14-day iron tablet dot calendar, BP trendline, and audio recap she can listen to before a busy 5-minute clinic.",
     time: "8:20 AM",
-  },
-  family: {
-    headline: "A closed circle for family and elders.",
-    body: "No public feed and no forwarded myths. Only her husband, mother, and mother-in-law receive hospital-verified Hindi audio notes and send warm voice blessings back.",
-    time: "8:25 AM",
+    tab: "journal",
   },
 };
+
+function VoiceNotePill({
+  duration,
+  lang,
+  dark = false,
+  frame,
+}: {
+  duration: string;
+  lang?: string;
+  dark?: boolean;
+  frame: number;
+}) {
+  const heights = [6, 12, 18, 10, 16, 20, 13, 8, 17, 14, 9, 15, 19, 11, 7];
+  return (
+    <div
+      style={{
+        marginTop: 7,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        padding: "6px 10px",
+        borderRadius: 999,
+        backgroundColor: dark ? "#0F4C3A" : "#EFE6D5",
+        color: dark ? "#FAF6EE" : "#101828",
+      }}
+    >
+      <Volume2 size={12} />
+      <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+        {heights.map((h, i) => {
+          const pulse = 0.75 + 0.25 * Math.sin(frame * 0.14 + i * 0.7);
+          return (
+            <span
+              key={i}
+              style={{
+                width: 2,
+                height: Math.round(h * pulse),
+                borderRadius: 2,
+                backgroundColor: dark ? "#A7F3D0" : "#9C5A3C",
+                display: "inline-block",
+              }}
+            />
+          );
+        })}
+      </div>
+      <span style={{ fontSize: 10.5, fontWeight: 600 }}>
+        {duration}
+        {lang ? ` · ${lang}` : ""}
+      </span>
+    </div>
+  );
+}
 
 export function Scene4PostVoiceUX() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const mode: TabMode = frame < 300 ? "today" : frame < 600 ? "journal" : "family";
-  const beatFrame = mode === "today" ? frame : mode === "journal" ? frame - 300 : frame - 600;
+  const mode: ViewMode = frame < 450 ? "circle" : "journal";
+  const beatFrame = mode === "circle" ? frame : frame - 450;
 
   const enter = spring({
     frame: beatFrame,
@@ -54,13 +103,30 @@ export function Scene4PostVoiceUX() {
     config: { damping: 22, stiffness: 95 },
   });
 
-  const beatFade = interpolate(beatFrame, [0, 12, 285, 300], [0, 1, 1, 0], {
+  const beatFade = interpolate(beatFrame, [0, 12, 435, 450], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  const wavePulse = 0.65 + 0.35 * Math.sin(frame * 0.16);
   const copy = COPY[mode];
+
+  // 14-day IFA dot calendar: 12 filled, 1 missed (index 5), 1 today (index 13)
+  const dotStates = [
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    "missed",
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    "done",
+    "today",
+  ] as const;
 
   return (
     <div
@@ -77,7 +143,7 @@ export function Scene4PostVoiceUX() {
         fontFamily: SANS,
       }}
     >
-      {/* Left Editorial Column (no rounded pills, no ALL-CAPS SaaS eyebrows, no cursors) */}
+      {/* Left Editorial Column */}
       <div
         style={{
           width: 560,
@@ -90,7 +156,7 @@ export function Scene4PostVoiceUX() {
           style={{
             margin: 0,
             fontFamily: SERIF,
-            fontSize: 64,
+            fontSize: 62,
             lineHeight: 1.08,
             fontWeight: 500,
             letterSpacing: "-0.02em",
@@ -110,7 +176,6 @@ export function Scene4PostVoiceUX() {
           {copy.body}
         </p>
 
-        {/* Subtle editorial progress rule */}
         <div
           style={{
             marginTop: 42,
@@ -124,9 +189,8 @@ export function Scene4PostVoiceUX() {
           }}
         >
           {[
-            { id: "today" as const, label: "01. Care Plan" },
-            { id: "journal" as const, label: "02. Personal Journal" },
-            { id: "family" as const, label: "03. Closed Family Circle" },
+            { id: "circle" as const, label: "01. Closed Peer Circle" },
+            { id: "journal" as const, label: "02. Visual Pregnancy Journal" },
           ].map((item) => {
             const active = item.id === mode;
             return (
@@ -145,7 +209,7 @@ export function Scene4PostVoiceUX() {
         </div>
       </div>
 
-      {/* Right Warm-Daylight Patient Mobile Screen */}
+      {/* Right Phone Screen */}
       <div
         style={{
           opacity: beatFade,
@@ -162,470 +226,578 @@ export function Scene4PostVoiceUX() {
               color: "#101828",
             }}
           >
-            {/* Context Header */}
-            <div
-              style={{
-                padding: "12px 20px 10px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                borderBottom: "1px solid #E7DFD0",
-                fontSize: 12,
-              }}
-            >
-              <span style={{ fontWeight: 600, color: "#101828" }}>Priya · Week 32</span>
-              <span style={{ fontWeight: 500, color: "#667085" }}>Next: 24 Nov</span>
-            </div>
-
-            {/* Tab Content */}
-            <div
-              style={{
-                flex: 1,
-                padding: "14px 16px",
-                display: "flex",
-                flexDirection: "column",
-                gap: 11,
-                overflow: "hidden",
-              }}
-            >
-              {mode === "today" && (
-                <>
-                  <div
+            {copy.tab === "feed" ? (
+              <>
+                {/* Threads/Twitter-style Header */}
+                <div
+                  style={{
+                    padding: "10px 18px 9px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    borderBottom: "1px solid #EAE3D5",
+                  }}
+                >
+                  <span style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 700, color: "#101828" }}>
+                    Sakhi
+                  </span>
+                  <span
                     style={{
-                      backgroundColor: "#FFFFFF",
-                      border: "1px solid #E7DFD0",
-                      borderRadius: 16,
-                      padding: 14,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                      fontSize: 10.5,
+                      fontWeight: 600,
+                      color: "#0F4C3A",
                     }}
                   >
-                    <div style={{ fontSize: 11, fontWeight: 700, color: "#9C5A3C" }}>
-                      Aaj · Care Plan
+                    <Lock size={10} />
+                    Week 30-34 Circle · 24 mothers
+                  </span>
+                </div>
+
+                {/* Subtle Post-Voice Care Strip */}
+                <div
+                  style={{
+                    padding: "7px 18px",
+                    borderBottom: "1px solid #EAE3D5",
+                    backgroundColor: "#F5EFE4",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    fontSize: 11,
+                  }}
+                >
+                  <span style={{ fontWeight: 600, color: "#344054" }}>
+                    Tonight 8:00 PM · Iron tablet reminder
+                  </span>
+                  <span style={{ fontWeight: 700, color: "#0F4C3A" }}>
+                    Mark taken
+                  </span>
+                </div>
+
+                {/* Composer Row (Text + Voice) */}
+                <div
+                  style={{
+                    padding: "8px 18px",
+                    borderBottom: "1px solid #EAE3D5",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 26,
+                      height: 26,
+                      borderRadius: "50%",
+                      backgroundColor: "#C8643B",
+                      color: "#FFFFFF",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    P
+                  </div>
+                  <div
+                    style={{
+                      flex: 1,
+                      fontSize: 11.5,
+                      color: "#667085",
+                    }}
+                  >
+                    Share text or voice with your circle...
+                  </div>
+                  <Mic size={14} color="#C8643B" />
+                  <Send size={13} color="#101828" />
+                </div>
+
+                {/* Edge-to-Edge Threads Feed */}
+                <div style={{ flex: 1, overflow: "hidden" }}>
+                  {/* Thread 1: Anjali + Reply from Sunita */}
+                  <div
+                    style={{
+                      padding: "11px 18px",
+                      borderBottom: "1px solid #EAE3D5",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: 10 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%",
+                            backgroundColor: "#E4DAC7",
+                            color: "#101828",
+                            fontSize: 11,
+                            fontWeight: 700,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          A
+                        </div>
+                        <div
+                          style={{
+                            width: 1.5,
+                            flex: 1,
+                            backgroundColor: "#DDD3C0",
+                            marginTop: 4,
+                            marginBottom: 4,
+                          }}
+                        />
+                      </div>
+
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5 }}>
+                          <span style={{ fontWeight: 700, color: "#101828" }}>
+                            Anjali Verma <span style={{ fontWeight: 500, color: "#667085" }}>· Wk 33</span>
+                          </span>
+                          <span style={{ color: "#98A2B3", fontSize: 10.5 }}>14m</span>
+                        </div>
+                        <div style={{ fontSize: 12, color: "#101828", marginTop: 2, lineHeight: 1.38 }}>
+                          Anyone else waking up with calf cramps at 3 AM? Warm water helped a bit.
+                        </div>
+                        <VoiceNotePill duration="0:19" frame={frame} />
+                        <div
+                          style={{
+                            marginTop: 7,
+                            display: "flex",
+                            gap: 16,
+                            fontSize: 10.5,
+                            color: "#667085",
+                          }}
+                        >
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                            <Heart size={11} /> 12
+                          </span>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                            <MessageCircle size={11} /> 3
+                          </span>
+                        </div>
+                      </div>
                     </div>
+
+                    {/* Threaded Reply */}
+                    <div style={{ display: "flex", gap: 10, marginTop: 6 }}>
+                      <div
+                        style={{
+                          width: 28,
+                          display: "flex",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: "50%",
+                            backgroundColor: "#D6E8DF",
+                            color: "#0F4C3A",
+                            fontSize: 10.5,
+                            fontWeight: 700,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          S
+                        </div>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11 }}>
+                          <span style={{ fontWeight: 700, color: "#101828" }}>
+                            Sunita Patil <span style={{ fontWeight: 500, color: "#667085" }}>· Wk 34</span>
+                          </span>
+                          <span style={{ color: "#98A2B3", fontSize: 10 }}>6m</span>
+                        </div>
+                        <div style={{ fontSize: 11.5, color: "#344054", marginTop: 2, lineHeight: 1.35 }}>
+                          Yes! Flexing toes upward and a pillow between knees really helped me.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Post 2: Kavita Voice-First */}
+                  <div
+                    style={{
+                      padding: "11px 18px",
+                      borderBottom: "1px solid #EAE3D5",
+                      display: "flex",
+                      gap: 10,
+                    }}
+                  >
                     <div
                       style={{
-                        fontFamily: SERIF,
-                        fontSize: 18,
-                        fontWeight: 600,
+                        width: 28,
+                        height: 28,
+                        borderRadius: "50%",
+                        backgroundColor: "#F3D3A7",
                         color: "#101828",
-                        marginTop: 4,
-                      }}
-                    >
-                      Listen to Sakhi&apos;s advice
-                    </div>
-                    <div style={{ fontSize: 11.5, color: "#475467", marginTop: 4, lineHeight: 1.45 }}>
-                      Meena didi aur Rohit ko khabar bhej di hai. Aaj aaram karein aur paani piyein.
-                    </div>
-                    <div
-                      style={{
-                        marginTop: 10,
-                        backgroundColor: "#C8643B",
-                        color: "#FFFFFF",
-                        borderRadius: 11,
-                        padding: "9px 12px",
+                        fontSize: 11,
+                        fontWeight: 700,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: 8,
-                        fontSize: 12,
-                        fontWeight: 600,
+                        flexShrink: 0,
                       }}
                     >
-                      <Volume2 size={14} style={{ opacity: wavePulse }} />
-                      Play voice recap in Hindi
+                      K
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5 }}>
+                        <span style={{ fontWeight: 700, color: "#101828" }}>
+                          Kavita Devi <span style={{ fontWeight: 500, color: "#667085" }}>· Wk 31</span>
+                        </span>
+                        <span style={{ color: "#98A2B3", fontSize: 10.5 }}>1h</span>
+                      </div>
+                      <VoiceNotePill duration="0:24" lang="Hindi" dark frame={frame} />
+                      <div style={{ fontSize: 11.5, color: "#475467", marginTop: 4, lineHeight: 1.35 }}>
+                        &ldquo;Aaj iron ki goli ke saath nimbu paani liya, chakkar bilkul nahi aaya.&rdquo;
+                      </div>
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      backgroundColor: "#FFF4F1",
-                      border: "1px solid #F3C5B8",
-                      borderRadius: 16,
-                      padding: 14,
-                    }}
-                  >
+                  {/* Post 3: Clinic Host */}
+                  <div style={{ padding: "11px 18px", display: "flex", gap: 10 }}>
                     <div
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: "#9C331A",
-                      }}
-                    >
-                      <span>Care team notified</span>
-                      <span>2 min ago</span>
-                    </div>
-                    <div
-                      style={{
-                        marginTop: 8,
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 5,
-                        fontSize: 11.5,
-                        color: "#344054",
-                      }}
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span>Meena Devi (Health Pro)</span>
-                        <span style={{ color: "#0F4C3A", fontWeight: 600 }}>On the way</span>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span>Rohit Sharma (Partner)</span>
-                        <span style={{ color: "#0F4C3A", fontWeight: 600 }}>Notified</span>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span>District Women&apos;s Hospital</span>
-                        <span style={{ color: "#0F4C3A", fontWeight: 600 }}>Desk ready</span>
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        marginTop: 10,
-                        backgroundColor: "#101828",
+                        width: 28,
+                        height: 28,
+                        borderRadius: "50%",
+                        backgroundColor: "#0F4C3A",
                         color: "#FFFFFF",
-                        borderRadius: 10,
-                        padding: "8px 10px",
+                        fontSize: 10,
+                        fontWeight: 700,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: 6,
-                        fontSize: 11.5,
-                        fontWeight: 600,
+                        flexShrink: 0,
                       }}
                     >
-                      <PhoneCall size={13} />
-                      Call Meena
+                      Dr
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5 }}>
+                        <span style={{ fontWeight: 700, color: "#0F4C3A" }}>
+                          Dr. Anita Deshmukh <span style={{ fontWeight: 500, color: "#667085" }}>· Clinic</span>
+                        </span>
+                        <span style={{ color: "#98A2B3", fontSize: 10.5 }}>3h</span>
+                      </div>
+                      <div style={{ fontSize: 11.5, color: "#101828", marginTop: 2, lineHeight: 1.35 }}>
+                        If headache and swollen feet show up together, do not wait till morning. Speak to Sakhi right away.
+                      </div>
                     </div>
                   </div>
-
-                  <div
+                </div>
+              </>
+            ) : (
+              /* Graphical Pregnancy & Health Journal */
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                {/* Header */}
+                <div
+                  style={{
+                    padding: "10px 18px 8px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    borderBottom: "1px solid #EAE3D5",
+                  }}
+                >
+                  <span style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 700 }}>
+                    Pregnancy Journal
+                  </span>
+                  <span
                     style={{
-                      backgroundColor: "#F3ECE0",
-                      border: "1px solid #E4DAC7",
-                      borderRadius: 16,
-                      padding: 13,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                      backgroundColor: "#0F4C3A",
+                      color: "#FFFFFF",
+                      padding: "4px 9px",
+                      borderRadius: 999,
+                      fontSize: 10.5,
+                      fontWeight: 600,
                     }}
                   >
+                    <Volume2 size={11} />
+                    Listen
+                  </span>
+                </div>
+
+                {/* Graphical SVG Gestation Arc */}
+                <div
+                  style={{
+                    padding: "10px 18px 8px",
+                    borderBottom: "1px solid #EAE3D5",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                  }}
+                >
+                  <svg width={104} height={62} viewBox="0 0 104 62">
+                    <path
+                      d="M 10 54 A 42 42 0 0 1 94 54"
+                      fill="none"
+                      stroke="#E7DFD0"
+                      strokeWidth={9}
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M 10 54 A 42 42 0 0 1 83 25"
+                      fill="none"
+                      stroke="#0F4C3A"
+                      strokeWidth={9}
+                      strokeLinecap="round"
+                    />
+                    <circle cx="83" cy="25" r="5" fill="#C8643B" stroke="#FAF6EE" strokeWidth="2" />
+                    <text
+                      x="52"
+                      y="46"
+                      textAnchor="middle"
+                      fontSize="14"
+                      fontWeight="700"
+                      fill="#101828"
+                    >
+                      Wk 32
+                    </text>
+                    <text x="52" y="59" textAnchor="middle" fontSize="9" fill="#667085">
+                      of 40
+                    </text>
+                  </svg>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 12.5, fontWeight: 700, color: "#101828" }}>
+                      Trimester 3 · 56 days left
+                    </div>
+                    <div style={{ fontSize: 11, color: "#475467", marginTop: 2 }}>
+                      Next ANC Visit: 24 Nov
+                    </div>
                     <div
                       style={{
-                        display: "flex",
+                        marginTop: 5,
+                        display: "inline-flex",
                         alignItems: "center",
-                        gap: 6,
-                        fontSize: 11.5,
-                        fontWeight: 700,
-                        color: "#101828",
+                        gap: 4,
+                        fontSize: 10.5,
+                        fontWeight: 600,
+                        color: "#0F4C3A",
                       }}
                     >
-                      <ShieldCheck size={14} color="#0F4C3A" />
-                      Tonight · 8:00 PM Iron Tablet
-                    </div>
-                    <div style={{ fontSize: 11.5, color: "#475467", marginTop: 4 }}>
-                      Gentle voice reminder scheduled after dinner.
+                      <ShieldCheck size={12} />
+                      Hospital-owned record
                     </div>
                   </div>
-                </>
-              )}
+                </div>
 
-              {mode === "journal" && (
-                <>
+                {/* Graphical 14-Day Iron Dot Calendar */}
+                <div
+                  style={{
+                    padding: "10px 18px",
+                    borderBottom: "1px solid #EAE3D5",
+                  }}
+                >
                   <div
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      alignItems: "center",
+                      fontSize: 11.5,
+                      fontWeight: 700,
+                      marginBottom: 7,
                     }}
                   >
-                    <div style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 700, color: "#101828" }}>
-                      My Health Journal
-                    </div>
-                    <div
-                      style={{
-                        backgroundColor: "#0F4C3A",
-                        color: "#FFFFFF",
-                        borderRadius: 10,
-                        padding: "6px 10px",
-                        fontSize: 11,
-                        fontWeight: 600,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 5,
-                      }}
-                    >
-                      <Volume2 size={12} />
-                      Listen before visit
-                    </div>
+                    <span>Iron Tablets (14-Day Grid)</span>
+                    <span style={{ color: "#0F4C3A" }}>118 / 180 days</span>
                   </div>
-
                   <div
                     style={{
-                      backgroundColor: "#FFFFFF",
-                      border: "1px solid #E7DFD0",
-                      borderRadius: 16,
-                      padding: 13,
+                      display: "grid",
+                      gridTemplateColumns: "repeat(7, 1fr)",
+                      gap: 6,
+                      justifyItems: "center",
                     }}
                   >
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        fontSize: 12,
-                        fontWeight: 600,
-                      }}
-                    >
-                      <span>Iron Tablet Streak</span>
-                      <span style={{ color: "#0F4C3A" }}>118 / 180 days</span>
-                    </div>
-                    <div
-                      style={{
-                        marginTop: 8,
-                        height: 8,
-                        borderRadius: 999,
-                        backgroundColor: "#EFE6D5",
-                        overflow: "hidden",
-                      }}
-                    >
+                    {dotStates.map((st, idx) => (
                       <div
+                        key={idx}
                         style={{
-                          width: "66%",
-                          height: "100%",
-                          borderRadius: 999,
-                          backgroundColor: "#0F4C3A",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {[
-                    {
-                      date: "Tonight · 11:14 PM",
-                      status: "Care alerted",
-                      statusColor: "#C8643B",
-                      text: "Headache for two days, swollen feet, blurred vision",
-                    },
-                    {
-                      date: "Yesterday · 8:10 PM",
-                      status: "Saved",
-                      statusColor: "#0F4C3A",
-                      text: "Missed iron tablet noted; 8 PM reminder set",
-                    },
-                    {
-                      date: "10 Nov · ANC Visit 2",
-                      status: "Doctor verified",
-                      statusColor: "#0F4C3A",
-                      text: "BP normal (116/74), baby heartbeat steady",
-                    },
-                  ].map((entry) => (
-                    <div
-                      key={entry.date}
-                      style={{
-                        backgroundColor: "#FFFFFF",
-                        border: "1px solid #E7DFD0",
-                        borderRadius: 14,
-                        padding: 12,
-                      }}
-                    >
-                      <div
-                        style={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: "50%",
+                          backgroundColor:
+                            st === "done"
+                              ? "#0F4C3A"
+                              : st === "today"
+                                ? "#EFE6D5"
+                                : "transparent",
+                          border:
+                            st === "missed"
+                              ? "2px solid #C8643B"
+                              : st === "today"
+                                ? "2px dashed #0F4C3A"
+                                : "none",
                           display: "flex",
-                          justifyContent: "space-between",
-                          fontSize: 10.5,
-                          color: "#667085",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 9,
+                          fontWeight: 700,
+                          color: st === "done" ? "#FFFFFF" : "#101828",
                         }}
                       >
-                        <span>{entry.date}</span>
+                        {st === "done" ? "✓" : st === "today" ? "•" : ""}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Graphical BP Sparkline & Weight */}
+                <div
+                  style={{
+                    padding: "9px 18px",
+                    borderBottom: "1px solid #EAE3D5",
+                    display: "grid",
+                    gridTemplateColumns: "1.2fr 0.8fr",
+                    gap: 12,
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: 10.5, color: "#667085", fontWeight: 600 }}>
+                      BP Trend (Last 4 visits)
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 2 }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: "#101828" }}>116/74</span>
+                      <svg width={74} height={22} viewBox="0 0 74 22">
+                        <polyline
+                          points="4,15 26,11 48,13 70,8"
+                          fill="none"
+                          stroke="#0F4C3A"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                        />
+                        <circle cx="70" cy="8" r="3" fill="#0F4C3A" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div style={{ borderLeft: "1px solid #EAE3D5", paddingLeft: 12 }}>
+                    <div style={{ fontSize: 10.5, color: "#667085", fontWeight: 600 }}>Weight Gain</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#101828", marginTop: 2 }}>
+                      +8.2 kg
+                    </div>
+                  </div>
+                </div>
+
+                {/* Vertical Hairline Timeline Spine */}
+                <div style={{ padding: "10px 18px", flex: 1 }}>
+                  {[
+                    {
+                      color: "#C8643B",
+                      time: "Tonight · 11:14 PM",
+                      text: "Headache & swollen feet alerted to care team",
+                    },
+                    {
+                      color: "#0F4C3A",
+                      time: "10 Nov · ANC Visit 2",
+                      text: "Baby heartbeat steady · Verified by Dr. Deshmukh",
+                    },
+                  ].map((item, i) => (
+                    <div key={item.time} style={{ display: "flex", gap: 10, paddingBottom: i === 0 ? 10 : 0 }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <span
                           style={{
-                            color: entry.statusColor,
-                            fontWeight: 600,
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 4,
+                            width: 9,
+                            height: 9,
+                            borderRadius: "50%",
+                            backgroundColor: item.color,
+                            marginTop: 3,
                           }}
-                        >
-                          <CheckCircle2 size={11} />
-                          {entry.status}
-                        </span>
+                        />
+                        {i === 0 && (
+                          <div style={{ width: 1.5, flex: 1, backgroundColor: "#DDD3C0", marginTop: 3 }} />
+                        )}
                       </div>
-                      <div style={{ fontSize: 12, fontWeight: 500, color: "#101828", marginTop: 4 }}>
-                        {entry.text}
+                      <div>
+                        <div style={{ fontSize: 10.5, fontWeight: 600, color: "#667085" }}>
+                          {item.time}
+                        </div>
+                        <div style={{ fontSize: 11.5, fontWeight: 500, color: "#101828" }}>
+                          {item.text}
+                        </div>
                       </div>
                     </div>
                   ))}
-                </>
-              )}
+                </div>
+              </div>
+            )}
 
-              {mode === "family" && (
-                <>
-                  <div
-                    style={{
-                      backgroundColor: "#FFFFFF",
-                      border: "1px solid #E7DFD0",
-                      borderRadius: 16,
-                      padding: 13,
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: "#101828",
-                      }}
-                    >
-                      <Lock size={13} color="#0F4C3A" />
-                      Closed Family Circle · 3 members
-                    </div>
-                    <div style={{ fontSize: 11, color: "#475467", marginTop: 4 }}>
-                      Maa (Savitri) · Saas (Kamla) · Rohit
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      backgroundColor: "#F3ECE0",
-                      border: "1px solid #E4DAC7",
-                      borderRadius: 16,
-                      padding: 13,
-                    }}
-                  >
-                    <div style={{ fontSize: 10.5, fontWeight: 700, color: "#0F4C3A" }}>
-                      Hospital-Verified Note for Family
-                    </div>
-                    <div style={{ fontSize: 12, color: "#101828", marginTop: 4, lineHeight: 1.45 }}>
-                      Week 32 care: warm iron-rich meals, afternoon rest, and check-up on 24 Nov.
-                    </div>
-                    <div
-                      style={{
-                        marginTop: 8,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        backgroundColor: "#101828",
-                        color: "#FFFFFF",
-                        borderRadius: 10,
-                        padding: "6px 10px",
-                        fontSize: 11,
-                        fontWeight: 600,
-                      }}
-                    >
-                      <Volume2 size={12} />
-                      Play in Hindi · 0:18
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      backgroundColor: "#FFFFFF",
-                      border: "1px solid #E7DFD0",
-                      borderRadius: 16,
-                      padding: 13,
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: "#9C5A3C",
-                      }}
-                    >
-                      <HeartHandshake size={13} />
-                      Voice note from Maa (Savitri Devi)
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: SERIF,
-                        fontSize: 13.5,
-                        color: "#101828",
-                        marginTop: 5,
-                        lineHeight: 1.38,
-                      }}
-                    >
-                      &ldquo;Beta, dal-palak bana rakha hai, shaam ko iron ki goli yaad se kha lena.&rdquo;
-                    </div>
-                    <div
-                      style={{
-                        marginTop: 8,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        backgroundColor: "#EFE6D5",
-                        color: "#101828",
-                        borderRadius: 10,
-                        padding: "6px 10px",
-                        fontSize: 11,
-                        fontWeight: 600,
-                      }}
-                    >
-                      <Volume2 size={12} />
-                      Listen to Maa · 0:14
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      backgroundColor: "#FFFFFF",
-                      border: "1px solid #E7DFD0",
-                      borderRadius: 14,
-                      padding: 12,
-                    }}
-                  >
-                    <div style={{ fontSize: 10.5, fontWeight: 700, color: "#0F4C3A" }}>
-                      Myth-Free Doctor Note
-                    </div>
-                    <div style={{ fontSize: 11.5, color: "#344054", marginTop: 3, lineHeight: 1.4 }}>
-                      Swollen feet with headache in Month 8 is never &apos;just heat&apos;. Always check BP at the hospital.
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* 4-Item Bottom Tab Bar */}
+            {/* 3-Tab Bottom Navigation */}
             <div
               style={{
-                padding: "8px 12px",
+                padding: "7px 16px",
                 display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: 4,
-                borderTop: "1px solid #E7DFD0",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                alignItems: "center",
+                borderTop: "1px solid #EAE3D5",
                 backgroundColor: "#FAF6EE",
               }}
             >
-              {[
-                { id: "voice", label: "Voice", icon: Mic },
-                { id: "today", label: "Today", icon: Calendar },
-                { id: "journal", label: "Journal", icon: BookOpen },
-                { id: "family", label: "Family", icon: Users },
-              ].map((tab) => {
-                const Icon = tab.icon;
-                const active = tab.id === mode;
-                return (
-                  <div
-                    key={tab.id}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "5px 0",
-                      borderRadius: 10,
-                      backgroundColor: active ? "#EFE6D5" : "transparent",
-                      color: active ? "#101828" : "#667085",
-                      fontSize: 10,
-                      fontWeight: 600,
-                    }}
-                  >
-                    <Icon size={14} />
-                    <span style={{ marginTop: 2 }}>{tab.label}</span>
-                  </div>
-                );
-              })}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  color: copy.tab === "feed" ? "#101828" : "#667085",
+                  fontSize: 10,
+                  fontWeight: copy.tab === "feed" ? 700 : 500,
+                }}
+              >
+                <Users size={15} />
+                <span style={{ marginTop: 2 }}>Circle</span>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: "50%",
+                    backgroundColor: "#0B1715",
+                    color: "#EAB685",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Mic size={15} />
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  color: copy.tab === "journal" ? "#101828" : "#667085",
+                  fontSize: 10,
+                  fontWeight: copy.tab === "journal" ? 700 : 500,
+                }}
+              >
+                <BookOpen size={15} />
+                <span style={{ marginTop: 2 }}>Journal</span>
+              </div>
             </div>
           </div>
         </PhoneFrame>
