@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   ArrowRight,
   BellRing,
@@ -118,48 +119,19 @@ const IMPACT_SIGNALS = [
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#F7F4ED] text-[#0F181A]">
-      {/* Section 0 & 1: Floating 3-Island Nav + Twilight Atmospheric Hero */}
-      <section
-        className="relative min-h-[660px] w-full overflow-hidden lg:min-h-[740px]"
-        style={{
-          background:
-            "linear-gradient(155deg, #101E2E 0%, #162B44 45%, #1E3A56 100%)",
-        }}
-      >
-        {/* Subtle night stars & warm right-side Orb horizon glow */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-45"
-          style={{
-            backgroundImage:
-              "radial-gradient(1.5px 1.5px at 14% 22%, rgba(255,255,255,0.65) 50%, transparent 100%), radial-gradient(1px 1px at 31% 14%, rgba(255,255,255,0.5) 50%, transparent 100%), radial-gradient(1.5px 1.5px at 56% 18%, rgba(255,255,255,0.55) 50%, transparent 100%), radial-gradient(1px 1px at 78% 12%, rgba(255,255,255,0.45) 50%, transparent 100%), radial-gradient(1.5px 1.5px at 88% 28%, rgba(255,255,255,0.6) 50%, transparent 100%), radial-gradient(1px 1px at 43% 34%, rgba(255,255,255,0.4) 50%, transparent 100%)",
-          }}
+      {/* Section 0 & 1: Floating 3-Island Nav + Twilight Horizon Hero */}
+      <section className="relative min-h-[660px] w-full overflow-hidden bg-[#13263E] lg:min-h-[740px]">
+        <Image
+          src="/images/hero-twilight-horizon.jpg"
+          alt="Calm twilight sky over distant hills and warm golden light reflected on still water"
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
         />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 bottom-8 h-[420px] w-[420px] rounded-full opacity-55 blur-3xl sm:right-10 sm:h-[520px] sm:w-[520px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(246,196,120,0.45) 0%, rgba(217,119,69,0.28) 45%, transparent 72%)",
-          }}
-        />
-        {/* Clean minimal 2-layer vector hill silhouettes along the bottom edge */}
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 1440 200"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-32 w-full sm:h-44"
-        >
-          <path
-            d="M0,120 C320,65 640,145 960,92 C1180,56 1340,78 1440,104 L1440,200 L0,200 Z"
-            fill="#112233"
-            fillOpacity="0.65"
-          />
-          <path
-            d="M0,152 C280,115 620,170 980,132 C1210,108 1350,124 1440,140 L1440,200 L0,200 Z"
-            fill="#0D1924"
-          />
-        </svg>
+        {/* Subtle directional twilight scrim so white serif typography stays crisp */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#101E2E]/82 via-[#162B44]/55 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F181A]/45 via-transparent to-[#13263E]/35" />
 
         {/* Section 0: Three Floating White Pill Islands (Calmy Pattern) */}
         <header className="relative z-20 mx-auto max-w-6xl px-5 pt-6 sm:px-8">
@@ -593,48 +565,23 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Section 7: Privacy Manifesto & Closing How-to-Join Vista (Heritage Pattern) */}
+        {/* Section 7: Privacy Manifesto & Closing How-to-Join Vista */}
         <section id="privacy" className="px-4 pb-10 sm:px-8 sm:pb-14">
           <div
             id="join"
-            className="relative mx-auto max-w-6xl overflow-hidden rounded-[32px] border border-[#0F181A]/12 shadow-[0_30px_80px_-32px_rgba(15,24,26,0.22)]"
-            style={{
-              background:
-                "linear-gradient(180deg, #F6D8B2 0%, #F2C997 58%, #E6B57E 100%)",
-            }}
+            className="relative mx-auto max-w-6xl overflow-hidden rounded-[32px] border border-[#0F181A]/12 bg-[#F6D8B2] shadow-[0_30px_80px_-32px_rgba(15,24,26,0.22)]"
           >
-            {/* Subtle warm golden sun glow near the horizon */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute right-12 bottom-16 h-64 w-64 rounded-full opacity-65 blur-2xl"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(255,242,214,0.85) 0%, rgba(230,159,69,0.35) 55%, transparent 75%)",
-              }}
+            <Image
+              src="/images/closing-dawn-water.jpg"
+              alt="Warm morning apricot sky over distant sage-teal hills and a calm sunlit river"
+              fill
+              className="object-cover object-bottom"
+              sizes="(max-width: 1200px) 100vw, 1152px"
             />
-            {/* Clean 3-layer slate-teal SVG hill silhouettes across the bottom */}
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 1200 220"
-              preserveAspectRatio="none"
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-32 w-full sm:h-44"
-            >
-              <path
-                d="M0,110 C220,52 430,132 710,88 C940,52 1080,84 1200,66 L1200,220 L0,220 Z"
-                fill="#2B4648"
-                fillOpacity="0.65"
-              />
-              <path
-                d="M0,145 C260,104 510,164 810,122 C990,98 1110,118 1200,104 L1200,220 L0,220 Z"
-                fill="#1A3032"
-              />
-              <path
-                d="M0,178 C320,148 640,192 960,154 C1070,142 1145,152 1200,146 L1200,220 L0,220 Z"
-                fill="#0F1C1D"
-              />
-            </svg>
+            {/* Soft upper apricot wash so dark serif typography and CTAs stay crisp */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#F6D8B2]/82 via-[#F6D8B2]/55 via-58% to-transparent" />
 
-            <div className="relative z-10 flex flex-col items-center px-6 pt-14 pb-36 text-center sm:px-12 sm:pt-16 sm:pb-44">
+            <div className="relative z-10 flex flex-col items-center px-6 pt-14 pb-36 text-center sm:px-12 sm:pt-16 sm:pb-48">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/20 bg-[#FAF6EE]/75 px-4 py-1.5 text-xs font-semibold text-[#0F181A] backdrop-blur-sm">
                 <Lock className="h-3.5 w-3.5 shrink-0" />
                 Hospital-Owned · Private by Design
