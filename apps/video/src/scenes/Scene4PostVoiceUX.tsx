@@ -32,8 +32,8 @@ const COPY: Record<
     tab: "journal",
   },
   circle: {
-    headline: "Warmth and wisdom, without misleading claims.",
-    body: "Inside Sakhi's closed circle, experienced women and mothers share comforting voice notes and everyday support, moderated so medical myths never slip in.",
+    headline: "Warmth and wisdom, alongside safe care.",
+    body: "Inside Sakhi's closed circle, experienced women and mothers share comforting voice notes and everyday encouragement, kept separate from clinical triage.",
     time: "8:20 AM",
     tab: "feed",
   },
