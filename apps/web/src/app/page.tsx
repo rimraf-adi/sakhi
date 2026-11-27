@@ -16,7 +16,6 @@ import { OrbShowcase } from "@/components/OrbShowcase";
 import { Reveal } from "@/components/Reveal";
 import {
   COUPLE_MOMENTS,
-  GUARDRAILS,
   IMPACT_SIGNALS,
   NFHS_STATS,
 } from "@/data/sakhi-content";
@@ -428,112 +427,83 @@ export default function HomePage() {
         </section>
 
         {/* Section 5: Safety Guardrails & Doctor's One-Page Timeline */}
-        <section className="border-t border-[#0F181A]/10 bg-[#EFE8DA]/65 py-14 sm:py-20 lg:py-26">
+        <section className="border-t border-[#0F181A]/10 bg-[#EFE8DA]/65 py-14 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            <div className="grid items-start gap-12 lg:grid-cols-12">
+            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
               <div className="lg:col-span-5">
                 <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
-                  For Both Families &amp; Clinicians
+                  Before Every Check-Up
                 </p>
                 <h2 className="mt-3 font-serif text-3xl leading-[1.12] font-semibold tracking-tight sm:text-4xl">
-                  Walk into your check-up heard, not rushed.
+                  Walk in heard, not rushed.
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-[#536360] sm:text-base">
-                  Before every check-up, Sakhi reads her a short recap in her language. Her doctor
-                  gets a dated one-page history in her exact words so nothing is missed.
+                  Her doctor gets a dated one-page history in her own words before she enters.
                 </p>
 
-                <div className="mt-7 space-y-5">
-                  {GUARDRAILS.map((rule) => (
-                    <div key={rule.title} className="flex items-start gap-3.5">
+                <ul className="mt-6 space-y-3 text-sm text-[#0F181A]">
+                  {[
+                    "Repeats back in her language to confirm",
+                    "Escalates to ASHA or hospital whenever unsure",
+                    "Tested with doctors across regional phrasing",
+                  ].map((point) => (
+                    <li key={point} className="flex items-center gap-3">
                       <span
                         aria-hidden="true"
-                        className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2B7A5B]/15 text-[#2B7A5B]"
+                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2B7A5B]/15 text-[#2B7A5B]"
                       >
                         <Check className="h-3.5 w-3.5" />
                       </span>
-                      <div>
-                        <h3 className="text-sm font-semibold text-[#0F181A]">{rule.title}</h3>
-                        <p className="mt-1 text-xs leading-relaxed text-[#536360] sm:text-sm">
-                          {rule.body}
-                        </p>
-                      </div>
-                    </div>
+                      <span>{point}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
 
               <Reveal delayMs={90} className="lg:col-span-7">
-                <div className="rounded-[24px] border border-[#0F181A]/12 border-t-4 border-t-[#162B44] bg-[#FCFBF7] p-5 shadow-[0_24px_60px_-24px_rgba(15,24,26,0.2)] transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_-24px_rgba(15,24,26,0.26)] sm:p-7 lg:p-9">
-                  <div className="flex flex-col gap-3 border-b border-[#0F181A]/12 pb-5 sm:flex-row sm:items-start sm:justify-between">
+                <div className="rounded-[24px] border border-[#0F181A]/10 bg-[#FCFBF7] p-6 shadow-[0_20px_50px_-24px_rgba(15,24,26,0.16)] sm:p-8">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#0F181A]/10 pb-4">
                     <div>
-                      <p className="text-[11px] font-bold tracking-[0.16em] text-[#D97745] uppercase">
-                        Pre-Visit Doctor Summary · Hospital Record
-                      </p>
-                      <h3 className="mt-1.5 font-serif text-xl font-semibold text-[#0F181A] sm:text-[1.45rem]">
-                        One-Page Timeline in Her Words
+                      <h3 className="font-serif text-xl font-semibold text-[#0F181A] sm:text-2xl">
+                        One-Page Timeline
                       </h3>
+                      <p className="mt-1.5 text-xs text-[#536360] tabular-nums">
+                        Week 32 · Iron 24/28 days · Hindi
+                      </p>
                     </div>
-                    <span className="w-fit shrink-0 rounded-full border border-[#0F181A]/15 bg-[#F7F4ED] px-3 py-1 text-xs font-semibold text-[#0F181A] tabular-nums">
+                    <span className="text-xs font-medium text-[#536360] tabular-nums">
                       ANC Visit #3
                     </span>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-1 gap-3 rounded-xl bg-[#F7F4ED] p-3.5 text-xs sm:grid-cols-3">
+                  <div className="mt-6 space-y-5 border-l border-[#0F181A]/15 pl-5">
                     <div>
-                      <p className="text-[#536360]">Gestation</p>
-                      <p className="mt-0.5 font-semibold text-[#0F181A] tabular-nums">
-                        Week 32 · Day 2
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[#536360]">Iron Tablets</p>
-                      <p className="mt-0.5 font-semibold text-[#0F181A] tabular-nums">
-                        24 / 28 days
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[#536360]">Language</p>
-                      <p className="mt-0.5 font-semibold text-[#0F181A]">Hindi (Confirmed)</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 space-y-5 border-l-2 border-[#0F181A]/15 pl-5">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs font-bold text-[#C23B2B] uppercase">
-                          19 Nov · Danger Alert Sent
+                      <p className="text-[11px] font-semibold tracking-wider uppercase">
+                        <span className="text-[#C23B2B]">19 Nov · Alert Sent</span>{" "}
+                        <span className="font-medium text-[#2B7A5B] normal-case">
+                          · Reached hospital in 38m
                         </span>
-                        <span className="rounded-full bg-[#98CFB4]/35 px-2.5 py-0.5 text-[11px] font-semibold text-[#102B22]">
-                          Care team responded in 38m · Reached hospital
-                        </span>
-                      </div>
-                      <p className="mt-1.5 text-sm font-medium text-[#0F181A]">
-                        “Do din se sar dard hai aur pair sujhe hue hain. Subah se thoda dhundhla
-                        lag raha hai.”
                       </p>
-                      <p className="mt-0.5 text-xs text-[#536360]">
-                        MoH Rule: Pre-eclampsia danger triad · Patient confirmed repeat-back
+                      <p className="mt-1.5 font-serif text-base font-medium text-[#0F181A] sm:text-lg">
+                        “Do din se sar dard hai aur pair sujhe hue hain.”
+                      </p>
+                      <p className="mt-1 text-xs text-[#536360]">
+                        Headache, swelling &amp; blurred vision · Confirmed by repeat-back
                       </p>
                     </div>
 
                     <div>
-                      <span className="text-xs font-bold text-[#536360] uppercase">
-                        14 Nov · Mild Symptom &amp; Habit Saved
-                      </span>
-                      <p className="mt-1 text-sm font-medium text-[#0F181A]">
-                        “Kal raat iron ki goli lena bhool gayi, aur thakan lag rahi hai.”
+                      <p className="text-[11px] font-semibold tracking-wider text-[#536360] uppercase">
+                        14 Nov · Saved &amp; Reminded
                       </p>
-                      <p className="mt-0.5 text-xs text-[#536360]">
-                        Ruled out dizziness/breathlessness · Evening voice reminder scheduled
+                      <p className="mt-1.5 font-serif text-base font-medium text-[#0F181A] sm:text-lg">
+                        “Kal raat iron ki goli lena bhool gayi.”
+                      </p>
+                      <p className="mt-1 text-xs text-[#536360]">
+                        Missed iron tablet · Evening voice reminder scheduled
                       </p>
                     </div>
                   </div>
-
-                  <p className="mt-6 border-t border-[#0F181A]/10 pt-4 text-[11px] text-[#536360]">
-                    Note: Sakhi does not diagnose or advise on medicine. She receives a short spoken
-                    recap before walking in, so the doctor no longer starts from nothing.
-                  </p>
                 </div>
               </Reveal>
             </div>
