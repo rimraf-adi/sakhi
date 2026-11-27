@@ -11,7 +11,7 @@ import {
   Users,
   Volume2,
 } from "lucide-react";
-import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { interpolate, useCurrentFrame } from "remotion";
 import { PhoneFrame, SANS, SERIF } from "../components/ScreenChrome";
 
 type ViewMode = "circle" | "journal";
@@ -43,12 +43,11 @@ function VoiceNotePill({
   duration,
   lang,
   dark = false,
-  frame,
 }: {
   duration: string;
   lang?: string;
   dark?: boolean;
-  frame: number;
+  frame?: number;
 }) {
   const heights = [6, 12, 18, 10, 16, 20, 13, 8, 17, 14, 9, 15, 19, 11, 7];
   return (
@@ -66,21 +65,18 @@ function VoiceNotePill({
     >
       <Volume2 size={12} />
       <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-        {heights.map((h, i) => {
-          const pulse = 0.75 + 0.25 * Math.sin(frame * 0.14 + i * 0.7);
-          return (
-            <span
-              key={i}
-              style={{
-                width: 2,
-                height: Math.round(h * pulse),
-                borderRadius: 2,
-                backgroundColor: dark ? "#A7F3D0" : "#9C5A3C",
-                display: "inline-block",
-              }}
-            />
-          );
-        })}
+        {heights.map((h, i) => (
+          <span
+            key={i}
+            style={{
+              width: 2,
+              height: h,
+              borderRadius: 2,
+              backgroundColor: dark ? "#A7F3D0" : "#9C5A3C",
+              display: "inline-block",
+            }}
+          />
+        ))}
       </div>
       <span style={{ fontSize: 10.5, fontWeight: 600 }}>
         {duration}
@@ -92,15 +88,13 @@ function VoiceNotePill({
 
 export function Scene4PostVoiceUX() {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   const mode: ViewMode = frame < 570 ? "journal" : "circle";
   const beatFrame = mode === "journal" ? frame : frame - 570;
 
-  const enter = spring({
-    frame: beatFrame,
-    fps,
-    config: { damping: 22, stiffness: 95 },
+  const enter = interpolate(beatFrame, [0, 14], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
   });
 
   const beatFade = interpolate(
