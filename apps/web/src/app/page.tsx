@@ -11,6 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { OrbShowcase } from "@/components/OrbShowcase";
+import { Reveal } from "@/components/Reveal";
 import {
   COUPLE_MOMENTS,
   GUARDRAILS,
@@ -70,11 +71,11 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F181A]/45 via-transparent to-[#13263E]/35" />
 
         {/* Section 0: Three Floating White Pill Islands */}
-        <header className="relative z-20 mx-auto max-w-6xl px-5 pt-6 sm:px-8">
+        <header className="animate-hero-rise relative z-20 mx-auto max-w-6xl px-5 pt-6 sm:px-8">
           <div className="flex items-center justify-between gap-3">
             <a
               href="#"
-              className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-white px-4 py-2 text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-transform hover:scale-[1.02]"
+              className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-white px-4 py-2 text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-transform duration-200 hover:scale-[1.02] active:scale-[0.985]"
             >
               <span
                 aria-hidden="true"
@@ -93,29 +94,38 @@ export default function HomePage() {
               aria-label="Primary navigation"
               className="hidden min-h-[44px] items-center gap-6 rounded-full bg-white px-7 py-2.5 text-xs font-medium text-[#0F181A]/85 shadow-[0_8px_24px_rgba(15,24,26,0.18)] md:flex"
             >
-              <a href="#the-gap" className="py-1 transition-colors hover:text-[#D97745]">
+              <a href="#the-gap" className="py-1 transition-colors duration-200 hover:text-[#D97745]">
                 The Gap
               </a>
-              <a href="#hear-sakhi" className="py-1 transition-colors hover:text-[#D97745]">
+              <a
+                href="#hear-sakhi"
+                className="py-1 transition-colors duration-200 hover:text-[#D97745]"
+              >
                 Hear Sakhi
               </a>
-              <a href="#four-actions" className="py-1 transition-colors hover:text-[#D97745]">
+              <a
+                href="#four-actions"
+                className="py-1 transition-colors duration-200 hover:text-[#D97745]"
+              >
                 4 Actions
               </a>
-              <a href="#impact" className="py-1 transition-colors hover:text-[#D97745]">
+              <a href="#impact" className="py-1 transition-colors duration-200 hover:text-[#D97745]">
                 Impact
               </a>
-              <a href="#privacy" className="py-1 transition-colors hover:text-[#D97745]">
+              <a href="#privacy" className="py-1 transition-colors duration-200 hover:text-[#D97745]">
                 Privacy
               </a>
             </nav>
 
             <a
               href="#join"
-              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-colors hover:bg-[#F5D6AE]"
+              className="group inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-[background-color,transform] duration-200 hover:bg-[#F5D6AE] active:scale-[0.985]"
             >
               Get Sakhi
-              <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
+              <ArrowRight
+                aria-hidden="true"
+                className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+              />
             </a>
           </div>
         </header>
@@ -123,39 +133,53 @@ export default function HomePage() {
         {/* Hero Foreground Content */}
         <div className="relative z-10 mx-auto flex max-w-6xl flex-col justify-between gap-10 px-5 pt-14 pb-16 sm:px-8 lg:min-h-[650px] lg:flex-row lg:items-end lg:pt-18 lg:pb-18">
           <div className="max-w-2xl pb-2 lg:pb-6">
-            <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
-              Voice-First Maternal Care · Android &amp; iOS
-            </p>
-            <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[3.4rem]">
-              She speaks.
-              <br />
-              <span className="lg:whitespace-nowrap">Sakhi listens and acts.</span>
-            </h1>
-            <p className="mt-5 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
+            <div className="animate-hero-rise" style={{ animationDelay: "90ms" }}>
+              <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
+                Voice-First Maternal Care · Android &amp; iOS
+              </p>
+              <h1 className="mt-4 font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-white sm:text-5xl lg:text-[3.4rem]">
+                She speaks.
+                <br />
+                <span className="lg:whitespace-nowrap">Sakhi listens and acts.</span>
+              </h1>
+            </div>
+            <p
+              className="animate-hero-rise mt-5 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg"
+              style={{ animationDelay: "180ms" }}
+            >
               Between check-ups, you should not have to guess at 11 PM. Registered by your hospital,
               Sakhi listens in her own language. It logs everyday symptoms and alerts her partner and
               care team within minutes when a warning sign appears.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div
+              className="animate-hero-rise mt-8 flex flex-wrap items-center gap-4"
+              style={{ animationDelay: "260ms" }}
+            >
               <a
                 href="#hear-sakhi"
-                className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/40 bg-white/18 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/28"
+                className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/40 bg-white/18 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-[background-color,border-color,transform] duration-200 hover:bg-white/28 active:scale-[0.985]"
               >
                 <Play aria-hidden="true" className="h-4 w-4 fill-current text-[#F6C478]" />
                 Listen to a Sample Call
               </a>
               <a
                 href="#join"
-                className="inline-flex min-h-[44px] items-center gap-1.5 px-2 py-2 text-xs font-semibold tracking-wider text-white/85 uppercase transition-colors hover:text-[#F6C478]"
+                className="group inline-flex min-h-[44px] items-center gap-1.5 px-2 py-2 text-xs font-semibold tracking-wider text-white/85 uppercase transition-colors duration-200 hover:text-[#F6C478]"
               >
                 How to Set It Up
-                <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
+                <ArrowRight
+                  aria-hidden="true"
+                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                />
               </a>
             </div>
 
             {/* Subtle Couple Reassurance Row */}
-            <div className="mt-8 flex flex-col gap-1.5 border-t border-white/15 pt-5 text-xs text-white/75 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
+            <div
+              className="animate-hero-rise mt-8 flex flex-col gap-1.5 border-t border-white/15 pt-5 text-xs text-white/75 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2"
+              style={{ animationDelay: "320ms" }}
+            >
               <span>Registered by your hospital</span>
               <span aria-hidden="true" className="hidden text-white/35 sm:inline">
                 ·
@@ -169,7 +193,10 @@ export default function HomePage() {
           </div>
 
           {/* Right Column: Subtle Pan-India Language Whispers + Sage Trust Card */}
-          <div className="flex w-full flex-col items-start gap-4 lg:w-auto lg:items-end lg:pb-2">
+          <div
+            className="animate-hero-rise flex w-full flex-col items-start gap-4 lg:w-auto lg:items-end lg:pb-2"
+            style={{ animationDelay: "320ms" }}
+          >
             <div
               aria-hidden="true"
               className="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-xs font-medium tracking-wide text-white/55 lg:justify-end"
@@ -218,26 +245,25 @@ export default function HomePage() {
               </h2>
 
               <div className="mt-8 grid gap-6 md:grid-cols-3">
-                {COUPLE_MOMENTS.map((item) => (
-                  <div
-                    key={item.moment}
-                    className="rounded-2xl border border-[#0F181A]/10 bg-[#FCFBF7] p-6"
-                  >
-                    <p className="text-[11px] font-bold tracking-[0.16em] text-[#9C4B22] uppercase">
-                      {item.moment}
-                    </p>
-                    <p className="mt-3 font-serif text-lg leading-snug font-medium text-[#0F181A]">
-                      {item.question}
-                    </p>
-                    <p className="mt-3 text-xs leading-relaxed text-[#536360] sm:text-sm">
-                      {item.answer}
-                    </p>
-                  </div>
+                {COUPLE_MOMENTS.map((item, idx) => (
+                  <Reveal key={item.moment} delayMs={idx * 90}>
+                    <div className="h-full rounded-2xl border border-[#0F181A]/10 bg-[#FCFBF7] p-6 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-0.5 hover:border-[#0F181A]/20 hover:shadow-sm">
+                      <p className="text-[11px] font-bold tracking-[0.16em] text-[#9C4B22] uppercase">
+                        {item.moment}
+                      </p>
+                      <p className="mt-3 font-serif text-lg leading-snug font-medium text-[#0F181A]">
+                        {item.question}
+                      </p>
+                      <p className="mt-3 text-xs leading-relaxed text-[#536360] sm:text-sm">
+                        {item.answer}
+                      </p>
+                    </div>
+                  </Reveal>
                 ))}
               </div>
             </div>
 
-            <div className="border-t border-[#0F181A]/10 pt-12">
+            <Reveal className="border-t border-[#0F181A]/10 pt-12">
               <p className="mb-8 text-xs font-semibold tracking-[0.18em] text-[#536360] uppercase">
                 Across India, millions of families navigate these exact gaps
               </p>
@@ -257,9 +283,9 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </Reveal>
 
-            <div className="mx-auto mt-12 max-w-3xl border-t border-[#0F181A]/10 pt-10 text-center">
+            <Reveal delayMs={100} className="mx-auto mt-12 max-w-3xl border-t border-[#0F181A]/10 pt-10 text-center">
               <p className="font-serif text-xl leading-relaxed text-[#0F181A] sm:text-2xl">
                 India still loses about 22,500 women a year in pregnancy and childbirth (88 per
                 100,000 live births). Sakhi cannot stop all of these deaths. It aims at one thing:{" "}
@@ -267,23 +293,25 @@ export default function HomePage() {
                   the delay between a warning sign and care.
                 </span>
               </p>
-            </div>
+            </Reveal>
           </div>
         </section>
 
         {/* Section 3: Interactive Split Stage */}
         <section id="hear-sakhi" className="bg-[#F7F4ED] py-18 sm:py-24">
           <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            <div className="mb-10 max-w-2xl">
+            <Reveal className="mb-10 max-w-2xl">
               <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
                 Hear Sakhi Work
               </p>
               <h2 className="mt-2.5 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
                 One calm orb. From spoken worry to safe action in minutes.
               </h2>
-            </div>
+            </Reveal>
 
-            <OrbShowcase />
+            <Reveal delayMs={80}>
+              <OrbShowcase />
+            </Reveal>
           </div>
         </section>
 
@@ -318,25 +346,27 @@ export default function HomePage() {
               </div>
 
               <div className="space-y-9 lg:col-span-7 lg:pl-14">
-                {FOUR_ACTIONS.map((item) => {
+                {FOUR_ACTIONS.map((item, idx) => {
                   const Icon = item.icon;
                   return (
-                    <div key={item.name} className="flex items-start gap-5">
-                      <div
-                        aria-hidden="true"
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0F181A] text-[#F7F4ED] shadow-sm"
-                      >
-                        <Icon className="h-5 w-5" />
+                    <Reveal key={item.name} delayMs={idx * 70}>
+                      <div className="group flex items-start gap-5">
+                        <div
+                          aria-hidden="true"
+                          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0F181A] text-[#F7F4ED] shadow-sm transition-transform duration-300 group-hover:scale-105"
+                        >
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h3 className="font-serif text-2xl font-semibold text-[#0F181A]">
+                            {item.name}
+                          </h3>
+                          <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-[#536360] sm:text-base">
+                            {item.summary}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-serif text-2xl font-semibold text-[#0F181A]">
-                          {item.name}
-                        </h3>
-                        <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-[#536360] sm:text-base">
-                          {item.summary}
-                        </p>
-                      </div>
-                    </div>
+                    </Reveal>
                   );
                 })}
               </div>
@@ -380,8 +410,8 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="lg:col-span-7">
-                <div className="rounded-[24px] border border-[#0F181A]/12 border-t-4 border-t-[#162B44] bg-[#FCFBF7] p-6 shadow-[0_24px_60px_-24px_rgba(15,24,26,0.2)] sm:p-9">
+              <Reveal delayMs={90} className="lg:col-span-7">
+                <div className="rounded-[24px] border border-[#0F181A]/12 border-t-4 border-t-[#162B44] bg-[#FCFBF7] p-6 shadow-[0_24px_60px_-24px_rgba(15,24,26,0.2)] transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_-24px_rgba(15,24,26,0.26)] sm:p-9">
                   <div className="flex items-start justify-between gap-4 border-b border-[#0F181A]/12 pb-5">
                     <div>
                       <p className="text-[11px] font-bold tracking-[0.16em] text-[#D97745] uppercase">
@@ -452,7 +482,7 @@ export default function HomePage() {
                     recap before walking in, so the doctor no longer starts from nothing.
                   </p>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -474,8 +504,8 @@ export default function HomePage() {
             </div>
 
             <div className="mt-12 grid gap-10 border-t border-[#0F181A]/12 pt-10 md:grid-cols-3">
-              {IMPACT_SIGNALS.map((signal) => (
-                <div key={signal.pillar}>
+              {IMPACT_SIGNALS.map((signal, idx) => (
+                <Reveal key={signal.pillar} delayMs={idx * 80}>
                   <p className="text-xs font-bold tracking-[0.16em] text-[#D97745] uppercase">
                     {signal.pillar}
                   </p>
@@ -483,7 +513,7 @@ export default function HomePage() {
                     {signal.metric}
                   </p>
                   <p className="mt-3 text-sm leading-relaxed text-[#536360]">{signal.body}</p>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -529,14 +559,17 @@ export default function HomePage() {
               <div className="mt-7 flex flex-wrap justify-center gap-3.5">
                 <a
                   href="mailto:pilot@sakhihealth.in?subject=Bring%20Sakhi%20to%20Our%20Hospital"
-                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-colors hover:bg-[#1E3A56]"
+                  className="group inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-[background-color,transform] duration-200 hover:bg-[#1E3A56] active:scale-[0.985]"
                 >
                   Bring Sakhi to Your Hospital
-                  <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                  />
                 </a>
                 <a
                   href="#hear-sakhi"
-                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-colors hover:bg-white"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-[background-color,transform] duration-200 hover:bg-white active:scale-[0.985]"
                 >
                   Listen to a Sample Call
                 </a>

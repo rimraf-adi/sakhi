@@ -171,7 +171,7 @@ export function OrbShowcase() {
                       type="button"
                       aria-pressed={isActive}
                       onClick={() => handleSelectScenario(idx)}
-                      className={`min-h-[44px] w-full cursor-pointer rounded-2xl border px-4 py-3.5 text-left transition-[background-color,border-color,color,box-shadow] ${
+                      className={`min-h-[44px] w-full cursor-pointer rounded-2xl border px-4 py-3.5 text-left transition-[background-color,border-color,color,box-shadow,transform] duration-200 active:scale-[0.985] ${
                         isActive
                           ? "border-[#0F181A] bg-[#0F181A] text-[#F7F4ED] shadow-md"
                           : "border-[#0F181A]/12 bg-white/75 text-[#0F181A] hover:border-[#0F181A]/30 hover:bg-white"
@@ -220,7 +220,7 @@ export function OrbShowcase() {
               type="button"
               aria-pressed={isPlaying}
               onClick={handlePlayCall}
-              className="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold text-[#F7F4ED] transition-colors hover:bg-white/18"
+              className="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold text-[#F7F4ED] transition-[background-color,transform] duration-200 hover:bg-white/18 active:scale-[0.985]"
             >
               {isPlaying ? (
                 <>
@@ -297,7 +297,7 @@ export function OrbShowcase() {
                       stopPlayback();
                       setStep(item.step);
                     }}
-                    className={`min-h-[44px] cursor-pointer rounded-full border px-3 py-2 text-[11px] font-semibold transition-[background-color,border-color,color] ${
+                    className={`min-h-[44px] cursor-pointer rounded-full border px-3 py-2 text-[11px] font-semibold transition-[background-color,border-color,color,transform] duration-200 active:scale-[0.985] ${
                       active
                         ? "border-[#F6C478] bg-[#F6C478]/18 text-[#F6C478]"
                         : reached
@@ -317,7 +317,7 @@ export function OrbShowcase() {
               className="space-y-3 rounded-2xl border border-white/12 bg-white/[0.04] p-4 text-sm sm:p-5"
             >
               {/* Step 1: She Speaks */}
-              <div className="flex items-start gap-3">
+              <div key={`${scenario.id}-s1`} className="animate-step-in flex items-start gap-3">
                 <Mic aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[#F6C478]" />
                 <div>
                   <p className="font-medium text-[#F7F4ED]">{scenario.motherUtterance}</p>
@@ -327,7 +327,10 @@ export function OrbShowcase() {
 
               {/* Step 2: 1 Stage-Aware Question */}
               {step >= 2 ? (
-                <div className="border-t border-white/10 pt-3">
+                <div
+                  key={`${scenario.id}-s2`}
+                  className="animate-step-in border-t border-white/10 pt-3"
+                >
                   <p className="text-[11px] font-semibold tracking-wider text-[#F6C478] uppercase">
                     Stage-aware follow-up · 1 short question
                   </p>
@@ -341,7 +344,10 @@ export function OrbShowcase() {
 
               {/* Step 3: Repeat-Back Confirmation */}
               {step >= 3 ? (
-                <div className="flex items-start gap-2.5 rounded-xl border border-[#98CFB4]/25 bg-[#98CFB4]/10 p-3 text-xs text-[#F7F4ED]">
+                <div
+                  key={`${scenario.id}-s3`}
+                  className="animate-step-in flex items-start gap-2.5 rounded-xl border border-[#98CFB4]/25 bg-[#98CFB4]/10 p-3 text-xs text-[#F7F4ED]"
+                >
                   <CheckCircle2
                     aria-hidden="true"
                     className="mt-0.5 h-4 w-4 shrink-0 text-[#98CFB4]"
@@ -358,7 +364,8 @@ export function OrbShowcase() {
               {/* Step 4: Bounded MoH Action */}
               {step === 4 ? (
                 <div
-                  className={`rounded-xl border p-4 ${
+                  key={`${scenario.id}-s4`}
+                  className={`animate-step-in rounded-xl border p-4 ${
                     scenario.action === "alert"
                       ? "border-[#C23B2B]/55 bg-[#C23B2B]/18"
                       : "border-[#98CFB4]/35 bg-[#98CFB4]/14"
