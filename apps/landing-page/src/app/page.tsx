@@ -10,7 +10,6 @@ import {
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
-import { OrbShowcase } from "@/components/OrbShowcase";
 import { Reveal } from "@/components/Reveal";
 import {
   COUPLE_MOMENTS,
@@ -85,10 +84,10 @@ export default function HomePage() {
                 Between Visits
               </a>
               <a
-                href="#how-sakhi-works"
+                href="#four-actions"
                 className="py-2 transition-colors duration-200 hover:text-[#9C5A3C]"
               >
-                How it Works
+                4 Actions
               </a>
               <a
                 href="#privacy"
@@ -152,7 +151,7 @@ export default function HomePage() {
                   />
                 </a>
                 <a
-                  href="#how-sakhi-works"
+                  href="#four-actions"
                   className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#0F181A]/35 bg-transparent px-7 py-3.5 text-sm font-medium text-[#0F181A] transition-[border-color,background-color,transform] duration-200 hover:border-[#0F181A]/65 hover:bg-[#0F181A]/[0.04] active:scale-[0.985]"
                 >
                   See How It Works
@@ -308,24 +307,6 @@ export default function HomePage() {
                   the delay between a warning sign and care.
                 </span>
               </p>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Section 3: Interactive Split Stage */}
-        <section id="how-sakhi-works" className="bg-[#F7F4ED] py-14 sm:py-20 lg:py-24">
-          <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-            <Reveal className="mb-8 max-w-2xl sm:mb-10">
-              <p className="text-xs font-semibold tracking-[0.18em] text-[#D97745] uppercase">
-                How Sakhi Works
-              </p>
-              <h2 className="mt-2.5 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
-                One calm orb. From spoken worry to safe action in minutes.
-              </h2>
-            </Reveal>
-
-            <Reveal delayMs={80}>
-              <OrbShowcase />
             </Reveal>
           </div>
         </section>
@@ -555,10 +536,10 @@ export default function HomePage() {
                     />
                   </a>
                   <a
-                    href="#how-sakhi-works"
+                    href="#four-actions"
                     className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-[background-color,transform] duration-200 hover:bg-white active:scale-[0.985] sm:w-auto"
                   >
-                    See How Sakhi Works
+                    See How Sakhi Helps
                   </a>
                 </div>
               </div>
