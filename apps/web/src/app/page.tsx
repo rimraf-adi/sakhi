@@ -61,11 +61,11 @@ export default function HomePage() {
 
       {/* Section 0 & 1: Sayings-Inspired Framed Dark Bento Hero */}
       <section className="bg-[#F7F4ED] p-2.5 sm:p-4 lg:p-5">
-        <div className="bg-grain mx-auto flex max-w-[1380px] flex-col justify-between overflow-hidden rounded-[24px] bg-[#0E1517] p-3 text-[#F7F4ED] shadow-[0_30px_90px_-30px_rgba(15,24,26,0.35)] sm:rounded-[32px] sm:p-4 lg:min-h-[calc(100svh-2.5rem)] lg:rounded-[36px]">
+        <div className="bg-grain mx-auto flex max-w-[1380px] flex-col justify-between overflow-hidden rounded-[24px] bg-[#0E1517] p-3 text-[#F7F4ED] shadow-[0_30px_90px_-30px_rgba(15,24,26,0.35)] sm:rounded-[32px] sm:p-4 lg:min-h-[620px] lg:rounded-[36px] xl:min-h-[660px]">
           <div className="relative z-10 grid flex-1 gap-4 lg:grid-cols-12">
             {/* Left Column: Minimal Inline Header + Serif Headline + CTAs + Scroll Cue */}
             <div className="flex flex-col justify-between p-4 sm:p-6 lg:col-span-6 lg:p-9">
-              <header className="animate-hero-rise flex flex-wrap items-center justify-between gap-3">
+              <header className="animate-hero-rise flex items-center justify-between gap-3">
                 <a
                   href="#"
                   className="inline-flex min-h-[44px] items-center gap-2.5 text-[#F7F4ED] transition-opacity duration-200 hover:opacity-85"
@@ -82,48 +82,10 @@ export default function HomePage() {
                     Sakhi
                   </span>
                 </a>
-
-                <a
-                  href="#join"
-                  className="inline-flex min-h-[40px] items-center gap-1 rounded-full border border-white/20 px-3.5 py-1.5 text-[11px] font-semibold text-[#F7F4ED] transition-colors hover:border-white/40 sm:hidden"
-                >
-                  Get Sakhi
-                  <ArrowRight aria-hidden="true" className="h-3 w-3" />
-                </a>
-
-                <nav
-                  aria-label="Primary navigation"
-                  className="hidden items-center gap-4 text-xs font-medium text-[#F7F4ED]/70 sm:flex md:gap-5"
-                >
-                  <a
-                    href="#the-gap"
-                    className="py-2 transition-colors duration-200 hover:text-[#F6C478]"
-                  >
-                    Between Visits
-                  </a>
-                  <a
-                    href="#hear-sakhi"
-                    className="py-2 transition-colors duration-200 hover:text-[#F6C478]"
-                  >
-                    Hear Sakhi
-                  </a>
-                  <a
-                    href="#four-actions"
-                    className="py-2 transition-colors duration-200 hover:text-[#F6C478]"
-                  >
-                    4 Actions
-                  </a>
-                  <a
-                    href="#privacy"
-                    className="py-2 transition-colors duration-200 hover:text-[#F6C478]"
-                  >
-                    Privacy
-                  </a>
-                </nav>
               </header>
 
               {/* Hero Main Copy */}
-              <div className="my-8 max-w-xl lg:my-0">
+              <div className="my-8 max-w-xl lg:my-8">
                 <div className="animate-hero-rise" style={{ animationDelay: "90ms" }}>
                   <p className="text-xs font-semibold tracking-[0.2em] text-[#F6C478] uppercase">
                     Voice-First Maternal Care · Android &amp; iOS
@@ -200,69 +162,70 @@ export default function HomePage() {
               className="animate-hero-rise flex flex-col gap-3.5 lg:col-span-6"
               style={{ animationDelay: "180ms" }}
             >
-              {/* Top Main Bento Tile: Concrete 11:14 PM Live Couple Moment */}
-              <div className="relative flex min-h-[290px] flex-1 flex-col justify-between overflow-hidden rounded-[22px] border border-white/10 p-5 sm:rounded-[26px] sm:p-7">
-                <Image
-                  src="/images/hero-twilight-horizon.jpg"
-                  alt="Calm twilight sky over distant hills and warm golden light reflected on still water"
-                  fill
-                  priority
-                  className="object-cover object-center"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+              {/* Top Main Bento Tile: Clean Editorial 11:14 PM Voice Moment */}
+              <div className="relative flex flex-1 flex-col justify-between gap-6 overflow-hidden rounded-[22px] border border-white/10 bg-[#141E21] p-6 sm:rounded-[26px] sm:p-7">
+                {/* Subtle ambient wash (pure CSS glow, no orb) */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -top-20 -right-20 h-52 w-52 rounded-full bg-[#F6C478]/10 blur-3xl"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0E1517]/75 via-[#0E1517]/40 to-[#0E1517]/90" />
 
-                <div className="relative z-10 flex flex-wrap items-center justify-between gap-2">
-                  <div className="inline-flex items-center gap-2 text-xs font-medium text-[#F7F4ED]/90">
+                {/* Top row: timestamp + minimalist audio waveform */}
+                <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
+                  <div className="inline-flex items-center gap-2 text-xs font-medium text-[#F7F4ED]/80">
                     <span
                       aria-hidden="true"
                       className="inline-block h-2 w-2 rounded-full bg-[#F6C478]"
                     />
                     <span className="tabular-nums">11:14 PM · Week 32 · Hindi</span>
                   </div>
-                  <span className="rounded-full border border-white/20 bg-[#0E1517]/65 px-3 py-1 text-[11px] font-medium text-[#F5D6AE] backdrop-blur-sm">
-                    Hospital Registered
-                  </span>
+                  <div aria-hidden="true" className="flex h-5 items-center gap-[3px]">
+                    {[6, 13, 19, 9, 17, 12, 20, 8, 14, 7].map((barHeight, idx) => (
+                      <span
+                        key={idx}
+                        className="w-[2.5px] rounded-full bg-[#F6C478]/80"
+                        style={{ height: `${barHeight}px` }}
+                      />
+                    ))}
+                  </div>
                 </div>
 
-                <div className="relative z-10 mt-10">
-                  <div className="flex items-start gap-2.5">
-                    <Mic
-                      aria-hidden="true"
-                      className="mt-1 h-4 w-4 shrink-0 text-[#F6C478]"
-                    />
-                    <div>
-                      <p className="font-serif text-lg leading-snug font-medium text-white sm:text-xl">
-                        “Do din se sar dard hai aur pair sujhe hue hain.”
-                      </p>
-                      <p className="mt-1 text-xs text-[#F7F4ED]/75">
-                        Headache and swollen feet for two days.
-                      </p>
-                    </div>
+                {/* Center focal editorial quote */}
+                <div className="relative z-10 my-auto">
+                  <div className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.18em] text-[#F5D6AE]/80 uppercase">
+                    <Mic aria-hidden="true" className="h-4 w-4 text-[#F6C478]" />
+                    <span>She Speaks</span>
                   </div>
+                  <p className="mt-3 font-serif text-2xl leading-[1.26] font-medium tracking-[-0.01em] text-white sm:text-[1.7rem]">
+                    “Do din se sar dard hai aur pair sujhe hue hain.”
+                  </p>
+                  <p className="mt-2 text-sm text-[#F7F4ED]/60">
+                    Headache and swollen feet for two days.
+                  </p>
+                </div>
 
-                  <div className="mt-4 grid gap-2 rounded-xl border border-white/15 bg-[#0E1517]/75 p-3 text-[11px] text-[#F7F4ED]/90 backdrop-blur-md sm:grid-cols-3">
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        aria-hidden="true"
-                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F6C478]"
-                      />
-                      <span>Confirms blurred vision</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        aria-hidden="true"
-                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#D97745]"
-                      />
-                      <span>Alerts partner &amp; ASHA</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        aria-hidden="true"
-                        className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#98CFB4]"
-                      />
-                      <span>Hospital notified in minutes</span>
-                    </div>
+                {/* Bottom hairline outcome strip */}
+                <div className="relative z-10 grid gap-2.5 border-t border-white/10 pt-4 text-xs text-[#F7F4ED]/85 sm:grid-cols-3">
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F6C478]"
+                    />
+                    <span>Checks blurred vision</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#D97745]"
+                    />
+                    <span>Alerts partner &amp; ASHA</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#A4E1BD]"
+                    />
+                    <span>Hospital notified</span>
                   </div>
                 </div>
               </div>
