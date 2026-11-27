@@ -25,17 +25,17 @@ const COPY: Record<
     tab: "feed" | "journal";
   }
 > = {
-  circle: {
-    headline: "A closed circle of mothers, never strangers.",
-    body: "Only hospital-enrolled pregnant women in the same trimester are in her circle. They share text and voice notes safely, without public-internet myths.",
-    time: "8:15 AM",
-    tab: "feed",
-  },
   journal: {
     headline: "A visual journal built for her, not just forms.",
     body: "A clear Week 32 gestation arc, 14-day iron tablet dot calendar, BP trendline, and audio recap she can listen to before a busy 5-minute clinic.",
-    time: "8:20 AM",
+    time: "8:15 AM",
     tab: "journal",
+  },
+  circle: {
+    headline: "Warmth and wisdom, without misleading claims.",
+    body: "Inside Sakhi's closed circle, experienced women and mothers share comforting voice notes and everyday support, moderated so medical myths never slip in.",
+    time: "8:20 AM",
+    tab: "feed",
   },
 };
 
@@ -94,8 +94,8 @@ export function Scene4PostVoiceUX() {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const mode: ViewMode = frame < 450 ? "circle" : "journal";
-  const beatFrame = mode === "circle" ? frame : frame - 450;
+  const mode: ViewMode = frame < 570 ? "journal" : "circle";
+  const beatFrame = mode === "journal" ? frame : frame - 570;
 
   const enter = spring({
     frame: beatFrame,
@@ -103,10 +103,15 @@ export function Scene4PostVoiceUX() {
     config: { damping: 22, stiffness: 95 },
   });
 
-  const beatFade = interpolate(beatFrame, [0, 12, 435, 450], [0, 1, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  const beatFade = interpolate(
+    beatFrame,
+    mode === "journal" ? [0, 12, 555, 570] : [0, 12, 465, 480],
+    [0, 1, 1, 0],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    },
+  );
 
   const copy = COPY[mode];
 
@@ -189,8 +194,8 @@ export function Scene4PostVoiceUX() {
           }}
         >
           {[
-            { id: "circle" as const, label: "01. Closed Peer Circle" },
-            { id: "journal" as const, label: "02. Visual Pregnancy Journal" },
+            { id: "journal" as const, label: "01. Visual Pregnancy Journal" },
+            { id: "circle" as const, label: "02. Closed Community Circle" },
           ].map((item) => {
             const active = item.id === mode;
             return (

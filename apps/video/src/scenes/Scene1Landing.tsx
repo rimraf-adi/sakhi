@@ -77,12 +77,12 @@ export function Scene1Landing() {
     config: { damping: 22, stiffness: 95 },
   });
 
-  // Beat 3 (405 - 630): 50/50 magazine spread
-  const beat3Opacity = interpolate(frame, [398, 415, 615, 630], [0, 1, 1, 0], {
+  // Beat 3 (405 - 675): 50/50 magazine spread
+  const beat3Opacity = interpolate(frame, [398, 415, 660, 675], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const beat3ImgScale = interpolate(frame, [405, 630], [1.02, 1.07], {
+  const beat3ImgScale = interpolate(frame, [405, 675], [1.02, 1.07], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });

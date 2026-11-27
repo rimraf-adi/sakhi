@@ -4,7 +4,7 @@ import { SANS, SERIF } from '../components/ScreenChrome';
 const ACTIONS = [
   { name: 'Alert', detail: 'Danger signs escalated in minutes', color: '#B42318' },
   { name: 'Save', detail: 'Routine updates logged to timeline', color: '#0F4C3A' },
-  { name: 'Remind', detail: 'ANC visits and iron adherence', color: '#B54708' },
+  { name: 'Connect', detail: 'Closed circle of trusted wisdom', color: '#B54708' },
   { name: 'Summarize', detail: 'One-page pre-visit clinician brief', color: '#101828' },
 ];
 

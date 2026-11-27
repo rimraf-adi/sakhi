@@ -9,7 +9,7 @@ export function RemotionRoot() {
       <Composition
         id="SakhiDemo"
         component={SakhiDemo}
-        durationInFrames={4620}
+        durationInFrames={4740}
         fps={30}
         width={1920}
         height={1080}
@@ -17,7 +17,7 @@ export function RemotionRoot() {
       <Composition
         id="PostVoiceUXPreview"
         component={Scene4PostVoiceUX}
-        durationInFrames={900}
+        durationInFrames={1050}
         fps={30}
         width={1920}
         height={1080}

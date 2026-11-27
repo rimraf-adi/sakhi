@@ -127,22 +127,22 @@ export function Scene5ClinicDashboard() {
     config: { damping: 18, stiffness: 120 },
   });
 
-  const acknowledged = frame >= 210;
-  const showAudit = frame >= 330;
+  const acknowledged = frame >= 120;
+  const showAudit = frame >= 185;
 
   const cursorX = interpolate(
     frame,
-    [0, 110, 200, 290, 325, 450],
+    [0, 65, 115, 160, 180, 260],
     [320, 620, 775, 420, 145, 860],
     { extrapolateRight: 'clamp' },
   );
   const cursorY = interpolate(
     frame,
-    [0, 110, 200, 290, 325, 450],
+    [0, 65, 115, 160, 180, 260],
     [210, 310, 368, 310, 308, 420],
     { extrapolateRight: 'clamp' },
   );
-  const clickFrame = frame < 280 ? 205 : 325;
+  const clickFrame = frame < 155 ? 115 : 180;
 
   return (
     <AbsoluteFill
