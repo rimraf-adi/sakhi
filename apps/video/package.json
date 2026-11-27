@@ -1,0 +1,25 @@
+{
+  "name": "@sakhi/video",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio --port 3003",
+    "render": "remotion render src/index.ts SakhiDemo out/sakhi-demo.mp4",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.242",
+    "lucide-react": "^0.511.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remotion": "^4.0.242"
+  },
+  "devDependencies": {
+    "@sakhi/typescript-config": "*",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "^5.8.3"
+  }
+}

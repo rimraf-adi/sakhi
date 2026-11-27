@@ -49,7 +49,7 @@ export const GUARDRAILS = [
   },
   {
     title: "When Unsure, Connects Her to Care",
-    body: "If a symptom is unclear, it asks one short follow-up question. If anything is still unsure, it treats the case as serious and connects her to her ASHA worker or hospital.",
+    body: "If a symptom is unclear, it asks one short follow-up question. If anything is still unsure, it treats the case as serious and connects her to her health professional or hospital.",
   },
   {
     title: "Tested With Doctors Across Languages",

@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sakhi: Voice-First Pregnancy Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    @page {
+      size: 1280px 720px;
+      margin: 0;
+    }
+
+    :root {
+      --paper-ivory: #F7F4ED;
+      --warm-sand: #EFE8DA;
+      --obsidian-ink: #0F181A;
+      --muted-slate: #536360;
+      --orb-gold: #F6C478;
+      --orb-terracotta: #D97745;
+      --sage-mint: #98CFB4;
+      --sage-ink: #102B22;
+      --twilight-indigo: #162B44;
+      --clinical-vermilion: #C23B2B;
+      --confirmation-leaf: #2B7A5B;
+      --apricot-sandstone: #F5D6AE;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background: #E2DAC9;
+      color: var(--obsidian-ink);
+      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background: var(--paper-ivory);
+      padding: 46px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .slide:last-child {
+      page-break-after: auto;
+      break-after: auto;
+    }
+
+    @media screen {
+      .slide {
+        margin: 24px auto;
+        box-shadow: 0 14px 36px rgba(15, 24, 26, 0.14);
+      }
+    }
+
+    @media print {
+      html, body {
+        background: var(--paper-ivory);
+      }
+      .slide {
+        margin: 0;
+        box-shadow: none;
+      }
+    }
+
+    .bg-watermark {
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.75;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-mark {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--obsidian-ink);
+      letter-spacing: -0.02em;
+    }
+
+    .slide-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted-slate);
+    }
+
+    h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 58px;
+      line-height: 1.05;
+      font-weight: 700;
+      color: var(--obsidian-ink);
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 40px;
+      line-height: 1.1;
+      font-weight: 700;
+      color: var(--obsidian-ink);
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      font-size: 16px;
+      line-height: 1.48;
+      color: var(--muted-slate);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--obsidian-ink);
+      background: var(--orb-gold);
+      width: fit-content;
+    }
+
+    .pill-terracotta {
+      background: var(--orb-terracotta);
+      color: #FFFFFF;
+    }
+
+    .pill-sage {
+      background: var(--sage-mint);
+      color: var(--sage-ink);
+    }
+
+    .panel {
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .panel-gold { background: var(--orb-gold); }
+    .panel-terracotta { background: var(--orb-terracotta); }
+    .panel-sage { background: var(--sage-mint); }
+
+    /* Formal Editorial Cards */
+    .editorial-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(15, 24, 26, 0.12);
+      border-radius: 16px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .editorial-sand {
+      background: var(--warm-sand);
+      border: 1px solid rgba(15, 24, 26, 0.1);
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .editorial-stat {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--obsidian-ink);
+    }
+
+    .editorial-label {
+      font-size: 13.5px;
+      line-height: 1.4;
+      color: var(--muted-slate);
+    }
+
+    /* Product Screenshot Frame */
+    .screen-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 24, 26, 0.16);
+      overflow: hidden;
+      background: #FFFFFF;
+      box-shadow: 0 10px 26px rgba(15, 24, 26, 0.08);
+    }
+
+    .screen-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .screen-caption {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--obsidian-ink);
+      letter-spacing: 0.01em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .screen-caption span.muted {
+      font-weight: 500;
+      color: var(--muted-slate);
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+    }
+
+    .bullet-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .badge-circle {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 50%;
+      background: var(--obsidian-ink);
+      color: var(--paper-ivory);
+      font-size: 13.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .badge-outline {
+      background: transparent;
+      border: 2px solid var(--obsidian-ink);
+      color: var(--obsidian-ink);
+    }
+
+    .item-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--obsidian-ink);
+      margin-bottom: 3px;
+    }
+
+    .item-desc {
+      font-size: 14.5px;
+      line-height: 1.44;
+      color: var(--muted-slate);
+    }
+
+    .item-desc strong {
+      color: var(--obsidian-ink);
+    }
+
+    .code-tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12.5px;
+      background: var(--warm-sand);
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: var(--obsidian-ink);
+      font-weight: 600;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      color: var(--muted-slate);
+      font-weight: 600;
+    }
+
+    .bottom-row strong {
+      color: var(--obsidian-ink);
+    }
+
+    .action-card {
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: space-between;
+    }
+
+    .action-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--obsidian-ink);
+    }
+
+    .action-card-desc {
+      font-size: 13.5px;
+      line-height: 1.4;
+      color: var(--obsidian-ink);
+    }
+
+    .action-card.terracotta-card .action-card-title,
+    .action-card.terracotta-card .action-card-desc {
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SLIDE 1: COVER SPLIT (MASCOT KEPT) -->
+  <section class="slide">
+    <svg class="bg-watermark" style="left: -60px; top: 90px; width: 420px; height: 420px;" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="78" fill="none" stroke="#EFE8DA" stroke-width="26"/>
+    </svg>
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; height: 100%; align-items: stretch;">
+        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0;">
+          <div class="brand-mark">Sakhi</div>
+
+          <div style="display: flex; flex-direction: column; gap: 22px;">
+            <h1>Voice-First<br/>Pregnancy<br/>Companion</h1>
+            <span class="pill">Multilingual Voice | Just Talk, No Typing</span>
+            <p class="lead" style="max-width: 480px; color: var(--obsidian-ink); font-size: 17.5px;">
+              A calm voice companion for the weeks between monthly check-ups. Safe Ministry of Health guidance, care team alerts, and a complete health journal for her doctor.
+            </p>
+          </div>
+
+          <div class="bottom-row">
+            <span><strong>Ministry of Health</strong> Safe Rules</span>
+            <span>01 / 09</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px; justify-content: space-between;">
+          <div class="panel panel-gold" style="flex: 1;">
+            <svg viewBox="0 0 460 270" width="100%" height="100%">
+              <g stroke="#0F181A" stroke-width="3" fill="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M275 56 C275 40 299 40 299 56 C299 66 292 71 292 78 L282 78 C282 71 275 66 275 56 Z"/>
+                <line x1="283" y1="84" x2="291" y2="84"/>
+                <line x1="287" y1="26" x2="287" y2="34"/>
+                <line x1="258" y1="42" x2="265" y2="47"/>
+                <line x1="316" y1="42" x2="309" y2="47"/>
+              </g>
+              <path d="M95 270 C95 160 135 125 188 125 C235 125 262 155 265 190 L315 155 C327 148 338 160 328 173 L278 220 C274 242 268 258 265 270 Z" fill="#FFFFFF" stroke="#0F181A" stroke-width="3.5" stroke-linejoin="round"/>
+              <ellipse cx="182" cy="176" rx="5" ry="6.5" fill="#0F181A"/>
+              <ellipse cx="212" cy="174" rx="5" ry="6.5" fill="#0F181A"/>
+              <path d="M182 198 C192 214 214 212 220 194 Z" fill="#0F181A"/>
+              <path d="M145 225 C175 215 205 232 212 246" fill="none" stroke="#0F181A" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="panel panel-terracotta" style="flex: 1;">
+            <svg viewBox="0 0 460 270" width="100%" height="100%">
+              <g stroke="#0F181A" stroke-width="2.5" fill="none" opacity="0.45">
+                <circle cx="115" cy="135" r="56"/>
+                <circle cx="115" cy="135" r="34"/>
+                <path d="M155 175 L192 212" stroke-width="5" stroke-linecap="round"/>
+              </g>
+              <path d="M235 270 L235 235 C208 218 195 190 202 158 C210 118 255 96 298 106 C340 115 368 155 362 198 C358 225 342 242 325 250 L325 270" fill="#F6C478" stroke="#0F181A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="255" y1="246" x2="255" y2="270" stroke="#0F181A" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="305" y1="248" x2="305" y2="270" stroke="#0F181A" stroke-width="3.5" stroke-linecap="round"/>
+              <ellipse cx="268" cy="154" rx="5" ry="6.5" fill="#0F181A"/>
+              <ellipse cx="296" cy="154" rx="5" ry="6.5" fill="#0F181A"/>
+              <path d="M270 174 C278 185 292 185 298 172" fill="none" stroke="#0F181A" stroke-width="3.5" stroke-linecap="round"/>
+              <rect x="304" y="180" width="32" height="50" rx="8" fill="#FFFFFF" stroke="#0F181A" stroke-width="3"/>
+              <circle cx="320" cy="204" r="7" fill="#98CFB4" stroke="#0F181A" stroke-width="2"/>
+              <line x1="224" y1="86" x2="214" y2="70" stroke="#0F181A" stroke-width="3" stroke-linecap="round"/>
+              <line x1="252" y1="74" x2="248" y2="56" stroke="#0F181A" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="bottom-row" style="padding-top: 2px;">
+            <span></span>
+            <span><strong>Sakhi</strong> | Pitch Deck</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: PROBLEM STATEMENT (FORMAL CARDS) -->
+  <section class="slide">
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 0.82fr 1.18fr; gap: 44px; height: 100%; align-items: stretch;">
+        <!-- Left Formal Editorial Stat Column -->
+        <div class="editorial-sand" style="justify-content: space-between; height: 100%;">
+          <div style="background: var(--orb-terracotta); color: #FFFFFF; border-radius: 14px; padding: 22px;">
+            <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.9; margin-bottom: 6px;">11 PM Reality</div>
+            <div class="editorial-stat" style="color: #FFFFFF; font-size: 40px;">54.8%</div>
+            <div style="font-size: 14px; line-height: 1.42; margin-top: 6px;">Miss full check-up care between monthly visits (NFHS-6), leaving long unmonitored gaps at home.</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="editorial-card">
+              <div class="editorial-stat" style="font-size: 30px;">10.6%</div>
+              <div class="editorial-label">Speak English in India. Typing and menus exclude mothers.</div>
+            </div>
+            <div class="editorial-card">
+              <div class="editorial-stat" style="font-size: 30px;">55%</div>
+              <div class="editorial-label">Complete 100 days of iron tablets without gentle reminders.</div>
+            </div>
+          </div>
+
+          <div class="editorial-card" style="background: #FFFFFF;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--obsidian-ink);">What Gets Missed at Night</div>
+            <div class="editorial-label">Bad headache, swollen feet, blurred vision, bleeding, or reduced baby movement.</div>
+          </div>
+        </div>
+
+        <!-- Right Text Column -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 6px 0;">
+          <div class="top-row">
+            <span class="pill pill-terracotta" style="font-size: 12px; padding: 4px 12px;">01. Problem</span>
+            <span class="brand-mark">Sakhi</span>
+          </div>
+
+          <div>
+            <h2 style="margin-bottom: 14px;">Warning Signs Start at 11 PM,<br/>Not on Clinic Day</h2>
+            <p class="lead" style="margin-bottom: 22px;">
+              Between monthly check-ups, mothers face scary symptoms alone at home.
+            </p>
+
+            <ul class="bullet-list">
+              <li class="bullet-item">
+                <span class="badge-circle badge-outline">&rarr;</span>
+                <div>
+                  <div class="item-title">Scary Forwards &amp; Wrong Advice</div>
+                  <div class="item-desc">At night, mothers search online or read scary forwards and get wrong advice when warning signs like a bad headache, swollen feet, and blurred vision appear.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle badge-outline">&rarr;</span>
+                <div>
+                  <div class="item-title">Typing &amp; Reading Increase Panic</div>
+                  <div class="item-desc">Only <strong>10.6%</strong> speak English. Reading long screens or typing forms while scared makes anxiety worse, and <strong>54.8%</strong> miss full check-up care (NFHS-6).</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle badge-outline">&rarr;</span>
+                <div>
+                  <div class="item-title">Details Are Forgotten by Clinic Day</div>
+                  <div class="item-desc">In a busy 5-minute visit, mothers forget symptoms or missed iron tablets (<strong>55%</strong> finish 100 days). The doctor starts from nothing.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bottom-row">
+            <span><strong>The Gap:</strong> Turning "wait until my next visit" into safe action in minutes</span>
+            <span>02 / 09</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: OUR VISION + VOICE SCREENSHOT -->
+  <section class="slide">
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 36px; align-items: center;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="brand-mark">Sakhi</div>
+          <span class="pill" style="font-size: 12px; padding: 4px 12px;">01. Our Vision</span>
+          <h2>Safe Rules, Calm Voice,<br/>Complete Health Journal</h2>
+          <p class="lead">
+            The hospital registers her in 60 seconds. At home, she simply talks in her own language.
+          </p>
+        </div>
+
+        <div class="editorial-sand" style="padding: 14px; gap: 10px;">
+          <div class="screen-frame">
+            <img src="assets/screen-voice.png" alt="Voice-First Bedside Companion and Patient Consent" />
+          </div>
+          <div class="screen-caption">
+            <span>Voice-First Bedside Companion + Patient Consent</span>
+            <span class="muted">Zero Typing</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px 40px; margin-top: 8px;">
+        <div class="bullet-item">
+          <span class="badge-circle">1</span>
+          <div>
+            <div class="item-title">Stops Misleading Advice</div>
+            <div class="item-desc">Built strictly on Ministry of Health rules and her own hospital record. It never guesses, never diagnoses, and never suggests medicine.</div>
+          </div>
+        </div>
+        <div class="bullet-item">
+          <span class="badge-circle">2</span>
+          <div>
+            <div class="item-title">Voice-First to Calm Anxiety</div>
+            <div class="item-desc">Speaking naturally in her own language ("Do din se sar dard hai...") to a warm voice settles panic right away without typing.</div>
+          </div>
+        </div>
+        <div class="bullet-item">
+          <span class="badge-circle">3</span>
+          <div>
+            <div class="item-title">Always Asks Permission First</div>
+            <div class="item-desc">Repeats back what it heard so she confirms, then asks her permission before alerting her family or health professional.</div>
+          </div>
+        </div>
+        <div class="bullet-item">
+          <span class="badge-circle">4</span>
+          <div>
+            <div class="item-title">Complete Health Journal</div>
+            <div class="item-desc">Keeps a quiet, organized journal of every check-in and iron tablet so both mother and doctor have the full story.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <span><strong>60-Second Hospital Setup:</strong> Clinic logs her week, visit dates, health professional, and family contact</span>
+        <span>03 / 09</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: OUR SOLUTION - 4 ACTIONS + INTAKE SCREENSHOT -->
+  <section class="slide">
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 36px; height: 100%; align-items: stretch;">
+        <!-- Left: Title + 2x2 Bounded Actions -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 4px 0;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+              <span class="pill pill-sage" style="font-size: 12px; padding: 4px 12px;">01. Our Solution</span>
+              <span class="brand-mark">Sakhi</span>
+            </div>
+            <h2 style="margin-bottom: 8px;">4 Simple Actions, Safe Every Time</h2>
+            <p class="lead">
+              Sakhi only takes four clear actions. If anything sounds unclear after one short question, it treats the case seriously and connects her to care.
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="action-card terracotta-card" style="background: var(--orb-terracotta);">
+              <div class="action-card-title">1. Alert</div>
+              <div class="action-card-desc">Tells her to go to the hospital now and, with permission, alerts her health professional and family.</div>
+            </div>
+
+            <div class="action-card" style="background: var(--orb-gold);">
+              <div class="action-card-title">2. Save</div>
+              <div class="action-card-desc">Writes mild symptoms and iron tablet days into her organized health journal.</div>
+            </div>
+
+            <div class="action-card" style="background: var(--sage-mint);">
+              <div class="action-card-title">3. Remind</div>
+              <div class="action-card-desc">Sends gentle voice reminders for clinic visits and daily iron tablets.</div>
+            </div>
+
+            <div class="action-card" style="background: #FFFFFF; border: 1.5px solid rgba(15,24,26,0.22);">
+              <div class="action-card-title">4. Summarize</div>
+              <div class="action-card-desc">Reads a recap to her and gives the doctor a one-page timeline before her visit.</div>
+            </div>
+          </div>
+
+          <div class="bottom-row">
+            <span><strong>Full History Intact:</strong> Nothing is forgotten in a busy 5-minute clinic visit</span>
+            <span>04 / 09</span>
+          </div>
+        </div>
+
+        <!-- Right: Intake Screenshot -->
+        <div class="editorial-sand" style="justify-content: center; height: 100%;">
+          <div class="screen-frame">
+            <img src="assets/screen-intake.png" alt="60-Second Hospital ANC Intake" />
+          </div>
+          <div class="screen-caption">
+            <span>60-Second Hospital ANC Intake</span>
+            <span class="muted">Hospital-Owned Setup</span>
+          </div>
+          <div class="editorial-card" style="padding: 16px 18px;">
+            <div style="font-size: 14px; font-weight: 700; color: var(--obsidian-ink);">Strict Clinical Guardrail</div>
+            <div class="editorial-label">Every reply is grounded only in her pregnancy week, prior journal entries, visit dates, and Ministry of Health rules.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: WHO IT IS FOR + CLINIC SCREENSHOT -->
+  <section class="slide">
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; height: 100%; align-items: stretch;">
+        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 6px 0;">
+          <div class="top-row">
+            <span class="pill pill-terracotta" style="font-size: 12px; padding: 4px 12px;">02. Who It Is For</span>
+            <span class="brand-mark">Sakhi</span>
+          </div>
+
+          <div>
+            <h2 style="margin-bottom: 20px;">Made for Mothers, Care Teams,<br/>and Hospital Clinics</h2>
+            <ul class="bullet-list">
+              <li class="bullet-item">
+                <span class="badge-circle badge-outline">&rarr;</span>
+                <div>
+                  <div class="item-title">Pregnant Women in India (~29M Births/Yr)</div>
+                  <div class="item-desc"><strong>~8M high-risk pregnancies</strong> and <strong>54.8%</strong> check-up care gaps (~22,500 maternal deaths/yr). Multilingual voice support across Indian languages, with zero typing.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle badge-outline">&rarr;</span>
+                <div>
+                  <div class="item-title">Health Professionals Across Cities &amp; Villages</div>
+                  <div class="item-desc">Get instant alerts with her permission and symptom details so they can help her reach the hospital the same day.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle badge-outline">&rarr;</span>
+                <div>
+                  <div class="item-title">District, CHC &amp; PHC Antenatal OPDs</div>
+                  <div class="item-desc">The hospital owns the record. Doctors get a one-page health journal before each visit and live alerts for urgent cases.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bottom-row">
+            <span><strong>Privacy First:</strong> Records stay with her hospital; never sold or shared privately</span>
+            <span>05 / 09</span>
+          </div>
+        </div>
+
+        <div class="editorial-sand" style="justify-content: center; height: 100%;">
+          <div class="screen-frame">
+            <img src="assets/screen-clinic.png" alt="Live Escalations and Pre-Visit Journal" />
+          </div>
+          <div class="screen-caption">
+            <span>Live Escalations &amp; Pre-Visit Journal</span>
+            <span class="muted">Clinician Dashboard</span>
+          </div>
+          <div class="editorial-card" style="padding: 16px 18px;">
+            <div style="font-size: 14px; font-weight: 700; color: var(--obsidian-ink);">Hospital Data Ownership</div>
+            <div class="editorial-label">Patient records stay inside the registering hospital. Anonymized insights are shared with public-health researchers only with consent.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: DEPENDENCIES & TECH STACK (FORMAL CARDS) -->
+  <section class="slide">
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 0.88fr 1.12fr; gap: 44px; height: 100%; align-items: stretch;">
+        <!-- Left Formal Stack Architecture Cards -->
+        <div class="editorial-sand" style="justify-content: space-between; height: 100%;">
+          <div class="editorial-card" style="border-left: 4px solid var(--orb-gold);">
+            <div style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-slate);">Layer 1: Speech Recognition</div>
+            <div style="font-size: 18px; font-weight: 700; color: var(--obsidian-ink);">Multilingual Voice Input</div>
+            <div class="editorial-label">Understands spoken Hindi, Marathi, Tamil, Telugu, Kannada, Bengali, and mixed regional speech.</div>
+          </div>
+
+          <div class="editorial-card" style="border-left: 4px solid var(--sage-mint);">
+            <div style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-slate);">Layer 2: Safe Rule Engine</div>
+            <div style="font-size: 18px; font-weight: 700; color: var(--obsidian-ink);">Ministry of Health Triage</div>
+            <div class="editorial-label">Maps gestational week and confirmed symptoms strictly to Alert, Save, Remind, or Summarize.</div>
+          </div>
+
+          <div class="editorial-card" style="border-left: 4px solid var(--orb-terracotta);">
+            <div style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted-slate);">Layer 3: Portable Deployment</div>
+            <div style="font-size: 18px; font-weight: 700; color: var(--obsidian-ink);">Next.js 15 + Docker</div>
+            <div class="editorial-label">Runs both the mother's phone app and clinic dashboard on any hospital or state server.</div>
+          </div>
+        </div>
+
+        <!-- Right Text Column -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0;">
+          <div class="top-row">
+            <span class="pill pill-sage" style="font-size: 12px; padding: 4px 12px;">03. What It Depends On</span>
+            <span class="brand-mark">Sakhi</span>
+          </div>
+
+          <div>
+            <h2 style="margin-bottom: 14px;">Simple, Fast Voice Tools<br/>Built to Move Anywhere</h2>
+            <p class="lead" style="margin-bottom: 26px;">
+              Fast voice replies today, using open tools so we are never stuck with one company.
+            </p>
+
+            <ul class="bullet-list">
+              <li class="bullet-item">
+                <span class="badge-circle">1</span>
+                <div>
+                  <div class="item-title">Groq <span class="code-tag">whisper-large-v3-turbo</span></div>
+                  <div class="item-desc">Listens and understands everyday spoken Hindi, Marathi, Tamil, Telugu, Kannada, Bengali, and mixed local speech in under a second.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">2</span>
+                <div>
+                  <div class="item-title">Groq <span class="code-tag">openai/gpt-oss-120b</span></div>
+                  <div class="item-desc">Checks her words strictly against Ministry of Health rules and picks Alert, Save, Remind, or Summarize.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">3</span>
+                <div>
+                  <div class="item-title">Next.js 15 + Docker</div>
+                  <div class="item-desc">Runs the mother's phone app and the clinic's live dashboard in clean boxes that work on any hospital server.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bottom-row">
+            <span><strong>Flow:</strong> Mother talks &rarr; Speech understood &rarr; Safe rule check &rarr; Voice repeat &rarr; Clinic sync</span>
+            <span>06 / 09</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: COST & FAILURE RESILIENCE (FORMAL 2x2 MATRIX) -->
+  <section class="slide">
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 44px; height: 100%; align-items: stretch;">
+        <!-- Left Formal 2x2 Resilience Matrix -->
+        <div class="editorial-sand" style="justify-content: center; height: 100%;">
+          <div style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--obsidian-ink);">Failure &amp; Cost Safeguards</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="editorial-card" style="background: var(--orb-gold);">
+              <div style="font-size: 12px; font-weight: 800; color: var(--obsidian-ink);">COST SPIKE</div>
+              <div style="font-size: 16px; font-weight: 700; color: var(--obsidian-ink);">Open-Weight Swap</div>
+              <div style="font-size: 13px; line-height: 1.38; color: var(--obsidian-ink);">Move to self-hosted Faster-Whisper + vLLM / Ollama anytime.</div>
+            </div>
+
+            <div class="editorial-card" style="background: #FFFFFF;">
+              <div style="font-size: 12px; font-weight: 800; color: var(--muted-slate);">PEAK TRAFFIC</div>
+              <div style="font-size: 16px; font-weight: 700; color: var(--obsidian-ink);">Multi-Key Rotation</div>
+              <div style="font-size: 13px; line-height: 1.38; color: var(--muted-slate);">Balances load across keys during busy morning clinics.</div>
+            </div>
+
+            <div class="editorial-card" style="background: var(--sage-mint);">
+              <div style="font-size: 12px; font-weight: 800; color: var(--sage-ink);">API OUTAGE</div>
+              <div style="font-size: 16px; font-weight: 700; color: var(--sage-ink);">Zero-Key Fallback</div>
+              <div style="font-size: 13px; line-height: 1.38; color: var(--sage-ink);">Apps start and run end-to-end with zero .env or API keys.</div>
+            </div>
+
+            <div class="editorial-card" style="background: var(--orb-terracotta);">
+              <div style="font-size: 12px; font-weight: 800; color: #FFFFFF;">WEAK SIGNAL</div>
+              <div style="font-size: 16px; font-weight: 700; color: #FFFFFF;">Offline Voice Queue</div>
+              <div style="font-size: 13px; line-height: 1.38; color: #FFFFFF;">Saves voice locally on device and syncs when online.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Text Column -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0;">
+          <div class="top-row">
+            <span class="pill" style="font-size: 12px; padding: 4px 12px;">03. Cost &amp; Backup Plan</span>
+            <span class="brand-mark">Sakhi</span>
+          </div>
+
+          <div>
+            <h2 style="margin-bottom: 12px;">Keeps Working If Services<br/>Get Costly or Go Down</h2>
+            <p class="lead" style="margin-bottom: 24px;">
+              A mother's safety never stops when a cloud service raises prices or village signal drops.
+            </p>
+
+            <ul class="bullet-list">
+              <li class="bullet-item">
+                <span class="badge-circle">1</span>
+                <div>
+                  <div class="item-title">Swap to Self-Hosted Open Models</div>
+                  <div class="item-desc">If cloud costs rise, Sakhi switches to our own <strong>Faster-Whisper + vLLM or Ollama</strong> servers with zero vendor lock-in.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">2</span>
+                <div>
+                  <div class="item-title">Automatic Key Rotation</div>
+                  <div class="item-desc">Rotates across multiple backup keys so busy morning clinic hours never hit a service limit.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">3</span>
+                <div>
+                  <div class="item-title">Built-In Offline Rule Backup</div>
+                  <div class="item-desc">Local Ministry of Health rules are built right in. Both apps start and run end-to-end with <strong>zero <span class="code-tag">.env</span> and zero API keys</strong>.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">4</span>
+                <div>
+                  <div class="item-title">Saves Voice on Weak Signal</div>
+                  <div class="item-desc">When village internet is slow, voice notes wait safely on the phone and send automatically once signal returns.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bottom-row">
+            <span><strong>Always On:</strong> Cloud-fast today, self-hosted or offline-ready anytime</span>
+            <span>07 / 09</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: LAUNCH PLAN + AUDIT SCREENSHOT -->
+  <section class="slide">
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 40px; height: 100%; align-items: stretch;">
+        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 6px 0;">
+          <div class="top-row">
+            <span class="pill pill-sage" style="font-size: 12px; padding: 4px 12px;">04. Launch Plan</span>
+            <span class="brand-mark">Sakhi</span>
+          </div>
+
+          <div>
+            <h2 style="margin-bottom: 20px;">3-Step Rollout:<br/>One Hospital to State Scale</h2>
+            <ul class="bullet-list">
+              <li class="bullet-item">
+                <span class="badge-circle">1</span>
+                <div>
+                  <div class="item-title">Phase 1: 1 District Women's Hospital Pilot</div>
+                  <div class="item-desc"><strong>1 ANC clinic + 15 health professionals + 200 mothers.</strong> Monthly doctor safety check targeting <strong>0 missed danger signs</strong> and <strong>&gt;90% response under 2 hours</strong>.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">2</span>
+                <div>
+                  <div class="item-title">Phase 2: District-Wide CHC &amp; PHC Rollout</div>
+                  <div class="item-desc">Expand across local CHC and PHC clinics with <strong>RCH</strong> and <strong>ABHA</strong> health record sync.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">3</span>
+                <div>
+                  <div class="item-title">Phase 3: State NHM Partnerships</div>
+                  <div class="item-desc">Partner with State National Health Missions and add more regional Indian languages.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bottom-row">
+            <span><strong>Step by Step:</strong> Prove safety in one hospital before scaling</span>
+            <span>08 / 09</span>
+          </div>
+        </div>
+
+        <div class="editorial-sand" style="justify-content: center; height: 100%;">
+          <div class="screen-frame">
+            <img src="assets/screen-audit.png" alt="Hospital Safety Audit" />
+          </div>
+          <div class="screen-caption">
+            <span>Hospital Safety Audit</span>
+            <span class="muted">Monthly OB-GYN Review</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="editorial-card" style="padding: 14px 16px;">
+              <div class="editorial-stat" style="font-size: 26px;">0 Missed</div>
+              <div class="editorial-label">Danger signs in monthly sample</div>
+            </div>
+            <div class="editorial-card" style="padding: 14px 16px;">
+              <div class="editorial-stat" style="font-size: 26px;">&gt;90%</div>
+              <div class="editorial-label">Human response under 2 hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: IMPACT TARGETS, RISK & THANK YOU (MASCOT KEPT) -->
+  <section class="slide">
+    <svg class="bg-watermark" style="left: 120px; top: 60px; width: 320px; height: 320px;" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="72" fill="none" stroke="#EFE8DA" stroke-width="24"/>
+    </svg>
+    <div class="slide-content">
+      <div style="display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; height: 100%; align-items: stretch;">
+        <div style="display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0;">
+          <div class="brand-mark">Sakhi</div>
+
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <h2>Thank You</h2>
+
+            <ul class="bullet-list" style="gap: 14px;">
+              <li class="bullet-item">
+                <span class="badge-circle">1</span>
+                <div>
+                  <div class="item-title">Fast Help</div>
+                  <div class="item-desc"><strong>&gt;90%</strong> of alerts get a human reply in under 2 hours; <strong>80%</strong> reach a clinic the same day.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">2</span>
+                <div>
+                  <div class="item-title">Better Daily Habits</div>
+                  <div class="item-desc"><strong>+10 percentage points</strong> more mothers finish 4+ check-ups and 100 days of iron tablets.</div>
+                </div>
+              </li>
+              <li class="bullet-item">
+                <span class="badge-circle">3</span>
+                <div>
+                  <div class="item-title">Safe Every Time</div>
+                  <div class="item-desc"><strong>0 missed danger signs</strong>, &lt;1 in 5 false alarms; repeats back what it heard and treats any doubt seriously.</div>
+                </div>
+              </li>
+            </ul>
+
+            <span class="pill pill-terracotta">No Mother Decides Alone</span>
+          </div>
+
+          <div class="bottom-row">
+            <span><strong>Sakhi</strong> | Voice-First Pregnancy Companion</span>
+            <span>09 / 09</span>
+          </div>
+        </div>
+
+        <div class="panel panel-sage" style="height: 100%;">
+          <svg viewBox="0 0 460 620" width="100%" height="100%">
+            <g stroke="#0F181A" stroke-width="3" stroke-linecap="round">
+              <line x1="295" y1="155" x2="318" y2="128"/>
+              <line x1="340" y1="185" x2="372" y2="172"/>
+              <line x1="252" y1="142" x2="252" y2="112"/>
+            </g>
+            <path d="M105 620 L105 425 C105 315 162 255 232 255 C302 255 360 315 360 425 L360 620 Z" fill="#FFFFFF" stroke="#0F181A" stroke-width="3.5" stroke-linejoin="round"/>
+            <circle cx="202" cy="336" r="6" fill="#0F181A"/>
+            <circle cx="254" cy="336" r="6" fill="#0F181A"/>
+            <path d="M214 364 C224 374 236 374 244 364" fill="none" stroke="#0F181A" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M232 485 C190 448 170 422 186 396 C202 374 226 386 232 404 C238 386 262 374 278 396 C294 422 274 448 232 485 Z" fill="#D97745" stroke="#0F181A" stroke-width="3.5" stroke-linejoin="round"/>
+            <path d="M135 430 C162 418 184 428 194 452" fill="none" stroke="#0F181A" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M330 430 C303 418 281 428 271 452" fill="none" stroke="#0F181A" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

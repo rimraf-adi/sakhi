@@ -23,13 +23,13 @@ const FOUR_ACTIONS = [
     name: "Alert",
     icon: ShieldAlert,
     summary:
-      "When warning signs appear, or when anything feels uncertain, Sakhi tells her to go to the hospital now and alerts her ASHA worker and chosen family member.",
+      "When warning signs appear, or when anything feels uncertain, Sakhi calmly asks her permission first and then alerts her health professional, partner, and hospital.",
   },
   {
     name: "Save",
     icon: BookmarkCheck,
     summary:
-      "Mild symptoms and missed iron tablets are saved with dates in her hospital record so nothing is forgotten between visits.",
+      "Every symptom and missed iron tablet is saved with dates in a complete health journal so nothing is forgotten during a busy clinic visit.",
   },
   {
     name: "Remind",
@@ -41,7 +41,7 @@ const FOUR_ACTIONS = [
     name: "Summarize",
     icon: FileText,
     summary:
-      "Before each visit, Sakhi reads her a short spoken recap and gives her doctor a dated, one-page timeline in her own words.",
+      "Before each visit, Sakhi turns her health journal into a short spoken recap and a one-page timeline for her doctor.",
   },
 ];
 
@@ -131,9 +131,10 @@ export default function HomePage() {
                 className="animate-hero-rise mt-5 max-w-md text-base leading-relaxed text-[#3A4745] sm:text-lg"
                 style={{ animationDelay: "140ms" }}
               >
-                Between check-ups, you should not have to guess at 11 PM. Registered by your
-                hospital, Sakhi listens in her own language and alerts her partner and care team
-                within minutes.
+                Between check-ups, you should not have to guess at 11 PM or trust misleading
+                online advice. Registered by your hospital, Sakhi calms anxiety with a warm voice,
+                keeps a complete health journal so nothing is forgotten, and alerts your care team
+                with your permission.
               </p>
 
               <div
@@ -163,15 +164,15 @@ export default function HomePage() {
                 className="animate-hero-rise mt-10 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-[#536360]"
                 style={{ animationDelay: "280ms" }}
               >
-                <span>Hospital registered</span>
+                <span>No misleading advice</span>
                 <span aria-hidden="true" className="hidden text-[#0F181A]/25 sm:inline">
                   ·
                 </span>
-                <span>Zero typing</span>
+                <span>Voice-first to calm anxiety</span>
                 <span aria-hidden="true" className="hidden text-[#0F181A]/25 sm:inline">
                   ·
                 </span>
-                <span>Partner stays informed</span>
+                <span>Full health journal</span>
               </div>
             </div>
 
@@ -194,7 +195,7 @@ export default function HomePage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="flex flex-col justify-between rounded-[22px] bg-[#A7CBB5] p-5 text-[#132C22]">
                   <p className="text-[13px] leading-snug font-medium">
-                    Guided strictly by her pregnancy week, hospital visit dates, and{" "}
+                    Engineered to stop misleading advice. Guided strictly by her pregnancy week and{" "}
                     <strong className="font-semibold">
                       Ministry of Health danger-sign rules.
                     </strong>
@@ -202,7 +203,7 @@ export default function HomePage() {
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-[#132C22]/15 pt-3.5 text-[11px] font-semibold">
                     <span className="inline-flex items-center gap-1.5">
                       <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
-                      Reviewed by Doctors
+                      Verified Guidance
                     </span>
                     <span className="opacity-75">Never Diagnoses</span>
                   </div>
@@ -388,7 +389,7 @@ export default function HomePage() {
                 <ul className="mt-6 space-y-3 text-sm text-[#0F181A]">
                   {[
                     "Repeats back in her language to confirm",
-                    "Escalates to ASHA or hospital whenever unsure",
+                    "Escalates to health professional or hospital whenever unsure",
                     "Tested with doctors across regional phrasing",
                   ].map((point) => (
                     <li key={point} className="flex items-center gap-3">

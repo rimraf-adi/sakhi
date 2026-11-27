@@ -1,0 +1,41 @@
+services:
+  landing-page:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: landing-page
+        PORT: 3000
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
+  mobile:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: mobile
+        PORT: 3001
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+      - GROQ_API_KEYS=${GROQ_API_KEYS:-}
+
+  clinic-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: clinic-dashboard
+        PORT: 3002
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production

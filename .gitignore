@@ -27,3 +27,7 @@ yarn-error.log*
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
+
+# Rendered demo video artifacts
+apps/video/out/
+data/sakhi-store.json
