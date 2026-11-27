@@ -28,9 +28,9 @@ const devanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: "Sakhi — Voice-First Maternal Care Companion for India",
+  title: "Sakhi | Voice-First Maternal Care for India",
   description:
-    "She speaks. Sakhi listens and acts. Registered by her hospital, Sakhi is a calm voice-first companion for pregnant women across India—guided by Ministry of Health danger-sign guidelines.",
+    "She speaks. Sakhi listens and acts. Registered by her hospital, Sakhi is a calm voice-first companion for pregnant women across India, guided by Ministry of Health danger-sign guidelines.",
 };
 
 export default function RootLayout({

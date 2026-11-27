@@ -40,19 +40,19 @@ const COUPLE_MOMENTS = [
     moment: "Late-night worry",
     question: "“Is this headache or swelling normal, or should we go in now?”",
     answer:
-      "Speak for ten seconds. Sakhi checks Ministry of Health warning signs and tells you both clearly—never guessing.",
+      "Speak for ten seconds. Sakhi checks Ministry of Health danger signs and tells you both what to do next, without guessing.",
   },
   {
     moment: "Daily care rhythm",
     question: "“Did I take my iron tablet today, and when is our next check-up?”",
     answer:
-      "Gentle spoken reminders in her own language keep daily habits steady without family stress or nagging.",
+      "Gentle voice reminders in her language keep iron tablets and visit dates on track, with zero nagging.",
   },
   {
     moment: "Short clinic visits",
     question: "“How do we share four weeks of symptoms in one quick visit?”",
     answer:
-      "Before you walk in, Sakhi reads her a brief recap and hands the doctor a dated one-page history in her words.",
+      "Before you walk in, Sakhi reads her a short recap and shares a dated one-page timeline with her doctor in her own words.",
   },
 ];
 
@@ -61,7 +61,7 @@ const FOUR_ACTIONS = [
     name: "Alert",
     icon: ShieldAlert,
     summary:
-      "When warning signs appear—or when anything feels uncertain—Sakhi tells her to go to the hospital now and alerts her ASHA worker and chosen family member.",
+      "When warning signs appear, or when anything feels uncertain, Sakhi tells her to go to the hospital now and alerts her ASHA worker and chosen family member.",
   },
   {
     name: "Save",
@@ -90,7 +90,7 @@ const GUARDRAILS = [
   },
   {
     title: "When Unsure, Connects Her to Care",
-    body: "If a symptom is unclear, it asks one short follow-up question. If still unsure, it treats the case as more serious—never less—and connects her to her ASHA worker or hospital.",
+    body: "If a symptom is unclear, it asks one short follow-up question. If anything is still unsure, it treats the case as serious and connects her to her ASHA worker or hospital.",
   },
   {
     title: "Tested With Doctors Across Languages",
@@ -175,7 +175,7 @@ export default function HomePage() {
               href="#join"
               className="inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-xs font-semibold text-[#0F181A] shadow-[0_8px_24px_rgba(15,24,26,0.18)] transition-colors hover:bg-[#F5D6AE]"
             >
-              How to Join
+              Get Sakhi
               <ArrowRight className="h-3.5 w-3.5" />
             </a>
           </div>
@@ -193,9 +193,9 @@ export default function HomePage() {
               <span className="lg:whitespace-nowrap">Sakhi listens and acts.</span>
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
-              Between check-ups, you shouldn’t have to guess at 11 PM. Registered by your hospital,
-              Sakhi listens in your own language—calming small worries, and alerting your partner and
-              care team in minutes when a sign matters.
+              Between check-ups, you should not have to guess at 11 PM. Registered by your hospital,
+              Sakhi listens in her own language. It logs everyday symptoms and alerts her partner and
+              care team within minutes when a warning sign appears.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -204,13 +204,13 @@ export default function HomePage() {
                 className="inline-flex items-center gap-2.5 rounded-full border border-white/40 bg-white/18 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white/28"
               >
                 <Play className="h-4 w-4 fill-current text-[#F6C478]" />
-                Hear a 20-Second Call
+                Listen to a Sample Call
               </a>
               <a
-                href="#four-actions"
+                href="#join"
                 className="inline-flex items-center gap-1.5 px-2 py-2 text-xs font-semibold tracking-wider text-white/85 uppercase transition-colors hover:text-[#F6C478]"
               >
-                Four Ways Sakhi Helps
+                How to Set It Up
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
             </div>
@@ -366,7 +366,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Section 4: Asymmetric Hairline Editorial — "Four Actions. Zero Guesswork." (Snapsound Pattern) */}
+        {/* Section 4: Asymmetric Hairline Editorial, "Four Actions. Zero Guesswork." */}
         <section
           id="four-actions"
           className="border-t border-[#0F181A]/10 bg-[#F7F4ED] py-20 sm:py-26"
@@ -386,13 +386,13 @@ export default function HomePage() {
                   </h2>
                   <div className="mt-5 h-px w-12 bg-[#0F181A]/35" />
                   <p className="mt-5 text-base leading-relaxed text-[#536360]">
-                    Sakhi never diagnoses and never advises on medicine. It supports women and
-                    clinicians with four clear, dependable steps—nothing more, nothing unverified.
+                    Sakhi never diagnoses and never advises on medicine. It supports expectant
+                    parents and doctors with four dependable steps, and nothing unverified.
                   </p>
                   <p className="mt-4 text-sm leading-relaxed text-[#536360]">
-                    Every reply fits this woman, this week, and this symptom—drawing only from her
-                    weeks of pregnancy, earlier symptoms, hospital visit dates, and Ministry of
-                    Health danger-sign guidelines.
+                    Every reply fits this woman, this week, and this symptom. It draws only from her
+                    pregnancy week, earlier symptoms, hospital visit dates, and Ministry of Health
+                    danger-sign guidelines.
                   </p>
                 </div>
               </div>
@@ -435,9 +435,8 @@ export default function HomePage() {
                   Walk into your check-up heard, not rushed.
                 </h2>
                 <p className="mt-4 text-sm leading-relaxed text-[#536360] sm:text-base">
-                  Before each check-up, Sakhi reads her a short recap in her own language, while her
-                  doctor receives a dated one-page history in her exact words—built to prevent
-                  misheard danger signs:
+                  Before every check-up, Sakhi reads her a short recap in her language. Her doctor
+                  gets a dated one-page history in her exact words so nothing is missed.
                 </p>
 
                 <div className="mt-7 space-y-5">
@@ -457,7 +456,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right: Tactile Paper Artifact — Doctor's One-Page Summary */}
+              {/* Right: Tactile Paper Artifact, Doctor's One-Page Summary */}
               <div className="lg:col-span-7">
                 <div className="rounded-[24px] border border-[#0F181A]/12 border-t-4 border-t-[#162B44] bg-[#FCFBF7] p-6 shadow-[0_24px_60px_-24px_rgba(15,24,26,0.2)] sm:p-9">
                   <div className="flex items-start justify-between gap-4 border-b border-[#0F181A]/12 pb-5">
@@ -544,8 +543,8 @@ export default function HomePage() {
                 Three signals we track from day one
               </h2>
               <p className="mt-3 text-base text-[#536360]">
-                We measure each baseline first, so we can prove the real change—not only the final
-                number.
+                We measure each hospital&apos;s baseline first, so we can show real change and not
+                just a final number.
               </p>
             </div>
 
@@ -593,30 +592,30 @@ export default function HomePage() {
 
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#0F181A]/90 sm:text-base">
                 Your record stays strictly with your hospital. We never sell data or share it with
-                private companies. Only government health professionals and public-health researchers
-                see grouped data with no names—and only with your consent.
+                private companies. Government health professionals and public-health researchers
+                only see grouped data with no names, and only with your consent.
               </p>
 
               {/* Simple 2-Step Onboarding Note for Expectant Couples */}
               <div className="mt-6 max-w-xl rounded-2xl border border-[#0F181A]/15 bg-[#FAF6EE]/80 px-5 py-3.5 text-xs leading-relaxed text-[#0F181A] backdrop-blur-sm sm:text-sm">
                 <span className="font-semibold">How your family starts:</span> Ask your hospital or
-                OB-GYN to register you at your next visit—60 seconds on Android or iOS, with zero
-                passwords or forms.
+                OB-GYN to add you at your next visit. Setup takes 60 seconds on Android or iOS, with
+                no passwords and no forms.
               </div>
 
               <div className="mt-7 flex flex-wrap justify-center gap-3.5">
                 <a
-                  href="mailto:pilot@sakhihealth.in?subject=Ask%20About%20Sakhi%20Access"
+                  href="mailto:pilot@sakhihealth.in?subject=Bring%20Sakhi%20to%20Our%20Hospital"
                   className="inline-flex items-center gap-2 rounded-full bg-[#0F181A] px-7 py-3.5 text-xs font-semibold tracking-wider text-[#F7F4ED] uppercase shadow-sm transition-colors hover:bg-[#1E3A56]"
                 >
-                  Ask About Hospital Access
+                  Bring Sakhi to Your Hospital
                   <ArrowRight className="h-3.5 w-3.5" />
                 </a>
                 <a
-                  href="mailto:pilot@sakhihealth.in?subject=Sakhi%20Hospital%20Partner"
+                  href="#hear-sakhi"
                   className="inline-flex items-center gap-2 rounded-full border border-[#0F181A]/35 bg-[#FAF6EE]/85 px-7 py-3.5 text-xs font-semibold tracking-wider text-[#0F181A] uppercase backdrop-blur-sm transition-colors hover:bg-white"
                 >
-                  For Hospitals &amp; Doctors
+                  Listen to a Sample Call
                 </a>
               </div>
             </div>
