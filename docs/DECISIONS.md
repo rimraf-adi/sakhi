@@ -1,7 +1,7 @@
 # Sakhi — Architecture & Sprint Decisions
 
 ## 1. Mobile App Delivery Strategy (3-Day Sprint)
-- **Chosen Approach**: **Option 1 — Mobile-First PWA / Device-Framed Web App (`apps/app`)** inside the Turborepo alongside `apps/web` (Landing Page).
+- **Chosen Approach**: **Option 1 — Mobile-First PWA / Device-Framed Web App (`apps/app`)** inside the Turborepo alongside `apps/landing-page` (Landing Page).
 - **Rationale**:
   - **Zero native build friction**: Pure Next.js/React in Turborepo, sharing workspace packages cleanly without Gradle/Metro/Xcode bottlenecks.
   - **Automated media capture**: Pixel-perfect `390×844` mobile screenshots and 4K/60fps demo videos **with crisp internal Hindi/Marathi voice audio** via Playwright + `ffmpeg` (or Remotion).
