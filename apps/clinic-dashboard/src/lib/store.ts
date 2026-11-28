@@ -23,8 +23,11 @@ export interface PatientRecord {
   nextVisitLabel: string;
   ashaName: string;
   familyName: string;
-  ironDaysCompleted: number;
-  ironDaysTotal: number;
+  /** The daily care item this mother tracks, chosen at intake or onboarding. */
+  supplementName: string;
+  supplementDaysCompleted: number;
+  supplementDaysTotal: number;
+  supplementTakenToday: boolean;
   entries: TimelineEntry[];
 }
 
@@ -62,115 +65,46 @@ export interface SakhiStore {
 
 const STORE_PATH = path.resolve(process.cwd(), "../../data/sakhi-store.json");
 
+/** The desk starts with an empty cohort; every record comes from an intake. */
 export function createInitialStore(): SakhiStore {
+  return { patients: [], alerts: [], auditLogs: [] };
+}
+
+/** Store files written before onboarding carried the iron-specific fields. */
+type StoredPatient = PatientRecord & {
+  ironDaysCompleted?: number;
+  ironDaysTotal?: number;
+  ironTakenToday?: boolean;
+};
+
+function normalizePatient(stored: StoredPatient): PatientRecord {
+  const { ironDaysCompleted, ironDaysTotal, ironTakenToday, ...patient } = stored;
+
   return {
-    patients: [
-      {
-        id: "priya-sharma",
-        name: "Priya Sharma",
-        gestationWeek: 32,
-        gestationDay: 2,
-        language: "Hindi",
-        speechLang: "hi-IN",
-        nextVisitLabel: "ANC Visit #3 · 24 Nov",
-        ashaName: "Meena Devi",
-        familyName: "Rohit Sharma (Husband)",
-        ironDaysCompleted: 24,
-        ironDaysTotal: 28,
-        entries: [
-          {
-            id: "e-priya-1",
-            dateLabel: "14 Nov",
-            kind: "saved",
-            spokenQuote: "“Kal raat iron ki goli lena bhool gayi, aur thakan lag rahi hai.”",
-            englishTranslation: "Forgot iron tablet last night and feeling tired.",
-            outcomeNote: "Ruled out dizziness · Evening voice reminder scheduled",
-            ruleMatched: "MoHFW Routine ANC Adherence",
-          },
-        ],
-      },
-      {
-        id: "sunita-patil",
-        name: "Sunita Patil",
-        gestationWeek: 35,
-        gestationDay: 4,
-        language: "Marathi",
-        speechLang: "mr-IN",
-        nextVisitLabel: "ANC Visit #4 · 26 Nov",
-        ashaName: "Savita Jadhav",
-        familyName: "Suresh Patil (Husband)",
-        ironDaysCompleted: 26,
-        ironDaysTotal: 28,
-        entries: [],
-      },
-      {
-        id: "kavita-devi",
-        name: "Kavita Devi",
-        gestationWeek: 22,
-        gestationDay: 1,
-        language: "Hindi",
-        speechLang: "hi-IN",
-        nextVisitLabel: "ANC Visit #2 · 28 Nov",
-        ashaName: "Rekha Kumari",
-        familyName: "Anil Kumar (Husband)",
-        ironDaysCompleted: 18,
-        ironDaysTotal: 28,
-        entries: [],
-      },
-    ],
-    alerts: [
-      {
-        id: "alert-seed-sunita",
-        patientId: "sunita-patil",
-        patientName: "Sunita Patil",
-        gestationWeek: 35,
-        language: "Marathi",
-        severity: "doubt",
-        summary: "Reduced baby movement with uncertain onset timing",
-        spokenQuote: "“Aaj sakalpasun balachi halchal kami watat aahe.”",
-        ashaName: "Savita Jadhav",
-        familyName: "Suresh Patil (Husband)",
-        acknowledged: true,
-        responseNote: "Hospital called · Monitoring scheduled",
-        createdAtIso: new Date(Date.now() - 14 * 60_000).toISOString(),
-      },
-    ],
-    auditLogs: [
-      {
-        id: "audit-1",
-        patientName: "Sunita Patil",
-        timestampLabel: "14m ago",
-        action: "alert",
-        ruleMatched: "Escalate on Doubt · Reduced Fetal Movement",
-        transcript: "Aaj sakalpasun balachi halchal kami watat aahe.",
-        verifiedByDoctor: true,
-      },
-      {
-        id: "audit-2",
-        patientName: "Priya Sharma",
-        timestampLabel: "14 Nov",
-        action: "save_remind",
-        ruleMatched: "MoHFW Routine ANC Adherence",
-        transcript: "Kal raat iron ki goli lena bhool gayi.",
-        verifiedByDoctor: true,
-      },
-    ],
+    ...patient,
+    supplementName: patient.supplementName?.trim() || "Daily supplement",
+    supplementDaysCompleted: patient.supplementDaysCompleted ?? ironDaysCompleted ?? 0,
+    supplementDaysTotal: patient.supplementDaysTotal ?? ironDaysTotal ?? 28,
+    supplementTakenToday: patient.supplementTakenToday ?? ironTakenToday ?? false,
+    entries: patient.entries ?? [],
   };
 }
 
 export function readStore(): SakhiStore {
+  const fallback = createInitialStore();
   try {
-    if (!fs.existsSync(STORE_PATH)) {
-      const seed = createInitialStore();
-      writeStore(seed);
-      return seed;
-    }
-    const raw = fs.readFileSync(STORE_PATH, "utf-8");
-    return JSON.parse(raw) as SakhiStore;
+    if (!fs.existsSync(STORE_PATH)) return fallback;
+
+    const raw = JSON.parse(fs.readFileSync(STORE_PATH, "utf-8")) as Partial<SakhiStore>;
+    return {
+      patients: (raw.patients ?? []).map((patient) =>
+        normalizePatient(patient as StoredPatient),
+      ),
+      alerts: raw.alerts ?? [],
+      auditLogs: raw.auditLogs ?? [],
+    };
   } catch {
-    const seed = createInitialStore();
-    writeStore(seed);
-    return seed;
+    return fallback;
   }
 }
 

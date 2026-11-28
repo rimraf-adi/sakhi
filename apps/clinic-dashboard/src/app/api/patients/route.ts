@@ -9,9 +9,11 @@ export async function POST(req: Request) {
       name: string;
       gestationWeek: number;
       language: PatientLanguage;
-      nextVisitLabel: string;
-      ashaName: string;
-      familyName: string;
+      nextVisitLabel?: string;
+      ashaName?: string;
+      familyName?: string;
+      supplementName?: string;
+      supplementDaysTotal?: number;
     };
 
     const name = (body.name ?? "").trim();
@@ -22,26 +24,33 @@ export async function POST(req: Request) {
     const store = readStore();
     const id = `${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now().toString().slice(-4)}`;
     const language: PatientLanguage = body.language === "Marathi" ? "Marathi" : "Hindi";
+    const week = Math.min(42, Math.max(1, Math.round(Number(body.gestationWeek)) || 28));
+    const daysTotal = Math.min(
+      365,
+      Math.max(1, Math.round(Number(body.supplementDaysTotal)) || 28),
+    );
 
     const newPatient = {
       id,
       name,
-      gestationWeek: Number(body.gestationWeek) || 28,
+      gestationWeek: week,
       gestationDay: 1,
       language,
       speechLang: (language === "Marathi" ? "mr-IN" : "hi-IN") as "hi-IN" | "mr-IN",
-      nextVisitLabel: body.nextVisitLabel?.trim() || "ANC Visit · Next Week",
-      ashaName: body.ashaName?.trim() || "Meena Devi",
-      familyName: body.familyName?.trim() || "Family Member",
-      ironDaysCompleted: 20,
-      ironDaysTotal: 28,
+      nextVisitLabel: body.nextVisitLabel?.trim() || "Next ANC visit",
+      ashaName: body.ashaName?.trim() || "ASHA worker",
+      familyName: body.familyName?.trim() || "Family contact",
+      supplementName: body.supplementName?.trim() || "Daily supplement",
+      supplementDaysCompleted: 0,
+      supplementDaysTotal: daysTotal,
+      supplementTakenToday: false,
       entries: [],
     };
 
     store.patients.unshift(newPatient);
     writeStore(store);
 
-    return NextResponse.json({ ok: true, patient: newPatient });
+    return NextResponse.json({ ok: true, patient: newPatient }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to register patient";
     return NextResponse.json({ error: message }, { status: 500 });

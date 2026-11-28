@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
+import { recordCase, recordTimelineEntry } from "@/lib/conversations";
+import { isDatabaseConfigured } from "@/lib/db";
 import { readStore, writeStore } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Confirms a turn: writes the timeline entry (journal) and, for an alert,
+ * the case the clinic desk works from. Both the file store and Postgres are
+ * updated so the agent and the dashboard read the same episode.
+ */
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as {
       patientId: string;
+      conversationId?: string | null;
       spokenQuote: string;
       englishTranslation: string;
       action: "alert" | "save_remind";
@@ -22,35 +30,34 @@ export async function POST(req: Request) {
     }
 
     const now = new Date();
-    const dateLabel = now.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-    });
+    const quote = body.spokenQuote.replace(/^[“"]|[”"]$/g, "");
+    const dateLabel = now.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+    const kind = body.action === "alert" ? "alert" : "saved";
+    const outcomeNote =
+      body.action === "alert"
+        ? `Alerted ${patient.ashaName} & ${patient.familyName}`
+        : body.reminderNote;
 
-    const entryKind = body.action === "alert" ? "alert" : "saved";
     patient.entries.unshift({
-      id: `entry-${Date.now()}`,
+      id: `entry-${now.getTime()}`,
       dateLabel,
-      kind: entryKind,
-      spokenQuote: `“${body.spokenQuote.replace(/^“|”$/g, "")}”`,
+      kind,
+      spokenQuote: `“${quote}”`,
       englishTranslation: body.englishTranslation,
-      outcomeNote:
-        body.action === "alert"
-          ? `Alerted ${patient.ashaName} & ${patient.familyName}`
-          : body.reminderNote,
+      outcomeNote,
       ruleMatched: body.ruleMatched,
     });
 
     if (body.action === "alert") {
       store.alerts.unshift({
-        id: `alert-${Date.now()}`,
+        id: `alert-${now.getTime()}`,
         patientId: patient.id,
         patientName: patient.name,
         gestationWeek: patient.gestationWeek,
         language: patient.language,
         severity: body.severity === "doubt" ? "doubt" : "urgent",
         summary: body.ruleMatched,
-        spokenQuote: `“${body.spokenQuote.replace(/^“|”$/g, "")}”`,
+        spokenQuote: `“${quote}”`,
         ashaName: patient.ashaName,
         familyName: patient.familyName,
         acknowledged: false,
@@ -60,17 +67,42 @@ export async function POST(req: Request) {
     }
 
     store.auditLogs.unshift({
-      id: `audit-${Date.now()}`,
+      id: `audit-${now.getTime()}`,
       patientName: patient.name,
       timestampLabel: "Just now",
       action: body.action,
       ruleMatched: body.ruleMatched,
-      transcript: body.spokenQuote,
+      transcript: quote,
       verifiedByDoctor: false,
     });
 
     writeStore(store);
-    return NextResponse.json({ ok: true, store });
+
+    if (isDatabaseConfigured()) {
+      await recordTimelineEntry({
+        patientId: patient.id,
+        patientName: patient.name,
+        kind,
+        spokenQuote: quote,
+        englishTranslation: body.englishTranslation,
+        outcomeNote,
+        ruleMatched: body.ruleMatched,
+      });
+
+      if (body.action === "alert") {
+        await recordCase({
+          conversationId: body.conversationId ?? null,
+          patientId: patient.id,
+          patientName: patient.name,
+          severity: body.severity === "doubt" ? "amber" : "red",
+          summary: body.ruleMatched,
+          transcript: quote,
+          ruleMatched: body.ruleMatched,
+        });
+      }
+    }
+
+    return NextResponse.json({ ok: true, databaseConfigured: isDatabaseConfigured() });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to save turn";
     return NextResponse.json({ error: message }, { status: 500 });

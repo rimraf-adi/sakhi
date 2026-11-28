@@ -1,41 +1,31 @@
+# Local Postgres for Sakhi. The agent writes conversations here and the
+# clinic dashboard reads them, so both apps see the same turns.
+#
+#   docker compose up -d
+#   DATABASE_URL=postgres://sakhi:sakhi@localhost:5432/sakhi
+#
+# Without DATABASE_URL the apps fall back to data/sakhi-store.json, so the
+# demo still runs with no Docker and no API keys.
+
 services:
-  landing-page:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        APP_NAME: landing-page
-        PORT: 3000
-    ports:
-      - "3000:3000"
+  db:
+    image: postgres:16-alpine
+    container_name: sakhi-db
+    restart: unless-stopped
     environment:
-      - NODE_ENV=production
-
-  mobile:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        APP_NAME: mobile
-        PORT: 3001
+      POSTGRES_USER: sakhi
+      POSTGRES_PASSWORD: sakhi
+      POSTGRES_DB: sakhi
     ports:
-      - "3001:3001"
+      - "5432:5432"
     volumes:
-      - ./data:/app/data
-    environment:
-      - NODE_ENV=production
-      - GROQ_API_KEYS=${GROQ_API_KEYS:-}
+      - sakhi-db-data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sakhi -d sakhi"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
 
-  clinic-dashboard:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        APP_NAME: clinic-dashboard
-        PORT: 3002
-    ports:
-      - "3002:3002"
-    volumes:
-      - ./data:/app/data
-    environment:
-      - NODE_ENV=production
+volumes:
+  sakhi-db-data:

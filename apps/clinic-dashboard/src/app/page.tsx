@@ -38,10 +38,28 @@ interface AuditLogEntry {
   detail: string;
 }
 
+interface ConversationMessage {
+  id: number;
+  role: string;
+  body: string;
+  createdAt: string;
+}
+
+interface ConversationView {
+  id: string;
+  patient_name: string;
+  language: string;
+  action: string | null;
+  status: string;
+  updated_at: string;
+  messages: ConversationMessage[];
+}
+
 interface DashboardPayload {
   patients: PatientRecord[];
   alerts: EscalationAlert[];
   auditLogs: AuditLogEntry[];
+  conversations?: ConversationView[];
 }
 
 type NavTab = 'escalations' | 'intake' | 'timelines' | 'audit';
@@ -57,9 +75,11 @@ export default function ClinicDashboardPage() {
   const [gestationWeek, setGestationWeek] = useState('32');
   const [lmpDate, setLmpDate] = useState('2026-04-16');
   const [language, setLanguage] = useState<'Hindi' | 'Marathi' | 'Tamil' | 'Telugu' | 'English'>('Hindi');
-  const [nextVisitLabel, setNextVisitLabel] = useState('ANC Visit 3, 24 Nov');
-  const [ashaName, setAshaName] = useState('Meena Devi (+91 98••• ••410)');
-  const [familyName, setFamilyName] = useState('Rohit Sharma (Husband)');
+  const [nextVisitLabel, setNextVisitLabel] = useState('');
+  const [ashaName, setAshaName] = useState('');
+  const [familyName, setFamilyName] = useState('');
+  const [supplementName, setSupplementName] = useState('');
+  const [supplementDaysTotal, setSupplementDaysTotal] = useState('28');
   const [submitting, setSubmitting] = useState(false);
   const [intakeSavedBanner, setIntakeSavedBanner] = useState<string | null>(null);
 
@@ -98,6 +118,8 @@ export default function ClinicDashboardPage() {
           nextVisitLabel,
           ashaName,
           familyName,
+          supplementName,
+          supplementDaysTotal: Number(supplementDaysTotal) || 28,
         }),
       });
       if (res.ok) {
@@ -214,8 +236,8 @@ export default function ClinicDashboardPage() {
 
       {/* Main Clinical Workspace */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 shrink-0 items-center justify-between border-b border-[#E4E7EC] bg-white px-6">
-          <div>
+        <header className="flex min-h-14 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-[#E4E7EC] bg-white px-6 py-2">
+          <div className="min-w-0">
             <h1 className="text-[15.5px] font-semibold tracking-tight text-[#101828]">
               {pageMeta[activeTab].title}
             </h1>
@@ -252,6 +274,61 @@ export default function ClinicDashboardPage() {
         <main className="flex-1 p-6">
           {activeTab === 'escalations' && (
             <div className="space-y-4">
+              {(data.conversations ?? []).length > 0 && (
+                <section className="rounded-lg border border-[#E4E7EC] bg-white">
+                  <header className="flex items-center justify-between border-b border-[#E4E7EC] px-4 py-2.5">
+                    <span className="text-[13px] font-semibold text-[#101828]">
+                      Live from Sakhi voice
+                    </span>
+                    <span className="text-[11.5px] text-[#667085]">
+                      {(data.conversations ?? []).length} conversation
+                      {(data.conversations ?? []).length === 1 ? '' : 's'} · synced from Postgres
+                    </span>
+                  </header>
+                  <div className="divide-y divide-[#F2F4F7]">
+                    {(data.conversations ?? []).slice(0, 3).map((conversation) => (
+                      <article key={conversation.id} className="px-4 py-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-[12.5px] font-semibold text-[#101828]">
+                            {conversation.patient_name}
+                            <span className="ml-2 font-normal text-[#667085]">
+                              {conversation.language} ·{' '}
+                              {new Date(conversation.updated_at).toLocaleTimeString('en-IN', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </span>
+                          </span>
+                          <span
+                            className={`shrink-0 rounded-md px-2 py-0.5 text-[10.5px] font-semibold ${
+                              conversation.action === 'alert'
+                                ? 'bg-[#FEF3F2] text-[#B42318]'
+                                : 'bg-[#ECFDF3] text-[#027A48]'
+                            }`}
+                          >
+                            {conversation.action === 'alert' ? 'Escalated' : 'Saved to timeline'}
+                          </span>
+                        </div>
+                        <div className="mt-1.5 space-y-1">
+                          {conversation.messages.slice(-4).map((message) => (
+                            <p key={message.id} className="text-[12px] leading-snug text-[#344054]">
+                              <span
+                                className={`mr-1.5 font-semibold ${
+                                  message.role === 'sakhi' ? 'text-[#0F4C3A]' : 'text-[#667085]'
+                                }`}
+                              >
+                                {message.role === 'sakhi' ? 'Sakhi' : 'Mother'}
+                              </span>
+                              {message.body}
+                            </p>
+                          ))}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
+
               {/* Hairline-Divided Metric Bar */}
               <div className="grid grid-cols-2 divide-x divide-[#E4E7EC] rounded-lg border border-[#E4E7EC] bg-white md:grid-cols-4">
                 <div className="px-4 py-3">
@@ -476,7 +553,7 @@ export default function ClinicDashboardPage() {
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="e.g. Priya Sharma"
+                        placeholder="Patient full name"
                         className="h-9 w-full rounded-md border border-[#D0D5DD] bg-white px-2.5 text-[13px] font-medium text-[#101828] outline-none focus:border-[#0F4C3A]"
                       />
                     </div>
@@ -567,6 +644,7 @@ export default function ClinicDashboardPage() {
                         type="text"
                         value={ashaName}
                         onChange={(e) => setAshaName(e.target.value)}
+                        placeholder="ASHA / ANM name"
                         className="h-9 w-full rounded-md border border-[#D0D5DD] bg-white px-2.5 text-[13px] font-medium text-[#101828] outline-none focus:border-[#0F4C3A]"
                       />
                     </div>
@@ -578,6 +656,35 @@ export default function ClinicDashboardPage() {
                         type="text"
                         value={familyName}
                         onChange={(e) => setFamilyName(e.target.value)}
+                        placeholder="Name (relation)"
+                        className="h-9 w-full rounded-md border border-[#D0D5DD] bg-white px-2.5 text-[13px] font-medium text-[#101828] outline-none focus:border-[#0F4C3A]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-4 grid gap-2.5 sm:grid-cols-[1.6fr_1fr]">
+                    <div>
+                      <label className="mb-1 block text-[11.5px] font-semibold text-[#344054]">
+                        Daily care item to track
+                      </label>
+                      <input
+                        type="text"
+                        value={supplementName}
+                        onChange={(e) => setSupplementName(e.target.value)}
+                        placeholder="e.g. Iron + folic acid"
+                        className="h-9 w-full rounded-md border border-[#D0D5DD] bg-white px-2.5 text-[13px] font-medium text-[#101828] outline-none focus:border-[#0F4C3A]"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-[11.5px] font-semibold text-[#344054]">
+                        Course length (days)
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={365}
+                        value={supplementDaysTotal}
+                        onChange={(e) => setSupplementDaysTotal(e.target.value)}
                         className="h-9 w-full rounded-md border border-[#D0D5DD] bg-white px-2.5 text-[13px] font-medium text-[#101828] outline-none focus:border-[#0F4C3A]"
                       />
                     </div>
@@ -595,7 +702,10 @@ export default function ClinicDashboardPage() {
                       ['Blood pressure', '118/76 mmHg'],
                       ['Hemoglobin', '10.8 g/dL'],
                       ['Blood group', 'O+ positive'],
-                      ['Iron tablets', '24 of 28 days'],
+                      [
+                        supplementName.trim() || 'Daily care item',
+                        `0 of ${supplementDaysTotal || 28} days`,
+                      ],
                     ].map(([k, v]) => (
                       <div key={k} className="rounded-md border border-[#E4E7EC] bg-[#F8F9FA] px-2.5 py-2">
                         <div className="text-[11px] text-[#475467]">{k}</div>
@@ -643,9 +753,10 @@ export default function ClinicDashboardPage() {
                   <div className="mb-4 overflow-hidden rounded-md border border-[#E4E7EC] text-xs">
                     {[
                       ['Voice channel', language],
-                      ['Next ANC visit', nextVisitLabel],
-                      ['Care escalation', ashaName],
-                      ['Family alert', familyName],
+                      ['Next ANC visit', nextVisitLabel || 'Not set'],
+                      ['Care escalation', ashaName || 'ASHA worker'],
+                      ['Family alert', familyName || 'Family contact'],
+                      ['Daily care item', supplementName || 'Daily supplement'],
                     ].map(([k, v], idx) => (
                       <div
                         key={k}

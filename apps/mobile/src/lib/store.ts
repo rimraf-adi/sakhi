@@ -1,180 +1,77 @@
 import fs from "fs";
 import path from "path";
+import type {
+  AuditLogEntry,
+  CirclePost,
+  EscalationAlert,
+  NewPatientInput,
+  PatientRecord,
+  SakhiStoreData,
+  Vitals,
+} from "./types";
 
-export type PatientLanguage = "Hindi" | "Marathi";
-
-export interface TimelineEntry {
-  id: string;
-  dateLabel: string;
-  kind: "alert" | "saved";
-  spokenQuote: string;
-  englishTranslation: string;
-  outcomeNote: string;
-  ruleMatched: string;
-}
-
-export interface PatientRecord {
-  id: string;
-  name: string;
-  gestationWeek: number;
-  gestationDay: number;
-  language: PatientLanguage;
-  speechLang: "hi-IN" | "mr-IN";
-  nextVisitLabel: string;
-  ashaName: string;
-  familyName: string;
-  ironDaysCompleted: number;
-  ironDaysTotal: number;
-  entries: TimelineEntry[];
-}
-
-export interface EscalationAlert {
-  id: string;
-  patientId: string;
-  patientName: string;
-  gestationWeek: number;
-  language: PatientLanguage;
-  severity: "urgent" | "doubt";
-  summary: string;
-  spokenQuote: string;
-  ashaName: string;
-  familyName: string;
-  acknowledged: boolean;
-  responseNote: string;
-  createdAtIso: string;
-}
-
-export interface AuditLogEntry {
-  id: string;
-  patientName: string;
-  timestampLabel: string;
-  action: "alert" | "save_remind";
-  ruleMatched: string;
-  transcript: string;
-  verifiedByDoctor: boolean;
-}
-
-export interface SakhiStore {
-  patients: PatientRecord[];
-  alerts: EscalationAlert[];
-  auditLogs: AuditLogEntry[];
-}
+export type { PatientRecord } from "./types";
 
 const STORE_PATH = path.resolve(process.cwd(), "../../data/sakhi-store.json");
 
-export function createInitialStore(): SakhiStore {
+/** New profiles start with no clinical readings, so nothing is invented. */
+const EMPTY_VITALS: Vitals = {
+  bpSystolic: 0,
+  bpDiastolic: 0,
+  bpTrend: [],
+  weightGainKg: 0,
+};
+
+/**
+ * A fresh device has no mothers on it: the app opens on onboarding and the
+ * record is built from what the mother (or the OPD desk) actually enters.
+ */
+export function createInitialStore(): SakhiStoreData {
+  return { patients: [], alerts: [], auditLogs: [], circlePosts: [] };
+}
+
+/** Store files written before onboarding carried the iron-specific fields. */
+type StoredPatient = PatientRecord & {
+  ironDaysCompleted?: number;
+  ironDaysTotal?: number;
+  ironTakenToday?: boolean;
+};
+
+function normalizePatient(stored: StoredPatient): PatientRecord {
+  const { ironDaysCompleted, ironDaysTotal, ironTakenToday, ...patient } = stored;
+
   return {
-    patients: [
-      {
-        id: "priya-sharma",
-        name: "Priya Sharma",
-        gestationWeek: 32,
-        gestationDay: 2,
-        language: "Hindi",
-        speechLang: "hi-IN",
-        nextVisitLabel: "ANC Visit #3 · 24 Nov",
-        ashaName: "Meena Devi",
-        familyName: "Rohit Sharma (Husband)",
-        ironDaysCompleted: 24,
-        ironDaysTotal: 28,
-        entries: [
-          {
-            id: "e-priya-1",
-            dateLabel: "14 Nov",
-            kind: "saved",
-            spokenQuote: "“Kal raat iron ki goli lena bhool gayi, aur thakan lag rahi hai.”",
-            englishTranslation: "Forgot iron tablet last night and feeling tired.",
-            outcomeNote: "Ruled out dizziness · Evening voice reminder scheduled",
-            ruleMatched: "MoHFW Routine ANC Adherence",
-          },
-        ],
-      },
-      {
-        id: "sunita-patil",
-        name: "Sunita Patil",
-        gestationWeek: 35,
-        gestationDay: 4,
-        language: "Marathi",
-        speechLang: "mr-IN",
-        nextVisitLabel: "ANC Visit #4 · 26 Nov",
-        ashaName: "Savita Jadhav",
-        familyName: "Suresh Patil (Husband)",
-        ironDaysCompleted: 26,
-        ironDaysTotal: 28,
-        entries: [],
-      },
-      {
-        id: "kavita-devi",
-        name: "Kavita Devi",
-        gestationWeek: 22,
-        gestationDay: 1,
-        language: "Hindi",
-        speechLang: "hi-IN",
-        nextVisitLabel: "ANC Visit #2 · 28 Nov",
-        ashaName: "Rekha Kumari",
-        familyName: "Anil Kumar (Husband)",
-        ironDaysCompleted: 18,
-        ironDaysTotal: 28,
-        entries: [],
-      },
-    ],
-    alerts: [
-      {
-        id: "alert-seed-sunita",
-        patientId: "sunita-patil",
-        patientName: "Sunita Patil",
-        gestationWeek: 35,
-        language: "Marathi",
-        severity: "doubt",
-        summary: "Reduced baby movement with uncertain onset timing",
-        spokenQuote: "“Aaj sakalpasun balachi halchal kami watat aahe.”",
-        ashaName: "Savita Jadhav",
-        familyName: "Suresh Patil (Husband)",
-        acknowledged: true,
-        responseNote: "Hospital called · Monitoring scheduled",
-        createdAtIso: new Date(Date.now() - 14 * 60_000).toISOString(),
-      },
-    ],
-    auditLogs: [
-      {
-        id: "audit-1",
-        patientName: "Sunita Patil",
-        timestampLabel: "14m ago",
-        action: "alert",
-        ruleMatched: "Escalate on Doubt · Reduced Fetal Movement",
-        transcript: "Aaj sakalpasun balachi halchal kami watat aahe.",
-        verifiedByDoctor: true,
-      },
-      {
-        id: "audit-2",
-        patientName: "Priya Sharma",
-        timestampLabel: "14 Nov",
-        action: "save_remind",
-        ruleMatched: "MoHFW Routine ANC Adherence",
-        transcript: "Kal raat iron ki goli lena bhool gayi.",
-        verifiedByDoctor: true,
-      },
-    ],
+    ...patient,
+    supplementName: patient.supplementName?.trim() || "Daily supplement",
+    supplementDaysCompleted:
+      patient.supplementDaysCompleted ?? ironDaysCompleted ?? 0,
+    supplementDaysTotal: patient.supplementDaysTotal ?? ironDaysTotal ?? 28,
+    supplementTakenToday: patient.supplementTakenToday ?? ironTakenToday ?? false,
+    vitals: patient.vitals ?? EMPTY_VITALS,
+    entries: patient.entries ?? [],
   };
 }
 
-export function readStore(): SakhiStore {
+export function readStore(): SakhiStoreData {
+  const fallback = createInitialStore();
   try {
-    if (!fs.existsSync(STORE_PATH)) {
-      const seed = createInitialStore();
-      writeStore(seed);
-      return seed;
-    }
-    const raw = fs.readFileSync(STORE_PATH, "utf-8");
-    return JSON.parse(raw) as SakhiStore;
+    if (!fs.existsSync(STORE_PATH)) return fallback;
+
+    const raw = JSON.parse(fs.readFileSync(STORE_PATH, "utf-8")) as Partial<SakhiStoreData>;
+    return {
+      patients: (raw.patients ?? []).map((patient) =>
+        normalizePatient(patient as StoredPatient),
+      ),
+      alerts: raw.alerts ?? [],
+      auditLogs: raw.auditLogs ?? [],
+      circlePosts: raw.circlePosts ?? [],
+    };
   } catch {
-    const seed = createInitialStore();
-    writeStore(seed);
-    return seed;
+    return fallback;
   }
 }
 
-export function writeStore(store: SakhiStore): void {
+export function writeStore(store: SakhiStoreData): void {
   const dir = path.dirname(STORE_PATH);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -182,8 +79,116 @@ export function writeStore(store: SakhiStore): void {
   fs.writeFileSync(STORE_PATH, JSON.stringify(store, null, 2), "utf-8");
 }
 
-export function resetStore(): SakhiStore {
+export function resetStore(): SakhiStoreData {
   const seed = createInitialStore();
   writeStore(seed);
   return seed;
 }
+
+const SPEECH_LANG = { Hindi: "hi-IN", Marathi: "mr-IN" } as const;
+
+function slugify(value: string): string {
+  const slug = value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return slug || "mother";
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, Math.round(value)));
+}
+
+/** Builds a patient record from onboarding input, with derived fields filled in. */
+export function createPatient(input: NewPatientInput): PatientRecord {
+  const language = input.language === "Marathi" ? "Marathi" : "Hindi";
+
+  return {
+    id: `${slugify(input.name)}-${Date.now().toString().slice(-5)}`,
+    name: input.name.trim(),
+    gestationWeek: clamp(input.gestationWeek, 1, 42),
+    gestationDay: clamp(input.gestationDay ?? 0, 0, 6),
+    language,
+    speechLang: SPEECH_LANG[language],
+    nextVisitLabel: input.nextVisitLabel?.trim() || "Next ANC visit",
+    ashaName: input.ashaName?.trim() || "ASHA worker",
+    familyName: input.familyName?.trim() || "Family contact",
+    supplementName: input.supplementName?.trim() || "Daily supplement",
+    supplementDaysCompleted: 0,
+    supplementDaysTotal: clamp(input.supplementDaysTotal ?? 28, 1, 365),
+    supplementTakenToday: false,
+    vitals: EMPTY_VITALS,
+    entries: [],
+  };
+}
+
+/** Adds a mother to the shared record and returns her new profile. */
+export function enrollPatient(
+  store: SakhiStoreData,
+  input: NewPatientInput,
+): PatientRecord {
+  const patient = createPatient(input);
+  store.patients = [patient, ...store.patients];
+  return patient;
+}
+
+const AVATAR_STYLES = [
+  { bg: "#C8643B", text: "#FFFFFF" },
+  { bg: "#0F4C3A", text: "#FFFFFF" },
+  { bg: "#E4DAC7", text: "#101828" },
+  { bg: "#F3D3A7", text: "#101828" },
+];
+
+export function findPatient(
+  store: SakhiStoreData,
+  patientId: string | undefined,
+): PatientRecord | undefined {
+  if (!patientId) return store.patients[0];
+  return store.patients.find((patient) => patient.id === patientId) ?? store.patients[0];
+}
+
+/** Persists a new circle post written by an enrolled mother. */
+export function appendCirclePost(
+  store: SakhiStoreData,
+  input: { patient: PatientRecord; text: string; withVoice: boolean },
+): CirclePost {
+  const style = AVATAR_STYLES[store.circlePosts.length % AVATAR_STYLES.length]!;
+  const post: CirclePost = {
+    id: `post-${Date.now()}`,
+    patientId: input.patient.id,
+    author: input.patient.name,
+    badge: `Wk ${input.patient.gestationWeek}`,
+    avatar: input.patient.name.charAt(0).toUpperCase(),
+    avatarBg: style.bg,
+    avatarText: style.text,
+    createdAtIso: new Date().toISOString(),
+    text: input.text,
+    ...(input.withVoice
+      ? { voiceDuration: "0:12", voiceLang: input.patient.language }
+      : {}),
+    likes: 0,
+    replies: 0,
+  };
+  store.circlePosts = [post, ...store.circlePosts];
+  return post;
+}
+
+/** Flips today's care item and keeps the completed-day tally in sync. */
+export function toggleSupplementToday(
+  store: SakhiStoreData,
+  patientId: string,
+): PatientRecord | undefined {
+  const patient = store.patients.find((item) => item.id === patientId);
+  if (!patient) return undefined;
+
+  const taking = !patient.supplementTakenToday;
+  patient.supplementTakenToday = taking;
+  patient.supplementDaysCompleted = clamp(
+    patient.supplementDaysCompleted + (taking ? 1 : -1),
+    0,
+    patient.supplementDaysTotal,
+  );
+  return patient;
+}
+
+export type { AuditLogEntry, CirclePost, EscalationAlert, SakhiStoreData };
