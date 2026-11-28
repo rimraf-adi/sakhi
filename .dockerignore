@@ -1,7 +1,11 @@
 node_modules
 .next
+# No secrets in the image: every env file, at any depth.
 .env
-.env.local
+.env.*
+**/.env
+**/.env.*
+!**/.env.example
 .git
 apps/video/out
 *.mp4

@@ -1,13 +1,28 @@
-# Local Postgres for Sakhi. The agent writes conversations here and the
-# clinic dashboard reads them, so both apps see the same turns.
+# Sakhi, in Docker. `docker compose up -d --build` builds and runs the patient
+# app on http://localhost:3001 - the image defaults to the mobile app, never the
+# landing page or the clinic dashboard. The agent writes conversations to
+# data/sakhi-store.json inside the container (or to Postgres when DATABASE_URL
+# is set), and the clinic dashboard reads them, so both apps see the same turns.
 #
-#   docker compose up -d
+#   docker compose up -d --build     # mobile app on http://localhost:3001
+#   docker compose up -d db          # optional local Postgres
 #   DATABASE_URL=postgres://sakhi:sakhi@localhost:5432/sakhi
 #
 # Without DATABASE_URL the apps fall back to data/sakhi-store.json, so the
 # demo still runs with no Docker and no API keys.
 
 services:
+  mobile:
+    build:
+      context: .
+      args:
+        APP_NAME: mobile
+        PORT: 3001
+    container_name: sakhi-mobile
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+
   db:
     image: postgres:16-alpine
     container_name: sakhi-db

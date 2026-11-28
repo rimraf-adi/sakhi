@@ -152,6 +152,13 @@ export function VoiceScreen({ patient, session, onOpenTab }: VoiceScreenProps) {
   const engineLabel =
     engine === "llm-rules" ? "Groq + rules" : engine === "rules" ? "rules" : null;
   const thinking = phase === "thinking";
+  const liveVoice = status?.mode === "live";
+  const missingKeys = status?.missing ?? [];
+  const statusTitle = !status
+    ? "Checking which voice keys this build has"
+    : liveVoice
+      ? "Groq transcription and Sarvam voice are configured on this build"
+      : `Missing ${missingKeys.join(" and ")}: Sakhi speaks with this device's voice and listens with this device's microphone`;
 
   return (
     <>
@@ -178,20 +185,18 @@ export function VoiceScreen({ patient, session, onOpenTab }: VoiceScreenProps) {
               {engineLabel}
             </span>
           )}
-          {status && (!status.voiceOutput || !status.voiceInput) && (
-            <span
-              title={
-                status.voiceOutput
-                  ? "Sarvam voice on · microphone uses this device"
-                  : "Sarvam key unavailable: this device's voice reads Sakhi; the mic uses on-device recognition"
-              }
-              className="rounded-full border border-[#EAB685]/25 px-2 py-0.5 text-[9.5px] font-medium text-[#EAB685]/80"
-            >
-              {[!status.voiceOutput && "device voice", !status.voiceInput && "device mic"]
-                .filter(Boolean)
-                .join(" · ")}
-            </span>
-          )}
+          <span
+            title={statusTitle}
+            className={`rounded-full border px-2 py-0.5 text-[9.5px] font-semibold uppercase tracking-wider ${
+              !status
+                ? "border-white/10 text-[#7E938C]"
+                : liveVoice
+                  ? "border-[#58B98E]/40 bg-[#58B98E]/10 text-[#7FD1AE]"
+                  : "border-[#EAB685]/35 bg-[#EAB685]/10 text-[#EAB685]"
+            }`}
+          >
+            {!status ? "keys…" : liveVoice ? "live voice" : "demo mode"}
+          </span>
           <span className="text-xs font-medium text-[#8EA39C]">{patient.language}</span>
           <button
             type="button"
@@ -452,11 +457,32 @@ export function VoiceScreen({ patient, session, onOpenTab }: VoiceScreenProps) {
                   ))}
                 </div>
                 <p className="text-center text-[10px] text-[#6F847D]">{ui.privacy}</p>
-                {status && !status.voiceInput && (
-                  <p className="text-center text-[10px] text-[#EAB685]/70">
-                    Voice fallback: no transcription key on this build, so the mic uses this
-                    device&apos;s own recogniser. The prompts below run the same flow.
-                  </p>
+                {status?.mode === "demo" && (
+                  <div className="rounded-xl border border-[#EAB685]/25 bg-[#EAB685]/[0.07] px-3 py-2 text-left">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[9.5px] font-semibold uppercase tracking-[0.12em] text-[#EAB685]">
+                        Demo mode · API keys not set
+                      </span>
+                      <span className="shrink-0 text-[9px] text-[#EAB685]/70">add to .env</span>
+                    </div>
+                    <div className="mt-1 space-y-0.5 text-[10px] leading-snug text-[#C8D3CF]">
+                      {!status.voiceInput && (
+                        <p>
+                          <span className="font-mono text-[9.5px] text-[#F6AD94]">GROQ_API_KEYS</span>{" "}
+                          missing — the mic uses this device&apos;s recogniser
+                        </p>
+                      )}
+                      {!status.voiceOutput && (
+                        <p>
+                          <span className="font-mono text-[9.5px] text-[#F6AD94]">SARVAM_API_KEY</span>{" "}
+                          missing — Sakhi speaks in this device&apos;s voice
+                        </p>
+                      )}
+                    </div>
+                    <p className="mt-1 text-[9px] text-[#8EA39C]">
+                      Triage, escalation and the journal run exactly the same without keys.
+                    </p>
+                  </div>
                 )}
               </>
             )}

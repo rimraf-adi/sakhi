@@ -144,8 +144,11 @@ The demo is designed to run with no keys at all:
   prompt chips run the identical turn through `/api/voice/respond`.
 - **Triage** — the rules engine is deterministic regex, so danger-sign detection needs no model.
 
-`GET /api/status` returns `{ voiceInput, voiceOutput }` as booleans only; key values never leave the
-server.
+`GET /api/status` returns `{ voiceInput, voiceOutput, mode, missing }` as booleans and env-var
+names only; key values never leave the server. The voice screen shows the result in its header as a
+`live voice` or `demo mode` pill, and in demo mode a card names each missing variable
+(`GROQ_API_KEYS`, `SARVAM_API_KEY`) so a judge can see the build is running on device fallbacks
+rather than a silent failure.
 
 ## Getting started
 
@@ -171,10 +174,28 @@ Optional live LLM extraction and transcription need `GROQ_API_KEYS`; natural
 text-to-speech needs `SARVAM_API_KEY`. Without them the app uses this device's own recogniser and
 voice, and the deterministic rules engine — the flow is identical.
 
+Docker (the image always runs the patient app, not the landing page or the dashboard):
+
+```bash
+docker compose up -d --build     # http://localhost:3001 - the voice screen
+```
+
+Or without compose:
+
+```bash
+docker build -t sakhi-mobile .
+docker run --rm -p 3001:3001 sakhi-mobile
+```
+
+`data/sakhi-store.json` is baked into the image, so the seeded demo patient appears on first load
+with no keys and no database. Every `.env*` file is excluded from the image (see `.dockerignore`),
+so the container always runs keyless and shows the `demo mode` card instead of leaking a key into a
+layer.
+
 Optional Postgres:
 
 ```bash
-docker compose up -d
+docker compose up -d db
 export DATABASE_URL=postgres://sakhi:sakhi@localhost:5432/sakhi
 ```
 

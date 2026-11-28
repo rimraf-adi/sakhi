@@ -10,8 +10,17 @@ export const dynamic = "force-dynamic";
  * where the live version switches on and where the device fallback takes over.
  */
 export async function GET() {
+  const voiceInput = loadGroqKeys().length > 0;
+  const voiceOutput = loadSarvamKeys().length > 0;
+  const missing = [
+    ...(voiceInput ? [] : ["GROQ_API_KEYS"]),
+    ...(voiceOutput ? [] : ["SARVAM_API_KEY"]),
+  ];
+
   return NextResponse.json({
-    voiceInput: loadGroqKeys().length > 0,
-    voiceOutput: loadSarvamKeys().length > 0,
+    voiceInput,
+    voiceOutput,
+    mode: missing.length === 0 ? "live" : "demo",
+    missing,
   });
 }
