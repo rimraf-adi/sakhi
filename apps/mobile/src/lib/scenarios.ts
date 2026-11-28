@@ -19,6 +19,30 @@ export interface DemoScenario {
 
 export const DEMO_SCENARIOS: DemoScenario[] = [
   {
+    id: "danger-headache-en",
+    short: "Headache + swelling",
+    label: "English: late-night headache with swollen feet",
+    language: "English",
+    utterance: "I've had a headache for two days and my feet are swollen.",
+    followupReply: "Yes, things look a bit blurry since this morning.",
+  },
+  {
+    id: "doubt-movement-en",
+    short: "Baby movement",
+    label: "English: reduced baby movement, unsure",
+    language: "English",
+    utterance: "The baby seems to be moving less today, but I am not sure.",
+    followupReply: "It has felt quieter since this morning.",
+  },
+  {
+    id: "routine-tablet-en",
+    short: "Missed tablet",
+    label: "English: missed the daily tablet, feeling tired",
+    language: "English",
+    utterance: "I forgot my tablet last night and I am feeling a bit tired.",
+    followupReply: "No, I am not feeling dizzy.",
+  },
+  {
     id: "danger-headache",
     short: "Headache + swelling",
     label: "Hindi: late-night headache with swollen feet",

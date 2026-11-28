@@ -1,12 +1,23 @@
 # Sakhi
 
 A voice-first maternal care companion for pregnant women in low-resource settings, with a
-companion clinic dashboard. A mother speaks for a few seconds in Hindi or Marathi; Sakhi checks
-her words against MoHFW danger-sign protocols, asks at most one clarifying question, and either
-saves the note to her timeline or escalates to her ASHA worker and family with her consent.
+companion clinic dashboard. A mother speaks for a few seconds in English; Sakhi checks her words
+against MoHFW danger-sign protocols, asks at most one clarifying question, and either saves the
+note to her timeline or escalates to her ASHA worker and family with her consent.
 
-Every woman's profile is created at runtime — from her own onboarding or from the OPD desk.
-There are no seeded demo personas and no hardcoded medicine names in the product flow.
+The demo ships with one seeded record so the phone opens straight on the conversation — see
+[The patient record (demo mode)](#the-patient-record-demo-mode). Nothing about her medicine, week
+or care team is hardcoded in a screen: every surface reads it from that record.
+
+What the demo shows end to end, with or without API keys:
+
+- a spoken check-in, one clarifying question, and a consent prompt before anything is sent;
+- the escalation arriving at the OPD desk, the nurse acknowledging it, and **her phone showing who
+  picked it up and when** — the loop closing on both screens;
+- a WhatsApp-style record of exactly what left her phone, with her own words and the rule matched;
+- a **one-page pre-visit summary for the doctor**, derived from her timeline, not authored;
+- a clinician **mark-reviewed** action on the safety audit trail;
+- her iron/folic-acid grid with a streak and a weekly recap read aloud.
 
 ---
 
@@ -15,7 +26,8 @@ There are no seeded demo personas and no hardcoded medicine names in the product
 - [What this repository contains](#what-this-repository-contains)
 - [How the system fits together](#how-the-system-fits-together)
 - [The agent, in three layers](#the-agent-in-three-layers)
-- [Onboarding and the patient record](#onboarding-and-the-patient-record)
+- [The patient record (demo mode)](#the-patient-record-demo-mode)
+- [Running without API keys](#running-without-api-keys)
 - [Getting started](#getting-started)
 - [Environment variables](#environment-variables)
 - [Scripts](#scripts)
@@ -24,6 +36,7 @@ There are no seeded demo personas and no hardcoded medicine names in the product
 - [Repository layout](#repository-layout)
 - [Design constraints](#design-constraints)
 - [Known limitations](#known-limitations)
+- [Future scope](#future-scope)
 
 ---
 
@@ -31,7 +44,7 @@ There are no seeded demo personas and no hardcoded medicine names in the product
 
 | App | Port | Purpose |
 | --- | --- | --- |
-| `apps/mobile` | 3001 | The mother's app: onboarding, voice conversation, Circle, Pregnancy Journal |
+| `apps/mobile` | 3001 | The mother's app: voice conversation, Circle, Pregnancy Journal |
 | `apps/clinic-dashboard` | 3002 | The OPD desk: live escalations, ANC intake, cohort timelines, safety audit |
 | `apps/landing-page` | 3000 | Marketing site describing the product and its safeguarding model |
 | `apps/video` | 3003 | Remotion composition used to render the pitch video |
@@ -46,7 +59,7 @@ visible to the clinic desk.
         ┌──────────────────────────┐        ┌──────────────────────────┐
         │  apps/mobile (3001)      │        │ clinic-dashboard (3002)  │
         │                          │        │                          │
-        │  Onboarding ─┐           │        │  ANC intake ─┐           │
+        │  Demo record ┐           │        │  ANC intake ─┐           │
         │  Voice ──────┼─► /api/*  │        │  Escalations ┼─► /api/*  │
         │  Circle ─────┤           │        │  Timelines   │           │
         │  Journal ────┘           │        │  Audit       ┘           │
@@ -69,14 +82,16 @@ visible to the clinic desk.
 
 `apps/mobile/src/lib/agent.ts` is deliberately one-way:
 
-1. **Extraction** — a Groq model reads one message written in Romanized Hindi or Marathi and lists
-   only the symptoms she actually mentioned, as `present`, `negated` or `uncertain`. Its output is
-   validated against a fixed sign list; anything else is dropped.
+1. **Extraction** — a Groq model reads one message (English in the demo; Romanized Hindi and
+   Marathi are also handled by the prompt) and lists only the symptoms she actually mentioned, as
+   `present`, `negated` or `uncertain`. Its output is validated against a fixed sign list; anything
+   else is dropped.
 2. **Decision** — `triage.ts` applies deterministic MoHFW rules. Neither the model nor the copy
    layer can escalate: escalation requires a confirmed danger sign, the pre-eclampsia cluster
    (headache with vision change or swelling), or an unresolved uncertainty on a danger sign.
-3. **Phrasing** — `agentCopy.ts` turns that decision into one short sentence in her language,
-   using her name, her ASHA worker and her family contact from her own record.
+3. **Phrasing** — `agentCopy.ts` turns that decision into one short sentence in her language
+   (English by default; Hindi and Marathi lines are already written), using her name, her ASHA
+   worker and her family contact from her own record.
 
 If no API key is configured, or `SAKHI_STRICT_RULES=1` is set, extraction falls back to the same
 regex rules — the triage outcome is unchanged.
@@ -89,28 +104,48 @@ A turn ends in one of three actions:
 | `save_remind` | Routine; written to her timeline with a reminder note |
 | `alert` | A consent prompt; on confirmation the ASHA worker, family contact and clinic case are notified |
 
-## Onboarding and the patient record
+## The patient record (demo mode)
 
-The app has no built-in patients. On first launch `apps/mobile` shows `OnboardingScreen`, which
-collects:
+The mobile app no longer runs an onboarding flow: it opens straight on Sakhi's voice screen. The
+record it reads is one seeded demo profile in `apps/mobile/src/lib/demo.ts` (`DEMO_PATIENT`):
 
-- name, gestation week and day
-- spoken language (Hindi or Marathi)
-- health worker and family escalation contact
-- next ANC visit
-- the **daily care item** she is tracking — free text plus a course length in days
+- name and gestation — Sunita, week 28+2
+- language — English (`en-IN`)
+- care team — ASHA "Meena didi", family contact "Rakesh (pati)"
+- next ANC visit and the **daily care item** she tracks (Iron + folic acid, 12 of 28 days)
+- baseline vitals and one past journal entry
 
-That input is sent to `POST /api/patients`, which builds the record (id, speech locale, zeroed
-adherence counters) and persists it. Nothing about the medicine, the week or the people she
-escalates to is assumed anywhere else: the Journal, Circle header and reminder copy all read
-`supplementName`, `gestationWeek`, `ashaName` and `familyName` from that record.
+`store.ts` writes that profile into `data/sakhi-store.json` the first time the store is read, so the
+clinic desk and the phone work from the same file. Nothing about the medicine, the week or the
+people she escalates to is hardcoded in a screen: the Journal, Circle header, alert copy and
+reminder text all read `supplementName`, `gestationWeek`, `ashaName` and `familyName` from the
+record. Swapping the object in `demo.ts` swaps the whole demo.
 
-The same rule holds in the clinic dashboard's ANC intake, which writes the same record shape into
-the same store. Profiles added in either app appear in the other.
+If the store comes back empty (for example the dashboard's *Reset demo* button), the phone falls
+back to the same seeded record instead of showing an empty screen.
 
-A profile created before onboarding existed is migrated on read: legacy `ironDays*` fields are
+The clinic dashboard still has its ANC intake form, which writes the same record shape into the
+same store, and a profile added there appears on the phone. `POST /api/patients` still exists for
+that and for scripts; nothing in the mobile UI calls it today.
+
+Records written before the care-item rename are migrated on read: legacy `ironDays*` fields are
 mapped onto `supplementDays*`, and missing clinical readings stay empty rather than being filled
 with made-up values.
+
+### Running without API keys
+
+The demo is designed to run with no keys at all:
+
+- **Voice out** — Sakhi's lines are fetched from `/api/voice/tts` (Sarvam). With no `SARVAM_API_KEY`
+  that call returns 503 and `useSpeech` falls back to the browser's `speechSynthesis` voice. The
+  voice screen labels this as `device voice` so nobody thinks the live engine is running.
+- **Voice in** — with no `GROQ_API_KEYS`, `/api/status` reports `voiceInput: false` and the mic uses
+  the browser's own `SpeechRecognition` (`en-IN`). If the browser has no recogniser, three English
+  prompt chips run the identical turn through `/api/voice/respond`.
+- **Triage** — the rules engine is deterministic regex, so danger-sign detection needs no model.
+
+`GET /api/status` returns `{ voiceInput, voiceOutput }` as booleans only; key values never leave the
+server.
 
 ## Getting started
 
@@ -127,12 +162,14 @@ npm run dev --workspace @sakhi/mobile          # http://localhost:3001
 npm run dev --workspace @sakhi/clinic-dashboard # http://localhost:3002
 ```
 
-Open `http://localhost:3001`, complete onboarding, then speak or tap one of the sample utterances
-to run a full turn. The alert it produces appears on the dashboard within two seconds.
+Open `http://localhost:3001` — it lands straight on Sakhi's voice screen — then tap the mic or one
+of the English prompt chips to run a full turn. If an alert is raised and you confirm it, open the
+dashboard on `http://localhost:3002`, press **Acknowledge and call**, and watch her phone switch to
+"Sr. Anita Deshmukh has seen this" within three seconds.
 
-Optional live speech and LLM features need `GROQ_API_KEYS`; natural Hindi/Marathi
-text-to-speech needs `SARVAM_API_KEY`. Without them the app uses the browser voice and the
-deterministic rules engine.
+Optional live LLM extraction and transcription need `GROQ_API_KEYS`; natural
+text-to-speech needs `SARVAM_API_KEY`. Without them the app uses this device's own recogniser and
+voice, and the deterministic rules engine — the flow is identical.
 
 Optional Postgres:
 
@@ -175,9 +212,11 @@ dashboard apps expose `start`.
 
 | Route | Method | Purpose |
 | --- | --- | --- |
+| `/api/status` | `GET` | Which live voice features have keys (booleans only) |
 | `/api/patients` | `GET` | Every stored profile |
-| `/api/patients` | `POST` | Create a profile from onboarding |
+| `/api/patients` | `POST` | Create a profile (desk intake, scripts) |
 | `/api/patients/supplement` | `POST` | Toggle today's care item for one profile |
+| `/api/alerts` | `GET` | Her latest escalation and whether the desk has picked it up |
 | `/api/voice/transcribe` | `POST` | Audio → transcript (multipart) |
 | `/api/voice/respond` | `POST` | One agent turn: extract, decide, phrase, persist |
 | `/api/voice/confirm` | `POST` | Commit a turn: timeline entry, alert, audit log, case |
@@ -191,7 +230,8 @@ dashboard apps expose `start`.
 | --- | --- | --- |
 | `/api/dashboard` | `GET` | Cohort, alerts, audit log and live conversations |
 | `/api/patients` | `POST` | Register an ANC intake |
-| `/api/alerts/[id]/ack` | `POST` | Acknowledge an escalation |
+| `/api/alerts/[id]/ack` | `POST` | Acknowledge an escalation (her phone then shows who and when) |
+| `/api/audit/[id]/review` | `POST` | Mark a recorded exchange reviewed by a clinician |
 | `/api/reset` | `POST` | Clear the local record back to an empty cohort |
 
 ## Data model and storage
@@ -217,7 +257,7 @@ parameters.
 
 ```
 apps/
-  mobile/            patient app: onboarding, voice agent, Circle, Journal
+  mobile/            patient app: voice agent, Circle, Journal
     src/app/api/     route handlers
     src/components/  screens and voice UI
     src/hooks/       data, speech and voice-session state
@@ -237,18 +277,39 @@ packages/            shared TypeScript configuration
 - **Consent before notification.** An escalation is only sent after she confirms, in her language.
 - **One question at a time.** Routine turns get one clarifying question; only an unresolved danger
   sign earns a second.
-- **No invented clinical data.** New profiles start with empty vitals, and the Journal shows
-  "Not recorded" instead of a plausible-looking number.
-- **Nothing personal is hardcoded.** Names, weeks, languages, care items and escalation contacts
-  come from the record, not from constants.
+- **No invented clinical data in the flow.** Profiles created through either intake form start
+  with empty vitals, and the Journal shows "Not recorded" instead of a plausible-looking number.
+  The single exception is the deliberate demo record, which carries a sample BP so the Journal is
+  not blank on stage.
+- **Nothing personal is hardcoded in a screen.** Names, weeks, languages, care items and escalation
+  contacts come from the record; the seeded profile in `lib/demo.ts` is data the store reads, not a
+  constant baked into the UI.
 
 ## Known limitations
 
 - The file store is single-machine and has no locking; it is meant for local demos and pilots.
   Use `DATABASE_URL` for anything concurrent.
-- Hindi and Marathi are the supported voice languages; the clinic intake form lists more, but the
-  agent coerces unsupported choices to Hindi.
+- **The demo speaks English only.** Hindi and Marathi copy is still wired end to end (see
+  [Future scope](#future-scope)), but the seeded record, the prompt chips and the default
+  transcription locale are all English, because that is what the judges can follow.
 - `apps/video` and the marketing site contain fixed scripted content for the pitch; they are not
   connected to the live record.
 - The dashboard's "under 2 hours" and similar headline metrics are pilot targets, not measured
   outcomes.
+
+## Future scope
+
+- **Hindi and Marathi voice.** `PatientLanguage` and `SpeechLang` already include both,
+  `lib/agentCopy.ts` carries every Sakhi line in `en`/`hi`/`mr`, `lib/scenarios.ts` has Romanized
+  Hindi and Marathi prompt sets, and `store.ts` maps each language to its speech locale
+  (`hi-IN`, `mr-IN`). Switching a record's `language` and `speechLang` is enough to run the same
+  flow in either language - what is missing is a deliberate language picker and a review of the
+  Hindi/Marathi phrasings by a native speaker. The label, consent and fallback strings for the
+  three languages are already in `UI` in `components/VoiceScreen.tsx`.
+- **First-run onboarding.** A one-question-at-a-time voice setup (name, week, language, care team,
+  daily care item) that writes the same record, replacing the seeded demo profile on a real device.
+- **Maternal language QA.** The triage rules are English-regex based; the Romanized Hindi/Marathi
+  utterances in `scenarios.ts` exercise them, but a wider phrase set per language is needed before
+  a pilot.
+- **Per-language TTS voices.** Sarvam Bulbul supports `hi-IN` and `mr-IN`; the keyless fallback
+  depends on whichever device voices the browser ships.

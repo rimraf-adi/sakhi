@@ -60,6 +60,8 @@ export async function GET() {
       symptomSummary: alert.summary,
       transcriptSnippet: alert.spokenQuote,
       notifiedRecipients: [alert.ashaName, alert.familyName].filter(Boolean),
+      acknowledgedBy: alert.acknowledgedBy,
+      acknowledgedAt: alert.acknowledgedAtIso,
       createdAt: alert.createdAtIso,
     })),
     auditLogs: store.auditLogs.map((log) => ({
@@ -68,6 +70,8 @@ export async function GET() {
       actor: log.patientName,
       event: log.action,
       detail: log.ruleMatched,
+      verifiedByDoctor: log.verifiedByDoctor,
+      reviewedBy: log.reviewedBy,
     })),
     conversations,
   });

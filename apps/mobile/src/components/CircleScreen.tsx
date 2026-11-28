@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Lock, MessageCircle, Mic, Send, UserPlus, Volume2 } from "lucide-react";
+import { Heart, Lock, MessageCircle, Mic, Send, Volume2 } from "lucide-react";
 import { relativeTime } from "@/lib/format";
-import type { CirclePost, FlowPhase, Patient } from "@/lib/types";
+import type { CirclePost, FlowPhase, Patient, SpeechLang } from "@/lib/types";
 
 interface CircleScreenProps {
   patient: Patient;
@@ -11,10 +11,9 @@ interface CircleScreenProps {
   phase: FlowPhase;
   careNote: string | null;
   playingId: string | null;
-  onPlay: (id: string, text: string, lang: "hi-IN" | "mr-IN") => void;
+  onPlay: (id: string, text: string, lang: SpeechLang) => void;
   onPublish: (input: { text: string; withVoice: boolean }) => Promise<void>;
   onToggleSupplement: () => void;
-  onSwitchProfile: () => void;
 }
 
 export function CircleScreen({
@@ -26,7 +25,6 @@ export function CircleScreen({
   onPlay,
   onPublish,
   onToggleSupplement,
-  onSwitchProfile,
 }: CircleScreenProps) {
   const [composerText, setComposerText] = useState("");
   const [likedIds, setLikedIds] = useState<Record<string, boolean>>({});
@@ -52,15 +50,7 @@ export function CircleScreen({
             <Lock size={10} />
             Week {patient.gestationWeek} Circle
           </span>
-          <button
-            type="button"
-            onClick={onSwitchProfile}
-            aria-label="Switch or add a profile"
-            title="Switch or add a profile"
-            className="grid h-7 w-7 cursor-pointer place-items-center rounded-full border border-[#DDD3C0] text-[#0F4C3A] transition hover:bg-[#EFE6D5]"
-          >
-            <UserPlus size={12} />
-          </button>
+
         </div>
       </div>
 
@@ -168,7 +158,11 @@ export function CircleScreen({
                         onPlay(
                           post.id,
                           post.text,
-                          post.voiceLang === "Marathi" ? "mr-IN" : "hi-IN",
+                          post.voiceLang === "Marathi"
+                            ? "mr-IN"
+                            : post.voiceLang === "English"
+                              ? "en-IN"
+                              : "hi-IN",
                         )
                       }
                       className={`mt-1.5 inline-flex cursor-pointer items-center gap-2 rounded-full px-2.5 py-1 text-[10.5px] font-semibold ${

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { DEMO_PATIENT } from "@/lib/demo";
 import type { CirclePost, NewPatientInput, Patient } from "@/lib/types";
 
 export interface SakhiData {
@@ -38,8 +39,11 @@ export function useSakhiData(): SakhiData {
       if (!patientsRes.ok) throw new Error(`patients ${patientsRes.status}`);
 
       const patientsJson = (await patientsRes.json()) as { patients?: Patient[] };
-      setPatients(patientsJson.patients ?? []);
-      setSelectedPatientId((current) => current || patientsJson.patients?.[0]?.id || "");
+      // The demo opens on Sakhi, never on an empty phone: a cleared store still
+      // lands on the seeded record instead of a dead screen.
+      const loaded = patientsJson.patients?.length ? patientsJson.patients : [DEMO_PATIENT];
+      setPatients(loaded);
+      setSelectedPatientId((current) => current || loaded[0]?.id || "");
       setLoadError(null);
 
       if (postsRes.ok) {

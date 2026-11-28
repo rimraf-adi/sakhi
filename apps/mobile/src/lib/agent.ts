@@ -56,7 +56,7 @@ const SIGN_LABELS: Record<SignId, string> = {
 const SIGN_IDS = Object.keys(SIGN_LABELS) as SignId[];
 
 const EXTRACTION_SYSTEM = `You are a clinical scribe for an Indian maternal-health helpline.
-Read one message from a pregnant woman, written in Romanized Hindi or Marathi, sometimes with English words.
+Read one message from a pregnant woman, written in English, Romanized Hindi or Romanized Marathi.
 List only the symptoms she actually talks about. Allowed sign ids:
 ${SIGN_IDS.join(", ")}.
 State rules:
@@ -129,7 +129,12 @@ export interface AgentTurnInput {
 }
 
 export async function runAgentTurn(input: AgentTurnInput): Promise<AgentTurn> {
-  const language: AgentLanguage = input.patient.language === "Marathi" ? "Marathi" : "Hindi";
+  const language: AgentLanguage =
+    input.patient.language === "Marathi"
+      ? "Marathi"
+      : input.patient.language === "Hindi"
+        ? "Hindi"
+        : "English";
   const voice = {
     name: input.patient.name.split(" ")[0] || input.patient.name,
     asha: input.patient.ashaName.split(" ")[0] || "ASHA",

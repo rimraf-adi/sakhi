@@ -36,6 +36,8 @@ interface AuditLogEntry {
   actor: string;
   event: string;
   detail: string;
+  verifiedByDoctor?: boolean;
+  reviewedBy?: string;
 }
 
 interface ConversationMessage {
@@ -135,6 +137,15 @@ export default function ClinicDashboardPage() {
 
   async function handleAcknowledge(alertId: string) {
     await fetch(`/api/alerts/${alertId}/ack`, { method: 'POST' });
+    await fetchDashboard();
+  }
+
+  async function handleReview(logId: string, verified: boolean) {
+    await fetch(`/api/audit/${logId}/review`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ verified }),
+    });
     await fetchDashboard();
   }
 
@@ -445,9 +456,20 @@ export default function ClinicDashboardPage() {
                             </div>
 
                             {alert.acknowledged ? (
-                              <span className="rounded-md bg-[#0F4C3A] px-3 py-1.5 text-xs font-semibold text-white">
-                                {alert.acknowledgedBy || 'Nurse acknowledged'}
-                              </span>
+                              <div className="text-right">
+                                <span className="rounded-md bg-[#0F4C3A] px-3 py-1.5 text-xs font-semibold text-white">
+                                  {alert.acknowledgedBy || 'Nurse acknowledged'}
+                                </span>
+                                <div className="mt-1 text-[10.5px] font-medium text-[#0F4C3A]">
+                                  Her phone shows &ldquo;seen&rdquo;
+                                  {alert.acknowledgedAt
+                                    ? ` at ${new Date(alert.acknowledgedAt).toLocaleTimeString([], {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                      })}`
+                                    : ''}
+                                </div>
+                              </div>
                             ) : (
                               <button
                                 type="button"
@@ -865,10 +887,25 @@ export default function ClinicDashboardPage() {
                       <span className="text-[#344054]">
                         <strong className="text-[#101828]">{log.event}:</strong> {log.detail}
                       </span>
-                      <div className="text-right">
-                        <span className="rounded-md border border-[#ABEFC6] bg-[#ECFDF3] px-2 py-0.5 text-[11px] font-semibold text-[#0F4C3A]">
-                          Verified
-                        </span>
+                      <div className="flex justify-end">
+                        {log.verifiedByDoctor ? (
+                          <button
+                            type="button"
+                            onClick={() => handleReview(log.id, false)}
+                            title={log.reviewedBy ? `Reviewed by ${log.reviewedBy}` : 'Reviewed'}
+                            className="rounded-md border border-[#ABEFC6] bg-[#ECFDF3] px-2 py-0.5 text-[11px] font-semibold text-[#0F4C3A] hover:bg-[#D1FADF]"
+                          >
+                            Verified
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleReview(log.id, true)}
+                            className="rounded-md border border-[#D0D5DD] bg-white px-2 py-0.5 text-[11px] font-semibold text-[#475467] hover:bg-[#F3F4F6]"
+                          >
+                            Mark reviewed
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}

@@ -87,9 +87,9 @@ function pickSpokenText(data: {
 export async function transcribeAudioWithGroq(
   audioBlob: Blob,
   filename: string,
-  speechLang: "hi-IN" | "mr-IN",
+  speechLang: "en-IN" | "hi-IN" | "mr-IN",
 ): Promise<string> {
-  const langCode = speechLang === "mr-IN" ? "mr" : "hi";
+  const langCode = speechLang === "mr-IN" ? "mr" : speechLang === "en-IN" ? "en" : "hi";
   const res = await fetchWithGroqKeyRotation(
     "https://api.groq.com/openai/v1/audio/transcriptions",
     (apiKey) => {

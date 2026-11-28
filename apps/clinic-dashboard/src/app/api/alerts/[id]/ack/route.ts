@@ -15,7 +15,9 @@ export async function POST(
   }
 
   alert.acknowledged = true;
-  alert.responseNote = "Care team acknowledged · Reached hospital";
+  alert.acknowledgedBy = "Sr. Anita Deshmukh";
+  alert.acknowledgedAtIso = new Date().toISOString();
+  alert.responseNote = "Sr. Anita has seen this · calling now, ambulance on standby";
   writeStore(store);
 
   return NextResponse.json({ ok: true, alert });

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { enrollPatient, readStore, writeStore } from "@/lib/store";
+import { enrollPatient, readStore, toLanguage, writeStore } from "@/lib/store";
 import type { NewPatientInput } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     name,
     gestationWeek: week,
     gestationDay: Number(body.gestationDay) || 0,
-    language: body.language === "Marathi" ? "Marathi" : "Hindi",
+    language: toLanguage(body.language),
     ashaName: body.ashaName,
     familyName: body.familyName,
     nextVisitLabel: body.nextVisitLabel,

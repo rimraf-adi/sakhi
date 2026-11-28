@@ -19,6 +19,45 @@ const MIN_RECORDING_MS = 700;
 /** Peak input level below this reads as silence (quiet nights are fine). */
 const SILENCE_PEAK = 0.02;
 
+/**
+ * The browser's own speech recogniser (Chrome/Edge/Safari). It needs no key, so
+ * it keeps the mic alive on the keyless demo; the TS DOM lib does not ship its
+ * types, so the surface we use is declared here.
+ */
+interface RecognitionItem {
+  0?: { transcript?: string };
+}
+interface RecognitionEvent {
+  results: { length: number; [index: number]: RecognitionItem | undefined };
+}
+interface RecognitionInstance {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  start: () => void;
+  stop: () => void;
+  onresult: ((event: RecognitionEvent) => void) | null;
+  onerror: (() => void) | null;
+  onend: (() => void) | null;
+}
+type RecognitionCtor = new () => RecognitionInstance;
+
+/** How her "yes"/"no" is echoed back into the thread, in her language. */
+const CONFIRM_WORDS = {
+  English: { yes: "Yes, send it.", no: "Not now." },
+  Hindi: { yes: "Haan, bhej do.", no: "Abhi nahi." },
+  Marathi: { yes: "Ho, pathva.", no: "Aata nahi." },
+} as const;
+
+function getRecognition(): RecognitionCtor | null {
+  if (typeof window === "undefined") return null;
+  const scope = window as unknown as {
+    SpeechRecognition?: RecognitionCtor;
+    webkitSpeechRecognition?: RecognitionCtor;
+  };
+  return scope.SpeechRecognition ?? scope.webkitSpeechRecognition ?? null;
+}
+
 export interface VoiceSession {
   phase: FlowPhase;
   captions: CaptionItem[];
@@ -59,6 +98,9 @@ export function useVoiceSession({ patient, speech, onDataChanged }: Options): Vo
   const [askedQuestions, setAskedQuestions] = useState<string[]>([]);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
+  const recognitionRef = useRef<RecognitionInstance | null>(null);
+  /** Server transcription needs a Groq key; the device recogniser does not. */
+  const serverVoiceInputRef = useRef(false);
   const chunksRef = useRef<Blob[]>([]);
   const micLevelRef = useRef(0);
   const peakLevelRef = useRef(0);
@@ -84,6 +126,22 @@ export function useVoiceSession({ patient, speech, onDataChanged }: Options): Vo
     setFollowupSuggestion(null);
     setFindings([]);
     setAskedQuestions([]);
+  }, []);
+
+  // Keyless demo: with no Groq key the mic falls back to the browser recogniser.
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/status", { cache: "no-store" })
+      .then((res) => (res.ok ? (res.json() as Promise<{ voiceInput?: boolean }>) : null))
+      .then((json) => {
+        if (alive) serverVoiceInputRef.current = Boolean(json?.voiceInput);
+      })
+      .catch(() => {
+        // Unknown: the recorder path still runs and says why if it is blocked.
+      });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   // A different patient starts a fresh turn. A store refresh of the same
@@ -185,7 +243,53 @@ export function useVoiceSession({ patient, speech, onDataChanged }: Options): Vo
     if (!patient) return;
     const targetPhase: "recording_initial" | "recording_followup" =
       phase === "followup" ? "recording_followup" : "recording_initial";
+    const idlePhase: FlowPhase =
+      targetPhase === "recording_followup" ? "followup" : "idle";
     setStatusNotice(null);
+
+    // No Groq key on this deployment: the browser speaks to Chrome's own
+    // recogniser, so a judge can still talk to Sakhi with no keys at all.
+    const Recognition = serverVoiceInputRef.current ? null : getRecognition();
+    if (Recognition) {
+      try {
+        const recognition = new Recognition();
+        recognition.lang = patient.speechLang;
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.onresult = (event) => {
+          const said = Array.from({ length: event.results.length })
+            .map((_, index) => event.results[index]?.[0]?.transcript ?? "")
+            .join(" ")
+            .trim();
+          if (!said) {
+            setPhase(idlePhase);
+            return;
+          }
+          setPhase("thinking");
+          appendCaption({ isSakhi: false, text: said });
+          if (targetPhase === "recording_initial") setInitialUtterance(said);
+          void runTurn(said, targetPhase === "recording_initial" ? "initial" : "followup", patient);
+        };
+        recognition.onerror = () => {
+          recognitionRef.current = null;
+          setStatusNotice(
+            "Device voice input stopped. Tap the mic again, or use a prompt below.",
+          );
+          setPhase(idlePhase);
+        };
+        recognition.onend = () => {
+          recognitionRef.current = null;
+          setPhase((current) => (current === targetPhase ? idlePhase : current));
+        };
+        recognitionRef.current = recognition;
+        recognition.start();
+        setPhase(targetPhase);
+        return;
+      } catch {
+        // Falls through to the recorder, which either works or explains itself.
+        recognitionRef.current = null;
+      }
+    }
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -283,6 +387,12 @@ export function useVoiceSession({ patient, speech, onDataChanged }: Options): Vo
   }, [appendCaption, patient, phase, runTurn]);
 
   const stopRecording = useCallback(() => {
+    if (recognitionRef.current) {
+      const recognition = recognitionRef.current;
+      recognitionRef.current = null;
+      recognition.stop();
+      return;
+    }
     if (recorderRef.current && recorderRef.current.state !== "inactive") {
       setPhase("thinking");
       recorderRef.current.stop();
@@ -315,7 +425,10 @@ export function useVoiceSession({ patient, speech, onDataChanged }: Options): Vo
 
   const confirmAlert = useCallback(async () => {
     if (!patient || !lastTurn) return;
-    appendCaption({ isSakhi: false, text: "Haan, bhej do." });
+    appendCaption({
+      isSakhi: false,
+      text: CONFIRM_WORDS[patient.language].yes,
+    });
     try {
       await fetch("/api/voice/confirm", {
         method: "POST",
@@ -342,11 +455,12 @@ export function useVoiceSession({ patient, speech, onDataChanged }: Options): Vo
   }, [appendCaption, initialUtterance, lastTurn, onDataChanged, patient, speech]);
 
   const declineAlert = useCallback(() => {
-    appendCaption({ isSakhi: false, text: "Abhi nahi." });
+    const language = patient?.language ?? "English";
+    appendCaption({ isSakhi: false, text: CONFIRM_WORDS[language].no });
     setPhase("declined");
     // No scripted consolation line: the agent stays quiet until she speaks again.
     setStatusNotice(null);
-  }, [appendCaption]);
+  }, [appendCaption, patient?.language]);
 
   const reset = useCallback(() => {
     speech.stop();

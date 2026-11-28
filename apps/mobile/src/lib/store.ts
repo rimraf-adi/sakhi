@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { DEMO_PATIENT } from "./demo";
 import type {
   AuditLogEntry,
   CirclePost,
@@ -22,12 +23,11 @@ const EMPTY_VITALS: Vitals = {
   weightGainKg: 0,
 };
 
-/**
- * A fresh device has no mothers on it: the app opens on onboarding and the
- * record is built from what the mother (or the OPD desk) actually enters.
- */
+export { DEMO_PATIENT } from "./demo";
+
+/** The seed the demo store starts from. */
 export function createInitialStore(): SakhiStoreData {
-  return { patients: [], alerts: [], auditLogs: [], circlePosts: [] };
+  return { patients: [DEMO_PATIENT], alerts: [], auditLogs: [], circlePosts: [] };
 }
 
 /** Store files written before onboarding carried the iron-specific fields. */
@@ -55,7 +55,11 @@ function normalizePatient(stored: StoredPatient): PatientRecord {
 export function readStore(): SakhiStoreData {
   const fallback = createInitialStore();
   try {
-    if (!fs.existsSync(STORE_PATH)) return fallback;
+    if (!fs.existsSync(STORE_PATH)) {
+      // Write the demo record once so the clinic desk reads the same patient.
+      writeStore(fallback);
+      return fallback;
+    }
 
     const raw = JSON.parse(fs.readFileSync(STORE_PATH, "utf-8")) as Partial<SakhiStoreData>;
     return {
@@ -85,7 +89,17 @@ export function resetStore(): SakhiStoreData {
   return seed;
 }
 
-const SPEECH_LANG = { Hindi: "hi-IN", Marathi: "mr-IN" } as const;
+const SPEECH_LANG = { English: "en-IN", Hindi: "hi-IN", Marathi: "mr-IN" } as const;
+
+/** Her language preference: whatever she picked, English when nothing was chosen. */
+export function toLanguage(value: string | undefined): PatientRecord["language"] {
+  return value === "Marathi" || value === "Hindi" || value === "English" ? value : "English";
+}
+
+/** The speech engine code that matches her language. */
+export function speechLangFor(language: PatientRecord["language"]): PatientRecord["speechLang"] {
+  return SPEECH_LANG[language];
+}
 
 function slugify(value: string): string {
   const slug = value
@@ -101,7 +115,7 @@ function clamp(value: number, min: number, max: number): number {
 
 /** Builds a patient record from onboarding input, with derived fields filled in. */
 export function createPatient(input: NewPatientInput): PatientRecord {
-  const language = input.language === "Marathi" ? "Marathi" : "Hindi";
+  const language = toLanguage(input.language);
 
   return {
     id: `${slugify(input.name)}-${Date.now().toString().slice(-5)}`,

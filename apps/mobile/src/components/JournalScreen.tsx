@@ -1,6 +1,11 @@
 "use client";
 
-import { ShieldCheck, UserPlus, Volume2 } from "lucide-react";
+import { ShieldCheck, Volume2 } from "lucide-react";
+import {
+  adherenceStreak,
+  buildPreVisitSummary,
+  weeklyRecap,
+} from "@/lib/summary";
 import {
   arcPoint,
   bpSparklinePoints,
@@ -19,7 +24,6 @@ interface JournalScreenProps {
   playingId: string | null;
   onPlay: (id: string, text: string) => void;
   onToggleSupplement: () => void;
-  onSwitchProfile: () => void;
 }
 
 export function JournalScreen({
@@ -30,7 +34,6 @@ export function JournalScreen({
   playingId,
   onPlay,
   onToggleSupplement,
-  onSwitchProfile,
 }: JournalScreenProps) {
   const progress = gestationProgress(patient.gestationWeek, patient.gestationDay);
   const point = arcPoint(progress);
@@ -39,6 +42,10 @@ export function JournalScreen({
   const hasWeight = patient.vitals.weightGainKg > 0;
   const latestEntry = patient.entries[0] ?? null;
   const showLive = (phase === "alert" || phase === "saved") && initialUtterance.length > 0;
+  // Derived, never authored: the doctor page and the recap both read her record.
+  const summary = buildPreVisitSummary(patient);
+  const recap = weeklyRecap(patient);
+  const streak = adherenceStreak(patient);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto" style={{ scrollbarWidth: "none" }}>
@@ -55,15 +62,56 @@ export function JournalScreen({
               {playingId === "journal-latest" ? "Playing…" : "Listen"}
             </button>
           )}
+
+        </div>
+      </div>
+
+      {/* The one page the doctor reads before she walks in. */}
+      <div className="shrink-0 border-b border-[#EAE3D5] bg-[#F7F2E7] px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-[#0F4C3A]">
+              For your doctor
+            </div>
+            <div className="mt-0.5 text-[12.5px] font-bold text-[#101828]">{summary.headline}</div>
+            <div className="truncate text-[10.5px] text-[#475467]">{summary.meta}</div>
+          </div>
           <button
             type="button"
-            onClick={onSwitchProfile}
-            aria-label="Switch or add a profile"
-            title="Switch or add a profile"
-            className="grid h-7 w-7 cursor-pointer place-items-center rounded-full border border-[#DDD3C0] text-[#0F4C3A] transition hover:bg-[#EFE6D5]"
+            onClick={() => onPlay("previsit-summary", summary.spoken)}
+            className="shrink-0 cursor-pointer rounded-full bg-[#0F4C3A] px-2.5 py-1 text-[10.5px] font-semibold text-white"
           >
-            <UserPlus size={12} />
+            {playingId === "previsit-summary" ? "Playing…" : "Listen"}
           </button>
+        </div>
+
+        {summary.lines.length > 0 && (
+          <div className="mt-2 space-y-1.5">
+            {summary.lines.slice(0, 3).map((line) => (
+              <div
+                key={`${line.dateLabel}-${line.ruleMatched}-${line.quote}`}
+                className="text-[11px] leading-snug text-[#344054]"
+              >
+                <span className="font-semibold text-[#101828]">{line.dateLabel}</span> {line.quote}
+                {line.translated && (
+                  <span className="text-[10px] text-[#667085]"> · {line.translated}</span>
+                )}
+                <div className="text-[10px] text-[#0F4C3A]">{line.ruleMatched}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          {summary.watchItems.map((item) => (
+            <span
+              key={item}
+              className="rounded-md border border-[#DDD3C0] bg-white px-1.5 py-0.5 text-[10px] font-medium text-[#475467]"
+            >
+              {item}
+            </span>
+          ))}
+          <span className="text-[10px] text-[#667085]">{summary.counts}</span>
         </div>
       </div>
 
@@ -105,6 +153,25 @@ export function JournalScreen({
             {patient.supplementDaysCompleted} / {patient.supplementDaysTotal} days
           </span>
         </div>
+
+        <div className="mb-2 flex items-center gap-1.5 rounded-lg border border-[#EAE3D5] bg-[#FBF7EF] px-2 py-1.5">
+          <span className="text-[10.5px]">{streak > 0 ? "🔥" : "•"}</span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[10px] font-semibold text-[#101828]">
+              {streak > 1 ? `${streak}-day streak` : "Start your streak today"} · {recap.title}
+            </div>
+            <div className="truncate text-[10px] text-[#475467]">{recap.line}</div>
+          </div>
+          <button
+            type="button"
+            onClick={() => onPlay("weekly-recap", recap.spoken)}
+            aria-label="Listen to this week's recap"
+            className="shrink-0 cursor-pointer text-[#0F4C3A]"
+          >
+            <Volume2 size={12} />
+          </button>
+        </div>
+
         <div className="grid grid-cols-7 justify-items-center gap-1.5">
           {supplementCells.map((cell) => (
             <button

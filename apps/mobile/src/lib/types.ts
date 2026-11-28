@@ -4,8 +4,13 @@
  * client components can import from here.
  */
 
-export type PatientLanguage = "Hindi" | "Marathi";
-export type SpeechLang = "hi-IN" | "mr-IN";
+/**
+ * English is what the demo runs in. Hindi and Marathi stay in the type and in
+ * the copy tables so a real rollout can switch her language on - see README
+ * "Future scope".
+ */
+export type PatientLanguage = "English" | "Hindi" | "Marathi";
+export type SpeechLang = "en-IN" | "hi-IN" | "mr-IN";
 export type MobileTab = "feed" | "voice" | "journal";
 export type TriageEngine = "llm-rules" | "rules";
 
@@ -110,6 +115,9 @@ export interface EscalationAlert {
   familyName: string;
   acknowledged: boolean;
   responseNote: string;
+  /** Who picked it up at the desk, so her phone can say a name. */
+  acknowledgedBy?: string;
+  acknowledgedAtIso?: string;
   createdAtIso: string;
 }
 

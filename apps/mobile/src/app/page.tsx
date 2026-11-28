@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { CircleScreen } from "@/components/CircleScreen";
 import { JournalScreen } from "@/components/JournalScreen";
-import { OnboardingScreen } from "@/components/OnboardingScreen";
 import { TabBar } from "@/components/TabBar";
 import { VoiceScreen } from "@/components/VoiceScreen";
 import { useSakhiData } from "@/hooks/useSakhiData";
@@ -19,7 +18,6 @@ export default function SakhiAgentPage() {
   const data = useSakhiData();
   const speech = useSpeech();
   const [activeTab, setActiveTab] = useState<MobileTab>("voice");
-  const [showProfiles, setShowProfiles] = useState(false);
 
   const session = useVoiceSession({
     patient: data.patient,
@@ -29,33 +27,12 @@ export default function SakhiAgentPage() {
 
   const patient = data.patient;
   const dark = activeTab === "voice";
-  const mustOnboard = !data.loading && data.patients.length === 0;
 
   if (data.loading) {
     return (
       <div className="grid h-[100dvh] place-items-center bg-[#FAF6EE] px-6 text-center text-sm text-[#667085]">
         Sakhi is getting ready…
       </div>
-    );
-  }
-
-  if (mustOnboard || showProfiles) {
-    return (
-      <OnboardingScreen
-        existing={data.patients}
-        onSelect={(patientId) => {
-          data.selectPatient(patientId);
-          setShowProfiles(false);
-        }}
-        onClose={mustOnboard ? undefined : () => setShowProfiles(false)}
-        onCreate={async (input) => {
-          const created = await data.enroll(input);
-          if (!created) return false;
-          setShowProfiles(false);
-          setActiveTab("voice");
-          return true;
-        }}
-      />
     );
   }
 
@@ -90,7 +67,6 @@ export default function SakhiAgentPage() {
               await data.publishPost({ patientId: patient.id, ...input });
             }}
             onToggleSupplement={() => void data.toggleSupplementToday(patient.id)}
-            onSwitchProfile={() => setShowProfiles(true)}
           />
         )}
 
@@ -103,7 +79,6 @@ export default function SakhiAgentPage() {
             playingId={speech.playingId}
             onPlay={(id, text) => void speech.play(id, text, patient.speechLang)}
             onToggleSupplement={() => void data.toggleSupplementToday(patient.id)}
-            onSwitchProfile={() => setShowProfiles(true)}
           />
         )}
 

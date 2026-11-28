@@ -17,7 +17,8 @@ export async function POST(req: Request) {
 
     const formData = await req.formData();
     const audio = formData.get("audio");
-    const speechLang = (formData.get("speechLang") as "hi-IN" | "mr-IN") || "hi-IN";
+    const speechLang =
+      (formData.get("speechLang") as "en-IN" | "hi-IN" | "mr-IN" | null) || "en-IN";
 
     if (!(audio instanceof Blob)) {
       return NextResponse.json({ error: "Missing audio file" }, { status: 400 });

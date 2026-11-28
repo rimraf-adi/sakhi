@@ -44,6 +44,9 @@ export interface EscalationAlert {
   familyName: string;
   acknowledged: boolean;
   responseNote: string;
+  /** Written here, read on her phone so the loop closes on both screens. */
+  acknowledgedBy?: string;
+  acknowledgedAtIso?: string;
   createdAtIso: string;
 }
 
@@ -55,12 +58,16 @@ export interface AuditLogEntry {
   ruleMatched: string;
   transcript: string;
   verifiedByDoctor: boolean;
+  reviewedBy?: string;
+  reviewedAtIso?: string;
 }
 
 export interface SakhiStore {
   patients: PatientRecord[];
   alerts: EscalationAlert[];
   auditLogs: AuditLogEntry[];
+  /** Written by the mobile app; carried through so a desk write never drops it. */
+  circlePosts?: unknown[];
 }
 
 const STORE_PATH = path.resolve(process.cwd(), "../../data/sakhi-store.json");
@@ -102,6 +109,7 @@ export function readStore(): SakhiStore {
       ),
       alerts: raw.alerts ?? [],
       auditLogs: raw.auditLogs ?? [],
+      circlePosts: raw.circlePosts ?? [],
     };
   } catch {
     return fallback;
